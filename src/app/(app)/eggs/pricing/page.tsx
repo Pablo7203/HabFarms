@@ -19,7 +19,7 @@ export default async function EggPricing() {
         .order("sort_order"),
       supabase
         .from("egg_grade_prices")
-        .select("*,egg_grades(name)")
+        .select("*")
         .eq("farm_id", context.farm.id)
         .order("effective_from", { ascending: false })
         .order("created_at", { ascending: false }),
@@ -37,6 +37,7 @@ export default async function EggPricing() {
   const creatorNames = new Map(
     (creators ?? []).map((creator) => [creator.id, creator.full_name]),
   );
+  const gradeNames = new Map((grades ?? []).map((grade) => [grade.id, grade.name]));
 
   return (
     <div>
@@ -59,7 +60,7 @@ export default async function EggPricing() {
           <tbody>
             {prices?.map((price) => (
               <tr className="border-t" key={price.id}>
-                <td className="p-4 font-medium">{price.egg_grades?.name}</td>
+                <td className="p-4 font-medium">{gradeNames.get(price.egg_grade_id) ?? "—"}</td>
                 <td className="p-4">{price.effective_from}</td>
                 <td className="p-4">{price.crate_price == null ? "—" : money(price.crate_price, context.farm.currency)}</td>
                 <td className="p-4">{price.loose_egg_price == null ? "—" : money(price.loose_egg_price, context.farm.currency)}</td>
