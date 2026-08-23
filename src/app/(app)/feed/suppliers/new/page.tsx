@@ -1,0 +1,1 @@
+import{requireRole}from"@/lib/auth/context";import{SupplierForm}from"@/components/forms/feed-forms";import{Card}from"@/components/ui/card";export default async function New(){await requireRole(["admin","manager"]);return <div><h1 className="text-3xl font-bold">New supplier</h1><Card className="mt-7 p-5 sm:p-7"><SupplierForm/></Card></div>}

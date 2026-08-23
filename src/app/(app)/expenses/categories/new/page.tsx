@@ -1,0 +1,1 @@
+import{requireRole}from"@/lib/auth/context";import{Card}from"@/components/ui/card";import{CategoryForm}from"@/components/forms/health-expense-forms";export default async function NewCategory(){await requireRole(["admin"]);return <div><h1 className="text-3xl font-bold">New expense category</h1><Card className="mt-6 p-5"><CategoryForm/></Card></div>}

@@ -1,0 +1,11 @@
+import { z } from "zod";
+const text = z.string().trim().max(500).optional().default("");
+const number = z.coerce.number();
+export const flockSchema = z.object({ flockName: z.string().trim().min(2).max(120), batchReference: text, breed: text, housePen: text, startDate: z.iso.date(), initialBirds: number.int().positive(), ageAtArrivalWeeks: z.union([z.literal(""), number.int().nonnegative()]).optional(), source: text, notes: z.string().trim().max(2000).optional().default("") });
+export const flockUpdateSchema = flockSchema.omit({ initialBirds: true }).extend({ status: z.enum(["active","closed","sold","culled"]) });
+export const birdMovementSchema = z.object({ flockId: z.uuid(), movementDate: z.iso.date(), movementType: z.enum(["addition","death","cull","bird_sale","transfer_in","transfer_out","adjustment"]), quantity: number.int().positive(), direction: z.enum(["IN","OUT"]), notes: z.string().trim().max(2000).optional().default("") });
+const productionFields = z.object({ flockId: z.uuid(), productionDate: z.iso.date(), eggsCollected: number.int().nonnegative(), crackedEggs: number.int().nonnegative(), deaths: number.int().nonnegative(), culls: number.int().nonnegative(), feedConsumedKg: number.nonnegative(), feedTypeId: z.union([z.literal(""),z.uuid()]).default(""), transportCost: number.nonnegative(), otherCost: number.nonnegative(), notes: z.string().trim().max(2000).optional().default("") });
+const validCrackedEggs = <T extends { eggsCollected: number; crackedEggs: number }>(data: T) => data.crackedEggs <= data.eggsCollected;
+const feedSelected=<T extends{feedConsumedKg:number;feedTypeId:string}>(d:T)=>d.feedConsumedKg===0||d.feedTypeId!=="";
+export const productionSchema = productionFields.refine(validCrackedEggs,{message:"Cracked eggs cannot be greater than eggs collected.",path:["crackedEggs"]}).refine(feedSelected,{message:"Select a feed type when feed is consumed.",path:["feedTypeId"]});
+export const productionUpdateSchema = productionFields.omit({flockId:true,productionDate:true}).refine(validCrackedEggs,{message:"Cracked eggs cannot be greater than eggs collected.",path:["crackedEggs"]}).refine(feedSelected,{message:"Select a feed type when feed is consumed.",path:["feedTypeId"]});

@@ -1,0 +1,1 @@
+export default function Loading() { return <div className="animate-pulse space-y-4" aria-label="Loading"><div className="h-8 w-56 rounded bg-stone-200" /><div className="h-4 w-96 max-w-full rounded bg-stone-200" /><div className="mt-8 h-48 rounded-2xl bg-stone-200" /></div>; }
