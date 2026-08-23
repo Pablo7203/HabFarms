@@ -243,16 +243,39 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# Uncomment to customize email template
-# [auth.email.template.invite]
-# subject = "You have been invited"
-# content_path = "./supabase/templates/invite.html"
+[auth.email.template.invite]
+subject = "You are invited to HabFarms"
+content_path = "./supabase/templates/invite.html"
 
-# Uncomment to customize notification email template
-# [auth.email.notification.password_changed]
-# enabled = true
-# subject = "Your password has been changed"
-# content_path = "./supabase/templates/password_changed_notification.html"
+[auth.email.template.confirmation]
+subject = "Confirm your HabFarms account"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Reset your HabFarms password"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.magic_link]
+subject = "Your HabFarms sign-in link"
+content_path = "./supabase/templates/magic-link.html"
+
+[auth.email.template.email_change]
+subject = "Confirm your new HabFarms email address"
+content_path = "./supabase/templates/email-change.html"
+
+[auth.email.template.reauthentication]
+subject = "Your HabFarms verification code"
+content_path = "./supabase/templates/reauthentication.html"
+
+[auth.email.notification.password_changed]
+enabled = true
+subject = "Your HabFarms password was changed"
+content_path = "./supabase/templates/password-changed.html"
+
+[auth.email.notification.email_changed]
+enabled = true
+subject = "Your HabFarms email address was changed"
+content_path = "./supabase/templates/email-changed.html"
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.
