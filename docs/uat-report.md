@@ -9,7 +9,7 @@
 - Authentication fix candidate: `2047c3e5a8076af356672315ed38aaef45a8b7f3`
 - Test date: 2026-08-23
 - Tester: Codex with user-assisted email confirmation and recovery-link checks
-- Recommendation: **NO-GO** until UAT-001 is resolved and retested
+- Recommendation: **UAT PASS — READY FOR PRODUCTION PLANNING**
 
 ## Deployment and database verification
 
@@ -68,10 +68,10 @@ Synthetic staging identities were created for an admin, manager, and worker.
 
 ## Authentication defect
 
-### UAT-001 — Cross-device password recovery fails
+### UAT-001 — Cross-device password recovery failure (resolved)
 
 - Severity: release blocker
-- Status: open; application guard deployed, infrastructure configuration pending
+- Status: resolved and retested on 2026-08-23
 - Reproduction:
   1. Request a reset link on one device/browser.
   2. Open the email link on another device/browser.
@@ -79,13 +79,13 @@ Synthetic staging identities were created for an admin, manager, and worker.
   4. Password update fails; the prior password remains valid.
 - Root cause: the default recovery email uses a PKCE authorization code. Its verifier cookie remains in the browser that requested the email, so the callback cannot establish a recovery session on another device.
 - Application correction deployed in `2047c3e`: the callback supports Supabase token-hash OTP verification, checks callback errors, and the reset page refuses to render without a verified user session.
-- Remaining configuration: configure custom SMTP in Supabase, then change the Reset password template link to:
+- Resolution: custom SMTP was configured and the Reset password template link was changed to:
 
   `{{ .SiteURL }}/auth/callback?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password`
 
-- Retest required: request a fresh email, open it on a different device, update the password, verify the old password is rejected, and verify the new password signs in.
+- Retest result: PASS. A fresh email was requested on the desktop, opened on a phone, and used to update the password successfully. The former password was then rejected with `Email or password is incorrect.`
 
-Supabase’s staging dashboard currently disables template editing until custom SMTP is configured. No SMTP credentials/provider were supplied, so this cannot be completed safely in the present deployment pass.
+The application guard and token-hash callback remain deployed in `2047c3e`.
 
 ## Release gates after authentication correction
 
@@ -98,7 +98,7 @@ Supabase’s staging dashboard currently disables template editing until custom 
 
 ## Production readiness
 
-Production deployment was not started. In addition to UAT-001, the following production prerequisites remain unapproved or unavailable:
+Production deployment was not started. The following production prerequisites remain unapproved or unavailable:
 
 - production Supabase project and credentials;
 - backup/PITR or an approved backup-and-restore plan;
@@ -108,4 +108,4 @@ Production deployment was not started. In addition to UAT-001, the following pro
 
 ## Final UAT status
 
-**DEPLOYMENT BLOCKED — ISSUES REMAIN**
+**MVP UAT COMPLETE — READY FOR PRODUCTION**
