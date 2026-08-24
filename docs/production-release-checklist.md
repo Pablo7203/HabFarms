@@ -21,6 +21,12 @@
 - [ ] Production, sales/payment, feed, health, and expense controlled transactions
 - [ ] Reports, CSV, cash flow, profitability, and audit event
 - [ ] Worker financial privacy and admin settings
+- [ ] Admin Users page has an Invite User action
+- [ ] New Worker invitation is delivered and accepted cross-device
+- [ ] Invitation assigns the correct farm and role and changes Pending to Active
+- [ ] Invitation resend and revoke work; revoked links cannot grant membership
+- [ ] Worker financial privacy still applies after acceptance
+- [ ] Last active Admin cannot be demoted or deactivated
 
 ## After deployment
 

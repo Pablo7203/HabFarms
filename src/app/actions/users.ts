@@ -1,0 +1,40 @@
+"use server";
+import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+import { createAuthAdminClient } from "@/lib/supabase/admin";
+import { requireRole } from "@/lib/auth/context";
+import { acceptInvitationSchema, invitationIdSchema, invitationSchema, memberUpdateSchema } from "@/lib/validation/users";
+import type { ActionResult } from "@/app/actions/auth";
+
+const friendly=(message:string)=>message.includes("already a member")?"This user is already a member of this farm.":message.includes("already pending")?"An invitation is already pending for this email.":message.includes("wait before")?"Please wait a minute before resending this invitation.":message.includes("another administrator")?"Assign another administrator before changing this user's access.":message.includes("denied")?"You do not have permission to manage farm users.":"We couldn't complete that user-management request. Please try again.";
+
+export async function inviteUserAction(input:unknown):Promise<ActionResult>{
+  const parsed=invitationSchema.safeParse(input);if(!parsed.success)return{ok:false,message:parsed.error.issues[0].message};
+  await requireRole(["admin"]);const s=await createClient();
+  const{data:invitation,error}=await s.rpc("create_farm_invitation",{target_email:parsed.data.email,target_role:parsed.data.role});
+  if(error||!invitation)return{ok:false,message:friendly(error?.message??"")};
+  try{
+    const origin=(await headers()).get("origin")??"http://localhost:3000";
+    const admin=createAuthAdminClient();
+    const{error:mailError}=await admin.auth.admin.inviteUserByEmail(parsed.data.email,{redirectTo:`${origin}/auth/callback?next=/accept-invitation`,data:{invitation_id:invitation.id}});
+    if(mailError){
+      if(/already|registered|exists/i.test(mailError.message)){revalidatePath("/settings/users");return{ok:true,message:"Invitation created. This person already has an account and can accept it after signing in."};}
+      return{ok:false,message:"The invitation was saved, but the email could not be sent. Use Resend to try again."};
+    }
+    revalidatePath("/settings/users");return{ok:true,message:"Invitation sent."};
+  }catch{return{ok:false,message:"The invitation was saved, but email delivery is not configured. Use Resend after configuration is complete."};}
+}
+
+export async function resendInvitationAction(input:unknown):Promise<ActionResult>{
+  const id=invitationIdSchema.safeParse(input);if(!id.success)return{ok:false,message:id.error.issues[0].message};await requireRole(["admin"]);const s=await createClient();
+  const{data,error}=await s.rpc("mark_farm_invitation_resent",{target_invitation:id.data});if(error||!data)return{ok:false,message:friendly(error?.message??"")};
+  try{const origin=(await headers()).get("origin")??"http://localhost:3000";const{error:mailError}=await createAuthAdminClient().auth.admin.inviteUserByEmail(data.email,{redirectTo:`${origin}/auth/callback?next=/accept-invitation`,data:{invitation_id:data.id}});if(mailError&&!/already|registered|exists/i.test(mailError.message))return{ok:false,message:"We couldn't resend the invitation email. Please try again later."};}catch{return{ok:false,message:"Invitation email delivery is not configured."};}
+  revalidatePath("/settings/users");return{ok:true,message:"Invitation resent."};
+}
+
+export async function revokeInvitationAction(input:unknown):Promise<ActionResult>{const id=invitationIdSchema.safeParse(input);if(!id.success)return{ok:false,message:id.error.issues[0].message};await requireRole(["admin"]);const s=await createClient();const{error}=await s.rpc("revoke_farm_invitation",{target_invitation:id.data});if(error)return{ok:false,message:friendly(error.message)};revalidatePath("/settings/users");return{ok:true,message:"Invitation revoked."};}
+
+export async function updateMemberAction(input:unknown):Promise<ActionResult>{const parsed=memberUpdateSchema.safeParse(input);if(!parsed.success)return{ok:false,message:parsed.error.issues[0].message};await requireRole(["admin"]);const s=await createClient();const{error}=await s.rpc("manage_farm_member",{target_membership:parsed.data.membershipId,new_role:parsed.data.role??null,new_active:parsed.data.active??null});if(error)return{ok:false,message:friendly(error.message)};revalidatePath("/settings/users");return{ok:true,message:"Farm user updated."};}
+
+export async function acceptInvitationAction(input:unknown):Promise<ActionResult>{const parsed=acceptInvitationSchema.safeParse(input);if(!parsed.success)return{ok:false,message:parsed.error.issues[0].message};const s=await createClient();const{data:{user}}=await s.auth.getUser();if(!user)return{ok:false,message:"Sign in through the invitation link first."};const{error:passwordError}=await s.auth.updateUser({password:parsed.data.password});if(passwordError)return{ok:false,message:"We couldn't set your password. Please try again."};const{error}=await s.rpc("accept_farm_invitation",{target_invitation:parsed.data.invitationId});if(error)return{ok:false,message:"This invitation is no longer valid."};revalidatePath("/settings/users");return{ok:true,message:"Invitation accepted. Continue to HabFarms."};}

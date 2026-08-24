@@ -95,6 +95,10 @@ For 2026-08-01 through 2026-08-23:
 - Desktop/tablet-width tables and reports: PASS
 - Full customer-owned physical-device workflow remains part of customer UAT
 
+## User-management P1 reopening
+
+Customer UAT remains paused until migration 13 and the application invitation flow are deployed and verified in staging. Local verification currently includes a clean 13-migration replay, database lint, the unchanged 841/841 regression baseline, and the dedicated 33/33 user-management runtime suite.
+
 ## 11. Customer UAT
 
 - Status: NOT YET COMPLETED
@@ -146,4 +150,4 @@ For 2026-08-01 through 2026-08-23:
 
 ## 17. Final Status
 
-**STAGING COMPLETE — CUSTOMER UAT REQUIRED**
+**STAGING UAT REOPENED — USER MANAGEMENT P1 BLOCKER**
