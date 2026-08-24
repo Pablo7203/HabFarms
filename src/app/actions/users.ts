@@ -11,9 +11,7 @@ const friendly=(message:string)=>message.includes("already a member")?"This user
 
 async function sendExistingAccountInvitationEmail(email:string,origin:string){
   const s=await createClient();
-  const callback=new URL("/auth/callback",origin);
-  callback.searchParams.set("next","/accept-invitation");
-  return s.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:callback.toString()}});
+  return s.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:`${origin}/invite-redirect`}});
 }
 
 export async function inviteUserAction(input:unknown):Promise<ActionResult>{
