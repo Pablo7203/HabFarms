@@ -12,7 +12,12 @@ export default async function AcceptInvitationPage() {
   if (!user) redirect("/login");
 
   const { data } = (await supabase.rpc("get_pending_farm_invitations")) as {
-    data: Array<{ id: string; role: string; farm_name: string }> | null;
+    data: Array<{
+      id: string;
+      role: string;
+      farm_name: string;
+      requires_password_setup: boolean;
+    }> | null;
   };
 
   return (
@@ -23,7 +28,7 @@ export default async function AcceptInvitationPage() {
         </div>
         <h1 className="mt-7 text-3xl font-bold tracking-tight">Accept invitation</h1>
         <p className="mt-2 text-stone-600">
-          Choose a password, then join the farm that invited you.
+          Review and accept each farm invitation addressed to your account.
         </p>
         <div className="mt-6 space-y-4">
           {data?.map((invitation) => (
@@ -32,6 +37,7 @@ export default async function AcceptInvitationPage() {
               id={invitation.id}
               farm={invitation.farm_name}
               role={invitation.role}
+              requiresPasswordSetup={invitation.requires_password_setup}
             />
           ))}
           {!data?.length && (

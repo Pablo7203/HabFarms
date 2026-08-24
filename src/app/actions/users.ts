@@ -58,14 +58,6 @@ export async function acceptInvitationAction(input: unknown): Promise<ActionResu
     return { ok: false, message: "This invitation is no longer valid." };
   }
 
-  const admin = createAuthAdminClient();
-  const { error: passwordError } = await admin.auth.admin.updateUserById(user.id, {
-    password: parsed.data.password,
-  });
-  if (passwordError) {
-    return { ok: false, message: "We couldn't set your password. Please try again." };
-  }
-
   const { error } = await supabase.rpc("accept_farm_invitation", {
     target_invitation: parsed.data.invitationId,
   });
