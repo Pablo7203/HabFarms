@@ -1,16 +1,18 @@
 "use server";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { createClient as createStatelessClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { createAuthAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/lib/auth/context";
+import { env } from "@/lib/env";
 import { acceptInvitationSchema, invitationIdSchema, invitationSchema, memberUpdateSchema } from "@/lib/validation/users";
 import type { ActionResult } from "@/app/actions/auth";
 
 const friendly=(message:string)=>message.includes("already a member")?"This user is already a member of this farm.":message.includes("already pending")?"An invitation is already pending for this email.":message.includes("wait before")?"Please wait a minute before resending this invitation.":message.includes("another administrator")?"Assign another administrator before changing this user's access.":message.includes("denied")?"You do not have permission to manage farm users.":"We couldn't complete that user-management request. Please try again.";
 
 async function sendExistingAccountInvitationEmail(email:string,origin:string){
-  const s=await createClient();
+  const s=createStatelessClient(env.NEXT_PUBLIC_SUPABASE_URL,env.NEXT_PUBLIC_SUPABASE_ANON_KEY,{auth:{flowType:"implicit",persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
   return s.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:`${origin}/invite-redirect`}});
 }
 
