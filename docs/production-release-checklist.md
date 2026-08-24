@@ -5,7 +5,7 @@
 - [ ] Backup current production database and confirm recoverability/retention
 - [ ] Review migration diff and target Supabase project
 - [ ] Run Sprint 1–7 verification, lint, typecheck, build, dependency audit, and diff check
-- [ ] Review Vercel environment variables; confirm no service-role key is needed
+- [ ] Review Vercel environment variables; confirm the service-role key is server-only and limited to Auth invitation delivery/resend
 - [ ] Confirm Supabase Site URL, callback, confirmation, and password-reset URLs
 - [ ] Complete staging deployment and approval
 
@@ -27,6 +27,14 @@
 - [ ] Invitation resend and revoke work; revoked links cannot grant membership
 - [ ] Worker financial privacy still applies after acceptance
 - [ ] Last active Admin cannot be demoted or deactivated
+- [ ] Existing user accepts a second-farm invitation without a password prompt or password change
+- [ ] Existing user retains the same Auth identity and all prior farm memberships
+- [ ] Manager invitation is delivered, accepted, Active, and follows the Manager permission contract
+- [ ] Worker role changes Worker → Manager → Worker take effect and are audited
+- [ ] Deactivation denies an already-authenticated member on the next protected request
+- [ ] Reactivation restores the intended farm access without deleting history or Auth identity
+- [ ] Users, Invite, and Accept Invitation pass 375×812 and keyboard accessibility UAT
+- [ ] Production Vercel automatic build is canceled for normal `main` pushes; release uses an explicit approved override
 
 ## After deployment
 

@@ -18,6 +18,12 @@ Back up first. Review every migration and target project, then use the installed
 
 Use a staging Supabase project and Vercel deployment before production. HTTPS is provided by the platforms. Keep production and staging credentials separate.
 
+Automatic Vercel builds are allowlisted to the `habfarms-staging` project by `scripts/vercel-ignore-build.mjs`. Other connected Vercel projects cancel Git-triggered builds. An approved production release must use Vercel's explicit manual deployment/redeploy flow and deliberately disable the project's Ignore Build Step for that release after the database migration plan, backup, and release revision are approved.
+
+## Farm user lifecycle
+
+See `user-management.md` for Admin invitation, acceptance, resend, revoke, role, access, and last-Admin operating procedures. The Supabase service-role credential is server-only and used only for administrative Auth invitation delivery and disposable unaccepted-identity rotation during resend. Farm data, membership acceptance, and role/access mutations continue through the authenticated user context and RLS-controlled RPCs.
+
 ## Diagnosis
 
 Use the user-visible reference ID and structured server log entry to correlate unexpected failures. Check Vercel function logs, Supabase database/Auth logs, audit history, health status, and the last deployment/migration. Logs must use IDs rather than credentials, contact details, notes, or payment references.

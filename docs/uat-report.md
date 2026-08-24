@@ -1,10 +1,10 @@
 # HabFarms v1.0 staging UAT report
 
-Tested 2026-08-23 through 2026-08-24. Production was not deployed or modified.
+Tested 2026-08-23 through 2026-08-24. Production application auto-deployment was detected and is documented below; the production database was not migrated.
 
 ## 1. Release Candidate
 
-- Commit: `204498c` (`fix: filter cash flow summary totals`)
+- Commit: `53c3d71` (`fix: preserve existing user credentials on invitations`)
 - Branch: `main`
 - Tag: `v1.0.0-rc9`
 - Repository: `Pablo7203/HabFarms`; branch and tag pushed successfully
@@ -13,13 +13,13 @@ Tested 2026-08-23 through 2026-08-24. Production was not deployed or modified.
 
 - Vercel: `https://habfarms-staging.vercel.app`, RC9 Ready
 - Supabase: `habfarms-staging`, project `faxvvvwkmdqwnlikczls`, `eu-west-1`, healthy
-- Separation: staging Vercel uses only staging Supabase public values. Production remains separate and untouched.
+- Separation: staging uses Supabase project `faxvvvwkmdqwnlikczls`; production uses separate project `lzrtxrkpohnbviemssic`.
 
 ## 3. Database Deployment
 
 - Initial ten-migration dry run and deployment: PASS
 - Forward-only UAT corrections: migrations 011 and 012 reviewed and applied
-- Final state: all 12 repository migrations match hosted staging; clean 12-migration local replay PASS; database lint PASS
+- Invitation lifecycle uses forward migrations 013–016. All 16 repository migrations match hosted staging; clean 16-migration local replay PASS; database lint PASS.
 - No hosted reset and no manual SQL repair were used
 
 ## 4. Staging Auth
@@ -28,7 +28,7 @@ Tested 2026-08-23 through 2026-08-24. Production was not deployed or modified.
 - Signup confirmation: PASS
 - Cross-device password recovery and subsequent login: PASS
 - Session restoration, logout, and protected logged-out routes: PASS
-- Invitation: NOT APPLICABLE; the existing product has no invitation workflow
+- Invitation: new-user cross-device invitation, password setup, correct-farm acceptance, and Pending-to-Active transition PASS. Existing-user credential-preserving acceptance PASS in automated verification; live existing-user UAT remains pending.
 - Email-change synchronization: PASS in the security runtime suite
 
 ## 5. Gmail SMTP
@@ -38,7 +38,7 @@ Tested 2026-08-23 through 2026-08-24. Production was not deployed or modified.
 - Sender address: dedicated operator-configured Gmail address (not repeated in release evidence)
 - Confirmation delivery: PASS
 - Password-reset delivery: PASS; opened and completed on a phone
-- Invitation delivery: NOT APPLICABLE
+- Invitation delivery: PASS for two controlled Worker aliases; both invitations became Active in the intended farm.
 - Delivery observation: received successfully; Gmail SMTP is not treated as a permanent deliverability solution
 
 ## 6. Internal UAT
@@ -59,6 +59,7 @@ Tested 2026-08-23 through 2026-08-24. Production was not deployed or modified.
 | CSV exports | PASS | Production, sales, expenses, feed, health, cash flow, and egg inventory routes plus date/tenant/formula-safety runtime coverage |
 | Audit trail | PASS | Live actor/time/action/entity/safe-summary inspection, filters and bounded pagination |
 | Automated regression | PASS | Nine suites, 841/841 checks |
+| User management | PASS (automated) | 40/40 dedicated checks, including new/existing users, original-password preservation, multi-farm membership, revocation, deactivation, cross-farm isolation, last-Admin protection, and service-role safety |
 | Lint / typecheck / production build | PASS | `pnpm lint`, `pnpm typecheck`, and `pnpm build` |
 
 ## 7. Financial Reconciliation
@@ -95,9 +96,13 @@ For 2026-08-01 through 2026-08-23:
 - Desktop/tablet-width tables and reports: PASS
 - Full customer-owned physical-device workflow remains part of customer UAT
 
-## User-management P1 reopening
+## User-management P1 status
 
-Customer UAT remains paused until migration 13 and the application invitation flow are deployed and verified in staging. Local verification currently includes a clean 13-migration replay, database lint, the unchanged 841/841 regression baseline, and the dedicated 33/33 user-management runtime suite.
+The Users module now provides Admin-only invitation, Active/Pending/Revoked states, resend, revoke, role changes, deactivation/reactivation, last-Admin protection, RLS isolation, new-user password setup, and existing-user password-preserving acceptance. Migration 016 distinguishes a disposable invited Auth identity from an existing signed-in account using server-controlled invitation linkage. Acceptance never changes an existing user's password.
+
+Completed staging evidence: two real Worker invitations delivered and accepted, correct farm/role, Pending-to-Active UI transition, and responsive Users/Invite pages at 375x812 with no horizontal overflow. Remaining live checks before P1 closure: Manager email acceptance/permissions, resend delivery, revoked-link rejection, live role changes, active-session deactivation/reactivation, real Worker direct-URL financial restrictions, existing-user second-farm acceptance, and complete keyboard UAT.
+
+Production inspection: Vercel auto-deployed application commit `26ed022` to `https://habfarms.vercel.app` on 2026-08-24, while production Supabase migration history remained at 008. Commit `53c3d71` added a project-ID allowlist ignore command; staging deployed successfully and the production build was canceled by the Ignored Build Step.
 
 ## 11. Customer UAT
 
@@ -107,7 +112,7 @@ Customer UAT remains paused until migration 13 and the application invitation fl
 ## 12. Defects
 
 - P0 open: none
-- P1 open: none
+- P1 open: user-management live lifecycle UAT items listed above
 - P2 open: none recorded from internal UAT
 - Customer findings: pending customer UAT
 
@@ -141,7 +146,7 @@ Customer UAT remains paused until migration 13 and the application invitation fl
 3. Create/confirm separate production Supabase and Vercel projects.
 4. Approve backup retention/PITR, take the pre-deploy backup, and record rollback owners.
 5. Configure production public environment values, Auth URLs, SMTP, and hosted templates.
-6. Dry-run all 12 migrations against production; review the exact plan.
+6. Dry-run all 16 migrations against production; review the exact plan.
 7. Apply migrations in the approved window and deploy the matching commit.
 8. Verify health, auth, RLS, role privacy, onboarding, core workflows, reports, exports, and audit.
 9. Enter only approved opening data; do not fabricate historical transactions.
@@ -150,4 +155,4 @@ Customer UAT remains paused until migration 13 and the application invitation fl
 
 ## 17. Final Status
 
-**STAGING UAT REOPENED — USER MANAGEMENT P1 BLOCKER**
+**USER MANAGEMENT & INVITATIONS NOT READY — P1 BLOCKER REMAINS**
