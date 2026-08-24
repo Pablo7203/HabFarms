@@ -17,7 +17,7 @@ export async function inviteUserAction(input:unknown):Promise<ActionResult>{
   try{
     const origin=(await headers()).get("origin")??"http://localhost:3000";
     const admin=createAuthAdminClient();
-    const{data:mailData,error:mailError}=await admin.auth.admin.inviteUserByEmail(parsed.data.email,{redirectTo:`${origin}/auth/callback?next=/accept-invitation`,data:{invitation_id:invitation.id}});
+    const{data:mailData,error:mailError}=await admin.auth.admin.inviteUserByEmail(parsed.data.email,{redirectTo:`${origin}/invite-redirect`,data:{invitation_id:invitation.id}});
     if(mailError){
       if(/already|registered|exists/i.test(mailError.message)){revalidatePath("/settings/users");return{ok:true,message:"Invitation created. This person already has an account and can accept it after signing in."};}
       return{ok:false,message:"The invitation was saved, but the email could not be sent. Use Resend to try again."};
@@ -30,7 +30,7 @@ export async function inviteUserAction(input:unknown):Promise<ActionResult>{
 export async function resendInvitationAction(input:unknown):Promise<ActionResult>{
   const id=invitationIdSchema.safeParse(input);if(!id.success)return{ok:false,message:id.error.issues[0].message};await requireRole(["admin"]);const s=await createClient();
   const{data,error}=await s.rpc("mark_farm_invitation_resent",{target_invitation:id.data});if(error||!data)return{ok:false,message:friendly(error?.message??"")};
-  try{const origin=(await headers()).get("origin")??"http://localhost:3000",admin=createAuthAdminClient();if(!data.auth_user_id)return{ok:false,message:"This person already has a HabFarms account. Ask them to sign in to accept the pending invitation."};await admin.auth.admin.deleteUser(data.auth_user_id);const{data:mailData,error:mailError}=await admin.auth.admin.inviteUserByEmail(data.email,{redirectTo:`${origin}/auth/callback?next=/accept-invitation`,data:{invitation_id:data.id}});if(mailError||!mailData.user?.id)return{ok:false,message:"We couldn't resend the invitation email. Please try again later."};await s.rpc("link_farm_invitation_auth_user",{target_invitation:data.id,target_auth_user:mailData.user.id});}catch{return{ok:false,message:"We couldn't resend the invitation email. Please try again later."};}
+  try{const origin=(await headers()).get("origin")??"http://localhost:3000",admin=createAuthAdminClient();if(!data.auth_user_id)return{ok:false,message:"This person already has a HabFarms account. Ask them to sign in to accept the pending invitation."};await admin.auth.admin.deleteUser(data.auth_user_id);const{data:mailData,error:mailError}=await admin.auth.admin.inviteUserByEmail(data.email,{redirectTo:`${origin}/invite-redirect`,data:{invitation_id:data.id}});if(mailError||!mailData.user?.id)return{ok:false,message:"We couldn't resend the invitation email. Please try again later."};await s.rpc("link_farm_invitation_auth_user",{target_invitation:data.id,target_auth_user:mailData.user.id});}catch{return{ok:false,message:"We couldn't resend the invitation email. Please try again later."};}
   revalidatePath("/settings/users");return{ok:true,message:"Invitation resent."};
 }
 
