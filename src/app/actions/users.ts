@@ -38,4 +38,39 @@ export async function revokeInvitationAction(input:unknown):Promise<ActionResult
 
 export async function updateMemberAction(input:unknown):Promise<ActionResult>{const parsed=memberUpdateSchema.safeParse(input);if(!parsed.success)return{ok:false,message:parsed.error.issues[0].message};await requireRole(["admin"]);const s=await createClient();const{error}=await s.rpc("manage_farm_member",{target_membership:parsed.data.membershipId,new_role:parsed.data.role??null,new_active:parsed.data.active??null});if(error)return{ok:false,message:friendly(error.message)};revalidatePath("/settings/users");return{ok:true,message:"Farm user updated."};}
 
-export async function acceptInvitationAction(input:unknown):Promise<ActionResult>{const parsed=acceptInvitationSchema.safeParse(input);if(!parsed.success)return{ok:false,message:parsed.error.issues[0].message};const s=await createClient();const{data:{user}}=await s.auth.getUser();if(!user)return{ok:false,message:"Sign in through the invitation link first."};const{error:passwordError}=await s.auth.updateUser({password:parsed.data.password});if(passwordError)return{ok:false,message:"We couldn't set your password. Please try again."};const{error}=await s.rpc("accept_farm_invitation",{target_invitation:parsed.data.invitationId});if(error)return{ok:false,message:"This invitation is no longer valid."};revalidatePath("/settings/users");return{ok:true,message:"Invitation accepted. Continue to HabFarms."};}
+export async function acceptInvitationAction(input: unknown): Promise<ActionResult> {
+  const parsed = acceptInvitationSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: "Sign in through the invitation link first." };
+
+  const { data: pendingInvitations, error: pendingError } = await supabase.rpc(
+    "get_pending_farm_invitations",
+  );
+  const ownsInvitation = pendingInvitations?.some(
+    (invitation: { id: string }) => invitation.id === parsed.data.invitationId,
+  );
+  if (pendingError || !ownsInvitation) {
+    return { ok: false, message: "This invitation is no longer valid." };
+  }
+
+  const admin = createAuthAdminClient();
+  const { error: passwordError } = await admin.auth.admin.updateUserById(user.id, {
+    password: parsed.data.password,
+  });
+  if (passwordError) {
+    return { ok: false, message: "We couldn't set your password. Please try again." };
+  }
+
+  const { error } = await supabase.rpc("accept_farm_invitation", {
+    target_invitation: parsed.data.invitationId,
+  });
+  if (error) return { ok: false, message: "This invitation is no longer valid." };
+
+  revalidatePath("/settings/users");
+  return { ok: true, message: "Invitation accepted. Continue to HabFarms." };
+}
