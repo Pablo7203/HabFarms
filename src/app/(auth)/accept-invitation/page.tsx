@@ -1,4 +1,0 @@
-import { redirect } from "next/navigation";
-import { AcceptInvitationForm } from "@/components/forms/user-management";
-import { createClient } from "@/lib/supabase/server";
-export default async function AcceptInvitationPage(){const s=await createClient(),{data:{user}}=await s.auth.getUser();if(!user)redirect("/login");const{data}=await s.rpc("get_pending_farm_invitations") as {data:Array<{id:string;role:string;farm_name:string}>|null};return <div><h1 className="text-3xl font-bold">Accept invitation</h1><p className="mt-2 text-stone-600">Choose a password, then join the farm that invited you.</p><div className="mt-6 space-y-4">{data?.map(i=><AcceptInvitationForm key={i.id} id={i.id} farm={i.farm_name} role={i.role}/>)}{!data?.length&&<p className="rounded-xl border bg-white p-6 text-stone-600">There are no valid pending invitations for this signed-in email.</p>}</div></div>}
