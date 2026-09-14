@@ -156,3 +156,6 @@ Production inspection: Vercel auto-deployed application commit `26ed022` to `htt
 ## 17. Final Status
 
 **USER MANAGEMENT & INVITATIONS NOT READY — P1 BLOCKER REMAINS**
+# Post-v1.0 farm performance UAT
+
+Staging verification for migration 017 confirms the Reports menu exposes Daily Summary and Weekly Summary. Worker access displays operational production and inventory data but omits commercial metrics. Product-owner UAT should use controlled staging data to reconcile a complete production day and week against source records before production release.

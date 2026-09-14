@@ -42,3 +42,10 @@
 - [ ] Confirm audit events and no cross-farm leakage
 - [ ] Confirm managed backup status and next logical export/restore-test date
 - [ ] Record release owner, time, migration version, smoke-test evidence, and rollback decision
+# Post-v1.0 farm performance release gate
+
+- [ ] Confirm staging migration 017 is applied and no production migration is applied.
+- [ ] Reconcile five sellable grades plus Unsorted with controlled staging data.
+- [ ] Verify 100% Hen-Day is accepted and over-100% is rejected.
+- [ ] Reconcile Daily and Weekly Summary source links, financial separation, and worker privacy.
+- [ ] Obtain explicit product-owner approval before any production deployment.
