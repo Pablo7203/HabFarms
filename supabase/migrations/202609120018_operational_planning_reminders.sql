@@ -53,9 +53,9 @@ select h.*,f.flock_name,case when h.status='completed' then 'completed' when h.s
 from public.health_reminders h join public.flocks f on f.id=h.flock_id join public.farms fa on fa.id=h.farm_id;
 
 create or replace view public.v_supplier_payables with(security_invoker=true) as
-select r.*,s.name supplier_name,case when r.outstanding_balance<=0 then 'paid' when r.payment_due_date is null then 'unscheduled' when r.payment_due_date<(now() at time zone fa.timezone)::date then 'overdue' when r.payment_due_date=(now() at time zone fa.timezone)::date then 'due_today' else 'upcoming' end payment_status,
-case when r.payment_due_date<(now() at time zone fa.timezone)::date then (now() at time zone fa.timezone)::date-r.payment_due_date else 0 end days_overdue
-from public.v_feed_purchase_receivables r left join public.suppliers s on s.id=r.supplier_id join public.farms fa on fa.id=r.farm_id;
+select r.*,p.payment_terms_days,p.payment_due_date,s.name supplier_name,case when r.outstanding_balance<=0 then 'paid' when p.payment_due_date is null then 'unscheduled' when p.payment_due_date<(now() at time zone fa.timezone)::date then 'overdue' when p.payment_due_date=(now() at time zone fa.timezone)::date then 'due_today' else 'upcoming' end supplier_due_status,
+case when p.payment_due_date<(now() at time zone fa.timezone)::date then (now() at time zone fa.timezone)::date-p.payment_due_date else 0 end days_overdue
+from public.v_feed_purchase_receivables r join public.feed_purchases p on p.id=r.id left join public.suppliers s on s.id=r.supplier_id join public.farms fa on fa.id=r.farm_id;
 
 alter table public.flock_feeding_plans enable row level security; alter table public.health_reminders enable row level security;
 create policy flock_feeding_plans_read on public.flock_feeding_plans for select to authenticated using(public.is_farm_member(farm_id));
