@@ -1,0 +1,3 @@
+export default function DashboardLoading() {
+  return <div className="animate-pulse" aria-label="Loading dashboard" role="status"><div className="h-5 w-28 rounded bg-stone-200" /><div className="mt-3 h-10 w-72 max-w-full rounded bg-stone-200" /><div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{Array.from({ length: 4 }, (_, index) => <div key={index} className="h-40 rounded-2xl border border-stone-200 bg-white p-5"><div className="h-4 w-24 rounded bg-stone-100" /><div className="mt-7 h-9 w-28 rounded bg-stone-100" /></div>)}</div><div className="mt-7 h-40 rounded-2xl border border-stone-200 bg-white" /><span className="sr-only">Loading farm dashboard</span></div>;
+}
