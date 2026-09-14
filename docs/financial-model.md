@@ -10,3 +10,14 @@ This is a management operating model, not statutory accounting.
 - Inventory is an asset-like management balance and becomes operating cost through consumption or wastage, not merely through payment.
 
 PostgreSQL `numeric` values are authoritative. Money displays with two decimals; feed quantities and weighted-average cost retain their configured higher precision.
+
+## Daily and weekly performance formulas
+
+- Production percentage = Eggs Collected / Eligible Hen-Days x 100. The numerator includes cracked eggs because they were biologically produced. An entry over 100% is rejected instead of visually clipped.
+- Saleable Eggs Produced = Eggs Collected - Cracked / Unsellable Eggs.
+- Operating Production Cost = feed consumption cost + feed wastage cost + incurred operating expenses. Feed purchases and payments remain separate.
+- Operating Cost per Saleable Egg = Operating Production Cost / Saleable Eggs Produced.
+- Operating Cost per Crate = Operating Cost per Saleable Egg x the farm's configured crate size.
+- Operating Margin per Crate = the applicable grade crate price - Operating Cost per Crate. Operating Margin % = Operating Margin / Current Grade Selling Price x 100.
+
+If saleable production is zero, unit-cost and margin values are unavailable rather than divided by zero. These are management operating measures, not full statutory cost accounting.
