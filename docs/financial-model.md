@@ -21,3 +21,6 @@ PostgreSQL `numeric` values are authoritative. Money displays with two decimals;
 - Operating Margin per Crate = the applicable grade crate price - Operating Cost per Crate. Operating Margin % = Operating Margin / Current Grade Selling Price x 100.
 
 If saleable production is zero, unit-cost and margin values are unavailable rather than divided by zero. These are management operating measures, not full statutory cost accounting.
+## Bird sales
+
+Bird Sales use the same `sales` revenue and customer-payment model as egg sales. Revenue is recognized when a completed Bird Sale is posted; cash is recognized only from its payment records. HabFarms does not currently model a biological bird cost basis, so Bird Sale reports show revenue and include it in management operating profitability without asserting a per-sale bird margin.

@@ -1,2 +1,32 @@
 @import "tailwindcss";
-:root { color-scheme: light; } * { box-sizing: border-box; } html { background: #fafaf9; } body { margin: 0; color: #1c1917; background: #fafaf9; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; } button, a, input { -webkit-tap-highlight-color: transparent; } ::selection { background: #d1fae5; color: #064e3b; }
+
+:root { color-scheme: light; --farm-lime: #98cf43; --farm-lime-deep: #659d24; --farm-mist: #f2f6ed; --farm-ink: #202821; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--farm-mist); }
+body { margin: 0; color: var(--farm-ink); background: var(--farm-mist); font-family: Aptos, "Segoe UI Variable", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button, a { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
+button:active, a:active { transform: translateY(1px) scale(.99); }
+:focus-visible { outline: 3px solid rgb(152 207 67 / .7); outline-offset: 3px; }
+.data-number { font-variant-numeric: tabular-nums; }
+::selection { background: #dff2a9; color: #315d17; }
+
+/* Palette bridge: legacy routes and forms inherit the same calm HabFarms grading. */
+[class~="bg-emerald-700"], [class~="bg-emerald-800"] { background-color: #7fb83b !important; }
+[class~="bg-emerald-600"] { background-color: #98cf43 !important; }
+[class~="bg-emerald-50"] { background-color: #f2f8e5 !important; }
+[class~="bg-emerald-100"] { background-color: #dff2a9 !important; }
+[class~="bg-emerald-950"] { background-color: #315d17 !important; }
+[class~="border-emerald-200"] { border-color: #d8e8b8 !important; }
+[class~="border-emerald-300"] { border-color: #b9da81 !important; }
+[class~="border-emerald-600"], [class~="border-emerald-700"] { border-color: #7fb83b !important; }
+[class~="text-emerald-700"], [class~="text-emerald-800"] { color: #527c22 !important; }
+[class~="text-emerald-900"], [class~="text-emerald-950"] { color: #315d17 !important; }
+[class~="text-emerald-100"], [class~="text-emerald-200"], [class~="text-emerald-300"] { color: #f4f9e9 !important; }
+[class~="ring-emerald-100"] { --tw-ring-color: #dff2a9 !important; }
+[class~="ring-emerald-600"] { --tw-ring-color: #7fb83b !important; }
+[class~="hover:bg-emerald-50"]:hover { background-color: #f2f8e5 !important; }
+[class~="hover:bg-emerald-100"]:hover { background-color: #e7f4ca !important; }
+[class~="hover:bg-emerald-800"]:hover, [class~="hover:bg-emerald-900"]:hover { background-color: #659d24 !important; }
+[class~="hover:border-emerald-300"]:hover, [class~="hover:border-emerald-200"]:hover { border-color: #b9da81 !important; }
+[class~="hover:text-emerald-700"]:hover, [class~="hover:text-emerald-800"]:hover, [class~="hover:text-emerald-950"]:hover { color: #315d17 !important; }

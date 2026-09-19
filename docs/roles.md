@@ -17,3 +17,6 @@
 | Operational production/health reports | Read/export | Read/export | Read/export without financial fields |
 
 Database policies and RPC checks are authoritative if UI presentation ever differs.
+## Bird sales
+
+Admins and managers may create and review Bird Sales, collect customer payments, and review commercial reports. Only admins may void a Bird Sale, and payments must be voided through the established payment workflow before the sale can be voided. Workers cannot access Bird Sale pricing, receivables, cash, profitability, or financial reports.

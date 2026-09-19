@@ -159,3 +159,6 @@ Production inspection: Vercel auto-deployed application commit `26ed022` to `htt
 # Post-v1.0 farm performance UAT
 
 Staging verification for migration 017 confirms the Reports menu exposes Daily Summary and Weekly Summary. Worker access displays operational production and inventory data but omits commercial metrics. Product-owner UAT should use controlled staging data to reconcile a complete production day and week against source records before production release.
+## Bird Sales verification scope
+
+Bird Sales are a distinct direct-flock workflow: one sale links to one authoritative population OUT movement, uses the shared customer/payment/collection system, and does not create egg, feed, or raw-material inventory movements. Runtime UAT results must be recorded after controlled local and staging transactions; static and migration checks alone do not prove the commercial flow.

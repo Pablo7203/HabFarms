@@ -1,0 +1,1 @@
+import { MaterialForm } from "@/components/forms/raw-material-forms";export default function NewMaterial(){return <div className="mx-auto max-w-2xl"><h1 className="text-3xl font-bold">Add material</h1><p className="mt-2 text-stone-600">Materials are tracked in kilograms.</p><div className="mt-7 rounded-xl border bg-white p-6"><MaterialForm/></div></div>}

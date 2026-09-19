@@ -49,3 +49,9 @@
 - [ ] Verify 100% Hen-Day is accepted and over-100% is rejected.
 - [ ] Reconcile Daily and Weekly Summary source links, financial separation, and worker privacy.
 - [ ] Obtain explicit product-owner approval before any production deployment.
+## Bird Sales release checks
+
+- Verify one cash, credit, and partial Bird Sale against the flock ledger, sale total, payment, collections, cash flow, and profitability.
+- Verify a safe void after payment reversal restores flock population and preserves audit history.
+- Verify egg and feed inventory remain unchanged by Bird Sales.
+- Verify worker and cross-farm users cannot access Bird Sale financial data or call posting RPCs.

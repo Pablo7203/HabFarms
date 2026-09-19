@@ -29,3 +29,6 @@ See `user-management.md` for Admin invitation, acceptance, resend, revoke, role,
 Use the user-visible reference ID and structured server log entry to correlate unexpected failures. Check Vercel function logs, Supabase database/Auth logs, audit history, health status, and the last deployment/migration. Logs must use IDs rather than credentials, contact details, notes, or payment references.
 
 For migration failure, data corruption, restore, and access incidents follow `recovery.md`. Do not directly edit derived balances; correct source transactions through supported void/reversal workflows.
+## Direct flock bird sales
+
+Use **Sales → Bird sale** for a live bird, spent layer, or cull bird sold directly from an active flock. Enter the customer, flock, date, category, quantity, and price per bird. The system posts exactly one population-out movement, a sale, and any immediate customer payment atomically. Do not first record a separate cull or death for the same sold birds.
