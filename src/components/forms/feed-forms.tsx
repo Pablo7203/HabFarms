@@ -41,7 +41,7 @@ function Shell({
   ) => Promise<{ ok: boolean; message: string; id?: string }>;
   children: React.ReactNode;
   submit?: string;
-  onSuccess?: () => void;
+  onSuccess?: (form: HTMLFormElement) => void;
 }) {
   const [pending, start] = useTransition(),
     [message, setMessage] = useState("");
@@ -50,10 +50,11 @@ function Shell({
       className="space-y-5"
       onSubmit={(e) => {
         e.preventDefault();
+        const form = e.currentTarget;
         start(async () => {
-          const r = await action(new FormData(e.currentTarget));
+          const r = await action(new FormData(form));
           setMessage(r.message);
-          if (r.ok) onSuccess?.();
+          if (r.ok) onSuccess?.(form);
         });
       }}
     >
@@ -76,6 +77,7 @@ export function FeedTypeForm({ id }: { id?: string }) {
           active: true,
         })
       }
+      onSuccess={id ? undefined : (form) => form.reset()}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field name="name" label="Feed type" />
