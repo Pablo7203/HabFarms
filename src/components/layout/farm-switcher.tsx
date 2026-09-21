@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeftRight, Check, ChevronDown, LoaderCircle } from "lucide-react";
 import { switchActiveFarmAction } from "@/app/actions/auth";
 import type { FarmChoice } from "@/types/domain";
 
 export function FarmSwitcher({ farms, activeFarmId }: { farms: FarmChoice[]; activeFarmId: string }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const activeFarm = farms.find((farm) => farm.id === activeFarmId) ?? farms[0];
@@ -21,8 +19,10 @@ export function FarmSwitcher({ farms, activeFarmId }: { farms: FarmChoice[]; act
       const result = await switchActiveFarmAction(farmId);
       if (result.ok) {
         setOpen(false);
-        router.replace(result.nextPath ?? "/dashboard");
-        router.refresh();
+        // A full navigation makes the newly written farm cookie available to every
+        // server component before the destination renders.  Client-side refreshes
+        // could leave the previous farm visible until the user reloaded manually.
+        window.location.assign(result.nextPath ?? "/dashboard");
       }
     });
   };
