@@ -1,12 +1,14 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { ImageUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   createFeedAdjustmentAction,
   createFeedMixingBatchAction,
   postFeedPurchaseAction,
+  uploadPurchaseReceiptAction,
   recordFeedPaymentAction,
   saveFeedTypeAction,
   saveSupplierAction,
@@ -30,6 +32,10 @@ const Field = ({
     <Input name={name} type={type} step={step} required className="mt-2" />
   </label>
 );
+function ReceiptUpload() {
+  const [fileName, setFileName] = useState("");
+  return <div className="text-sm font-medium"><span>Receipt evidence <span className="font-normal text-stone-500">(cash or bank)</span></span><label className="mt-2 flex min-h-14 cursor-pointer items-center gap-3 rounded-xl border border-dashed border-stone-300 bg-stone-50 px-3 text-sm font-normal text-stone-600 transition hover:border-emerald-400 hover:bg-emerald-50"><span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white text-emerald-700 shadow-sm"><ImageUp size={17}/></span><span className="min-w-0"><strong className="block truncate text-stone-800">{fileName || "Upload receipt image"}</strong><span className="block text-xs text-stone-500">PNG, HEIC, WebP, or any image · max 10 MB</span></span><input name="receipt" type="file" accept="image/*,.heic,.heif" className="sr-only" onChange={(event) => setFileName(event.target.files?.[0]?.name ?? "")}/></label></div>;
+}
 function Shell({
   action,
   children,
@@ -159,6 +165,12 @@ export function PurchaseForm({
           reference: f.get("reference"),
           notes: f.get("notes"),
         });
+        const receipt = f.get("receipt");
+        if (r.ok && r.id && receipt instanceof File && receipt.size > 0) {
+          const evidence = new FormData(); evidence.set("receipt", receipt);
+          const uploaded = await uploadPurchaseReceiptAction("feed_purchase", r.id, evidence);
+          if (!uploaded.ok) return uploaded;
+        }
         if (r.ok && r.id) router.push(`/feed/purchases/${r.id}`);
         return r;
       }}
@@ -216,6 +228,7 @@ export function PurchaseForm({
             name="method"
             className="mt-2 min-h-11 w-full rounded-lg border px-3"
           >
+            <option value="" disabled>Select payment method</option>
             <option value="cash">Cash</option>
             <option value="momo">Mobile money</option>
             <option value="bank_transfer">Bank transfer</option>
@@ -223,6 +236,7 @@ export function PurchaseForm({
           </select>
         </label>
         <Field name="reference" label="Reference" />
+        <ReceiptUpload />
       </div>
       <label className="block text-sm font-medium">
         Notes

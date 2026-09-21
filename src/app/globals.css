@@ -5,6 +5,11 @@
 html { scroll-behavior: smooth; background: var(--farm-mist); }
 body { margin: 0; color: var(--farm-ink); background: var(--farm-mist); font-family: Aptos, "Segoe UI Variable", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif; }
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+/* Number steppers are awkward on operational data-entry screens. Values remain
+   numeric, but users type them directly without browser spinner controls. */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 button, a { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
 button:active, a:active { transform: translateY(1px) scale(.99); }
 :focus-visible { outline: 3px solid rgb(152 207 67 / .7); outline-offset: 3px; }

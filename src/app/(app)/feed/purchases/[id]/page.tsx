@@ -4,19 +4,23 @@ import { requireRole } from "@/lib/auth/context";
 import { createClient } from "@/lib/supabase/server";
 import { farmToday } from "@/lib/farm-date";
 import { FeedPaymentForm } from "@/components/forms/feed-forms";
+import { PurchaseReceiptForm } from "@/components/forms/purchase-receipt-form";
 import { Card } from "@/components/ui/card";
 
 export default async function Purchase({ params }: { params: Promise<{ id: string }> }) {
   const context = await requireRole(["admin", "manager"]);
   const { id } = await params;
   const supabase = await createClient();
-  const [{ data: purchase }, { data: payments }, { data: movements }] = await Promise.all([
+  const [{ data: purchase }, { data: payments }, { data: movements }, { data: receipt }] = await Promise.all([
     supabase.from("v_feed_purchase_receivables").select("*").eq("id", id).maybeSingle(),
     supabase.from("feed_purchase_payments").select("*").eq("feed_purchase_id", id).order("payment_date", { ascending: false }),
     supabase.from("feed_inventory_movements").select("*").eq("source_id", id).order("created_at"),
+    supabase.from("purchase_receipts").select("*").eq("source_type", "feed_purchase").eq("source_id", id).maybeSingle(),
   ]);
 
   if (!purchase) notFound();
+  const signedReceipt = receipt ? await supabase.storage.from("purchase-receipts").createSignedUrl(receipt.storage_path, 3600) : null;
+  const receiptUrl = signedReceipt?.data?.signedUrl ?? null;
 
   return (
     <div>
@@ -31,6 +35,7 @@ export default async function Purchase({ params }: { params: Promise<{ id: strin
         <Card className="p-6"><h2 className="font-semibold">Purchase snapshot</h2><p className="mt-4">{purchase.bags} bags × {purchase.bag_size_kg} kg</p><p>{money(purchase.cost_per_bag,context.farm.currency)}/bag · {money(purchase.cost_per_kg,context.farm.currency)}/kg</p><p className="capitalize">Status: {purchase.status}</p></Card>
         <Card className="p-6"><h2 className="font-semibold">Inventory movements</h2>{movements?.map((movement) => <p key={movement.id} className="mt-3">{movement.direction} {movement.quantity_kg} kg · {movement.movement_type}</p>)}</Card>
       </div>
+      <Card className="mt-7 p-6"><h2 className="font-semibold">Receipt evidence</h2><p className="mt-1 text-sm text-stone-600">Keep a photo of the cash or bank receipt with this purchase for audit and reconciliation.</p>{receiptUrl ? <a href={receiptUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-lg border px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">View {receipt?.file_name}</a> : <p className="mt-4 text-sm text-stone-500">No receipt image has been attached.</p>}<PurchaseReceiptForm purchaseId={id}/></Card>
       {Number(purchase.outstanding_balance) > 0 && <Card className="mt-7 p-6"><h2 className="mb-4 font-semibold">Record supplier payment</h2><FeedPaymentForm id={id} today={farmToday(context.farm.timezone)}/></Card>}
       <Card className="mt-7 divide-y"><h2 className="p-5 font-semibold">Payment history</h2>{payments?.map((payment) => <div key={payment.id} className="grid grid-cols-3 p-5"><span>{payment.payment_date}</span><span>{money(payment.amount,context.farm.currency)}</span><span>{payment.voided_at ? "Voided" : payment.payment_method}</span></div>)}</Card>
     </div>

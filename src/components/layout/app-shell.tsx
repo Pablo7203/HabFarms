@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { logoutAction } from "@/app/actions/auth";
 import { ChickenIcon } from "@/components/ui/chicken-icon";
+import { NotificationBell } from "@/components/layout/notification-bell";
 import { cn } from "@/lib/utils";
 import type { AppContext } from "@/types/domain";
 
@@ -181,7 +182,7 @@ export function AppShell({
         </div>
       )}
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-[#e4eadf] bg-white/95 px-4 backdrop-blur sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-[#e4eadf] bg-white/95 px-4 sm:px-6">
           <div className="flex min-w-0 items-center gap-2">
             <button
               onClick={() => setOpen(true)}
@@ -201,13 +202,16 @@ export function AppShell({
               </Link>
             )}
           </div>
-          <div className="ml-auto shrink-0 text-right">
+          <div className="ml-auto flex shrink-0 items-center gap-3">
+            <NotificationBell farmId={context.farm.id} role={context.membership.role} currency={context.farm.currency} />
+            <div className="text-right">
             <p className="text-sm font-semibold text-stone-900">
               {context.profile?.full_name || context.user.email}
             </p>
             <p className="text-xs capitalize text-stone-500">
               {context.membership.role}
             </p>
+            </div>
           </div>
         </header>
         <main id="main-content" className="mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">{children}</main>
