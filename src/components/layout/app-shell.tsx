@@ -119,13 +119,13 @@ export function AppShell({
   ].filter((group) => group.items.length);
   const nav = (
     <>
-      <div className="flex h-16 items-center gap-3 px-5">
-        <div className="grid size-9 place-items-center rounded-xl bg-[#98cf43] font-bold text-[#294c14] shadow-sm">
+      <div className={cn("flex items-center gap-3 px-5", farms.length > 1 ? "min-h-[112px] py-3" : "h-16")}>
+        <div className="grid size-10 shrink-0 place-items-center self-start rounded-xl bg-[#98cf43] font-bold text-[#294c14] shadow-sm">
           P
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <p className="text-xs text-stone-500">Poultry Farm</p>
-          <p className="max-w-40 truncate font-semibold text-stone-900">
+          <p className="truncate font-semibold text-stone-900">
             {context.farm.name}
           </p>
           <FarmSwitcher farms={farms} activeFarmId={context.farm.id} />
