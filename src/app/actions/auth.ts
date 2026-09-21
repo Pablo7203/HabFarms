@@ -14,7 +14,15 @@ export async function switchActiveFarmAction(farmId: string): Promise<ActionResu
   const { data: membership } = await supabase.from("farm_members").select("farm_id").eq("farm_id", farmId).eq("user_id", user.id).eq("active", true).maybeSingle();
   if (!membership) return { ok: false, message: "You do not have access to that farm." };
   (await cookies()).set("habfarms_active_farm", farmId, { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
-  return { ok: true, message: "Farm switched." };
+  const { data: account } = await supabase
+    .from("farm_accounts")
+    .select("account_status,primary_owner_user_id")
+    .eq("farm_id", farmId)
+    .maybeSingle();
+  const nextPath = account?.account_status === "onboarding" && account.primary_owner_user_id === user.id
+    ? "/onboarding"
+    : "/dashboard";
+  return { ok: true, message: "Farm switched.", nextPath };
 }
 
 export async function loginAction(input: unknown): Promise<ActionResult> {
