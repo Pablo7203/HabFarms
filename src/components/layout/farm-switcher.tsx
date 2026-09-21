@@ -1,37 +1,78 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronsUpDown } from "lucide-react";
+import { ArrowLeftRight, Check, ChevronDown, LoaderCircle } from "lucide-react";
 import { switchActiveFarmAction } from "@/app/actions/auth";
 import type { FarmChoice } from "@/types/domain";
 
 export function FarmSwitcher({ farms, activeFarmId }: { farms: FarmChoice[]; activeFarmId: string }) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
-  if (farms.length < 2) return null;
+  const activeFarm = farms.find((farm) => farm.id === activeFarmId) ?? farms[0];
+
+  const selectFarm = (farmId: string) => {
+    if (farmId === activeFarmId || pending) {
+      setOpen(false);
+      return;
+    }
+    startTransition(async () => {
+      const result = await switchActiveFarmAction(farmId);
+      if (result.ok) {
+        setOpen(false);
+        router.replace(result.nextPath ?? "/dashboard");
+        router.refresh();
+      }
+    });
+  };
+
   return (
-    <div className="mt-2 w-full">
-      <label htmlFor="active-farm" className="mb-1 block text-[10px] font-bold uppercase tracking-[0.11em] text-stone-400">Switch farm</label>
-      <div className="relative">
-        <select
-          id="active-farm"
-          value={activeFarmId}
-          disabled={pending}
-          onChange={(event) => startTransition(async () => {
-            const result = await switchActiveFarmAction(event.target.value);
-            if (result.ok) {
-              router.replace(result.nextPath ?? "/dashboard");
-              router.refresh();
-            }
-          })}
-          className="min-h-10 w-full appearance-none rounded-xl border border-stone-200 bg-stone-50 px-3 pr-10 text-sm font-semibold text-stone-800 shadow-sm transition-colors hover:border-emerald-200 hover:bg-emerald-50/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 disabled:cursor-wait disabled:opacity-60"
+    <div className="relative px-3 py-3">
+      <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-[linear-gradient(135deg,#fbfff7,#f0fae9)] p-3 shadow-[0_8px_22px_rgba(41,76,20,0.06)]">
+        <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-[#98cf43] text-xl font-bold text-[#245110] shadow-sm">
+          {activeFarm.name.slice(0, 1).toUpperCase()}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-medium text-stone-500">Poultry Farm</p>
+          <p className="truncate text-base font-bold text-stone-900">{activeFarm.name}</p>
+          <p className="mt-0.5 flex items-center gap-1.5 text-xs font-semibold text-emerald-700"><span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />Active farm</p>
+        </div>
+        <button
+          type="button"
+          aria-label={`Switch from ${activeFarm.name}`}
+          aria-expanded={open}
+          aria-controls="farm-switcher-menu"
+          onClick={() => setOpen((value) => !value)}
+          className="grid size-10 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-800 transition-colors hover:bg-emerald-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 active:scale-95"
         >
-          <option value={activeFarmId}>{farms.find((farm) => farm.id === activeFarmId)?.name ?? "Current farm"}</option>
-          {farms.filter((farm) => farm.id !== activeFarmId).map((farm) => <option key={farm.id} value={farm.id}>{farm.name} · {farm.role}</option>)}
-        </select>
-        <ChevronsUpDown aria-hidden="true" size={16} strokeWidth={1.8} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-500" />
+          {open ? <ChevronDown size={20} strokeWidth={2} /> : <ArrowLeftRight size={20} strokeWidth={1.9} />}
+        </button>
       </div>
+
+      {open && (
+        <div id="farm-switcher-menu" role="menu" aria-label="Choose active farm" className="absolute left-3 right-3 top-[calc(100%-2px)] z-50 overflow-hidden rounded-2xl border border-stone-200 bg-white p-2 shadow-[0_18px_36px_rgba(41,76,20,0.16)]">
+          {farms.map((farm) => {
+            const selected = farm.id === activeFarmId;
+            return (
+              <button
+                key={farm.id}
+                type="button"
+                role="menuitemradio"
+                aria-checked={selected}
+                disabled={pending}
+                onClick={() => selectFarm(farm.id)}
+                className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-3 text-left transition-colors ${selected ? "bg-emerald-50 text-emerald-950" : "text-stone-700 hover:bg-stone-50"} disabled:cursor-wait disabled:opacity-60`}
+              >
+                <span className={`grid size-8 shrink-0 place-items-center rounded-lg text-xs font-bold ${selected ? "bg-emerald-100 text-emerald-800" : "bg-stone-100 text-stone-600"}`}>{farm.name.slice(0, 1).toUpperCase()}</span>
+                <span className="min-w-0 flex-1 truncate text-sm font-semibold">{farm.name}</span>
+                {pending && !selected ? <LoaderCircle className="animate-spin text-emerald-700" size={17} /> : selected ? <Check className="text-emerald-700" size={19} strokeWidth={2.4} /> : null}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <p className="sr-only" aria-live="polite">{pending ? "Switching farm" : ""}</p>
     </div>
   );
 }
