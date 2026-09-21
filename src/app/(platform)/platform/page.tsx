@@ -1,0 +1,13 @@
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { Card } from "@/components/ui/card";
+
+type FarmSummary = { farm_id: string; farm_name: string; account_status: string; onboarding_percentage: number };
+
+export default async function PlatformOverview() {
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("platform_get_farm_summaries");
+  const farms = (data ?? []) as FarmSummary[];
+  const counts = { total: farms.length, invited: farms.filter((farm) => farm.account_status === "invited").length, onboarding: farms.filter((farm) => farm.account_status === "onboarding").length, active: farms.filter((farm) => farm.account_status === "active").length };
+  return <div><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-semibold text-emerald-800">Control plane</p><h1 className="mt-1 text-3xl font-bold tracking-tight">HabFarms Platform</h1><p className="mt-2 text-stone-600">Customer tenancy, owner invitations, and onboarding—not farm operations.</p></div><Link href="/platform/farms/new" className="inline-flex min-h-11 items-center rounded-xl bg-emerald-800 px-4 font-semibold text-white">Create farm</Link></div><div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{[["Customer farms", counts.total], ["Invited", counts.invited], ["Onboarding", counts.onboarding], ["Active", counts.active]].map(([label, value]) => <Card key={String(label)} className="p-5"><p className="text-sm text-stone-500">{label}</p><p className="mt-2 text-3xl font-bold">{value}</p></Card>)}</div><Card className="mt-7 p-6"><div className="flex items-center justify-between gap-3"><div><h2 className="font-semibold">Needs attention</h2><p className="mt-1 text-sm text-stone-600">Pending invitations and incomplete onboarding need follow-up.</p></div><Link href="/platform/farms" className="text-sm font-semibold text-emerald-800">View farms</Link></div>{farms.filter((farm) => farm.account_status !== "active").length ? <div className="mt-4 divide-y">{farms.filter((farm) => farm.account_status !== "active").slice(0, 5).map((farm) => <Link key={farm.farm_id} href={`/platform/farms/${farm.farm_id}`} className="flex items-center justify-between gap-3 py-3 text-sm"><span className="font-medium">{farm.farm_name}</span><span className="capitalize text-stone-600">{farm.account_status} · {farm.onboarding_percentage}%</span></Link>)}</div> : <p className="mt-4 rounded-xl bg-stone-50 p-4 text-sm text-stone-600">Nothing needs attention. Create your first customer farm when you are ready.</p>}</Card></div>;
+}

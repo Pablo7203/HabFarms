@@ -19,3 +19,23 @@ export async function getCurrentAppContext(): Promise<AppContext | null> {
 export async function requireAuth() { const user = await getCurrentUser(); if (!user) redirect("/login"); return user; }
 export async function requireAppContext() { await requireAuth(); const context = await getCurrentAppContext(); if (!context) redirect("/onboarding"); return context; }
 export async function requireRole(roles: FarmRole[]) { const context = await requireAppContext(); if (!roles.includes(context.membership.role)) redirect("/dashboard"); return context; }
+
+export async function requirePlatformAdmin() {
+  const user = await requireAuth();
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("is_platform_admin");
+  if (error || !data) redirect("/dashboard");
+  return user;
+}
+
+export async function getCurrentFarmAccount() {
+  const context = await getCurrentAppContext();
+  if (!context) return null;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("farm_accounts")
+    .select("farm_id,account_status,primary_owner_user_id")
+    .eq("farm_id", context.farm.id)
+    .maybeSingle();
+  return data ? { context, account: data } : null;
+}

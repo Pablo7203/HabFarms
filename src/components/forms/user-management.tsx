@@ -237,7 +237,7 @@ export function AcceptInvitationForm({
       </div>
       {result?.ok ? (
         <Link
-          href="/dashboard"
+          href="/onboarding"
           className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-emerald-700 px-4 font-semibold text-white"
         >
           Continue to HabFarms
