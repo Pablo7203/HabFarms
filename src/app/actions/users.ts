@@ -76,7 +76,8 @@ export async function acceptInvitationAction(input: unknown): Promise<ActionResu
   if (error || !member) return { ok: false, message: "This invitation is no longer valid." };
   const farmId = (Array.isArray(member) ? member[0] : member).farm_id as string;
   (await cookies()).set("habfarms_active_farm", farmId, { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
-  const { data: account } = await supabase.from("farm_accounts").select("account_status,primary_owner_user_id").eq("farm_id", farmId).maybeSingle();
+  const { data: accountRows } = await supabase.rpc("get_my_farm_access", { target_farm: farmId });
+  const account = accountRows?.[0];
   const nextPath = account?.account_status === "onboarding" && account.primary_owner_user_id === user.id ? "/onboarding" : "/dashboard";
 
   revalidatePath("/settings/users");

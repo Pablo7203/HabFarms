@@ -48,10 +48,22 @@ export async function getCurrentFarmAccount() {
   const context = await getCurrentAppContext();
   if (!context) return null;
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("farm_accounts")
-    .select("farm_id,account_status,primary_owner_user_id")
-    .eq("farm_id", context.farm.id)
-    .maybeSingle();
-  return data ? { context, account: data } : null;
+  const { data } = await supabase.rpc("get_my_farm_access", { target_farm: context.farm.id });
+  const account = data?.[0];
+  return account ? {
+    context,
+    account: {
+      farm_id: account.farm_id,
+      account_status: account.account_status,
+      primary_owner_user_id: account.primary_owner_user_id,
+    },
+    accessMode: account.access_mode as "full" | "onboarding" | "blocked",
+    subscription: {
+      status: account.subscription_status as string | null,
+      planName: account.plan_name as string | null,
+      billingCycle: account.billing_cycle as string | null,
+      trialEndsAt: account.trial_ends_at as string | null,
+      graceEndsAt: account.grace_ends_at as string | null,
+    },
+  } : null;
 }
