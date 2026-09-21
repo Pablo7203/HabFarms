@@ -26,8 +26,9 @@ import {
 import { logoutAction } from "@/app/actions/auth";
 import { ChickenIcon } from "@/components/ui/chicken-icon";
 import { NotificationBell } from "@/components/layout/notification-bell";
+import { FarmSwitcher } from "@/components/layout/farm-switcher";
 import { cn } from "@/lib/utils";
-import type { AppContext } from "@/types/domain";
+import type { AppContext, FarmChoice } from "@/types/domain";
 
 const returnDestination = (pathname: string) => {
   const destinations = [
@@ -56,9 +57,11 @@ const returnDestination = (pathname: string) => {
 
 export function AppShell({
   context,
+  farms,
   children,
 }: {
   context: AppContext;
+  farms: FarmChoice[];
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -125,6 +128,7 @@ export function AppShell({
           <p className="max-w-40 truncate font-semibold text-stone-900">
             {context.farm.name}
           </p>
+          <FarmSwitcher farms={farms} activeFarmId={context.farm.id} />
         </div>
       </div>
       <nav

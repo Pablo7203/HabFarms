@@ -5,6 +5,7 @@ export interface AppContext {
   membership: { id: string; role: FarmRole; farm_id: string };
   farm: { id: string; name: string; currency: string; timezone: string; crate_size: number; feed_bag_size_kg: number; opening_cash_balance: number };
 }
+export interface FarmChoice { id: string; name: string; role: FarmRole; }
 export interface FarmSettings { default_egg_price_per_crate: number; default_loose_egg_price: number; feed_alert_warning_days: number; feed_alert_critical_days: number; average_feed_days_window: number }
 export interface Flock { id: string; farm_id: string; flock_name: string; batch_reference: string | null; breed: string | null; house_pen: string | null; start_date: string; initial_birds: number; age_at_arrival_weeks: number | null; source: string | null; status: "active" | "closed" | "sold" | "culled"; notes: string | null }
 export interface FlockStatus { flock_id: string; farm_id: string; flock_name: string; initial_birds: number; total_in: number; total_out: number; current_live_birds: number; status: Flock["status"] }

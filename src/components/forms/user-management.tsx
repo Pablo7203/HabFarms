@@ -1,6 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   acceptInvitationAction,
   inviteUserAction,
@@ -192,6 +192,7 @@ export function AcceptInvitationForm({
   const [password, setPassword] = useState(""),
     [result, setResult] = useState<Result | null>(null),
     [pending, start] = useTransition();
+  const router = useRouter();
   return (
     <form
       className="rounded-xl border bg-white p-5"
@@ -210,7 +211,9 @@ export function AcceptInvitationForm({
               return;
             }
           }
-          setResult(await acceptInvitationAction({ invitationId: id }));
+          const accepted = await acceptInvitationAction({ invitationId: id });
+          setResult(accepted);
+          if (accepted.ok && accepted.nextPath) router.replace(accepted.nextPath);
         });
       }}
     >
@@ -235,14 +238,7 @@ export function AcceptInvitationForm({
       <div className="mt-4">
         <Notice result={result} />
       </div>
-      {result?.ok ? (
-        <Link
-          href="/onboarding"
-          className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-emerald-700 px-4 font-semibold text-white"
-        >
-          Continue to HabFarms
-        </Link>
-      ) : (
+      {result?.ok ? <p className="mt-4 text-sm font-medium text-emerald-800">Opening your farm…</p> : (
         <button
           disabled={pending}
           className="mt-4 min-h-11 w-full rounded-lg bg-emerald-700 px-4 font-semibold text-white disabled:opacity-60"

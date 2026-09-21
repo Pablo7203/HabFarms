@@ -1,10 +1,21 @@
 "use server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema } from "@/lib/validation/auth";
 import { userMessage } from "@/lib/utils";
-export type ActionResult = { ok: boolean; message: string; id?: string };
+export type ActionResult = { ok: boolean; message: string; id?: string; nextPath?: string };
+
+export async function switchActiveFarmAction(farmId: string): Promise<ActionResult> {
+  const user = await createClient().then(async (supabase) => (await supabase.auth.getUser()).data.user);
+  if (!user) return { ok: false, message: "Sign in to switch farms." };
+  const supabase = await createClient();
+  const { data: membership } = await supabase.from("farm_members").select("farm_id").eq("farm_id", farmId).eq("user_id", user.id).eq("active", true).maybeSingle();
+  if (!membership) return { ok: false, message: "You do not have access to that farm." };
+  (await cookies()).set("habfarms_active_farm", farmId, { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
+  return { ok: true, message: "Farm switched." };
+}
 
 export async function loginAction(input: unknown): Promise<ActionResult> {
   const parsed = loginSchema.safeParse(input); if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
