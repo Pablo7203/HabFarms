@@ -1,5 +1,11 @@
 # Operations
 
+## Platform management dashboard
+
+Platform staff use `/platform` to follow customer-account, subscription, and HabFarms subscription-payment health. The dashboard and its trial, renewal, collection, and portfolio drill-downs are control-plane only. Amounts are grouped by their recorded currency; operators must not combine currencies manually in the product.
+
+Use the existing subscription detail workflow to prepare a billing period, record a verified manual payment, void an incorrect payment, extend a trial/grace period, or apply a manual suspension/reactivation. The dashboard is not a payment gateway and does not initiate customer charges. If an item needs farm-operational investigation, contact the customer through approved support channels rather than attempting to access tenant records through Platform Admin.
+
 ## Local work
 
 ```bash

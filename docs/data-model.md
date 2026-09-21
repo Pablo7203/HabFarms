@@ -13,3 +13,4 @@
 - **Reporting:** secure RPCs derive operational, profitability, and cash summaries from transaction sources.
 - **Farm performance summaries:** `get_daily_farm_summary` and `get_weekly_farm_summary` are derived, role-aware summary layers. They do not store editable KPI snapshots.
 - **Audit:** append-only `audit_logs` capture important mutations atomically without replacing source ledgers.
+- **Platform analytics:** Platform-only RPCs derive SaaS portfolio, dashboard, trial, renewal, and subscription-collections views from tenant-account, subscription, billing-period, Platform-payment, invitation, onboarding, membership, and Platform-audit records. They never query farm operational or farm-financial ledgers and preserve each currency separately.

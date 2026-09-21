@@ -75,3 +75,31 @@ Subscription status is one of `trialing`, `active`, `past_due`, `grace_period`, 
 ## Required staging UAT
 
 Before approving a Phase 2 release, test: plan creation/deactivation; trial conversion; monthly/annual period dates (including end-of-month); partial/full/duplicate/overpayment/void payment paths; grace and suspension/re-activation; safe account-status behaviour; Worker financial privacy; direct URL/RLS denial; a manual reconcile call with staging-only credentials; and responsive views for platform billing and customer subscription screens. No production deployment is part of this work.
+
+# Platform Admin Phase 3 — management intelligence
+
+## Dashboard definitions
+
+The Platform dashboard at `/platform` is a management view over control-plane data only. Its metrics are derived by restricted database functions rather than browser-side aggregation:
+
+- **Total farms:** customer accounts that are not closed.
+- **Active farms:** account is active, onboarding is completed, and the current subscription is active.
+- **Onboarding, trial, past-due, grace, and suspended farms:** the corresponding account or current subscription lifecycle state.
+- **Unique active users:** distinct active `farm_members` belonging to active or onboarding customer accounts.
+- **MRR:** monthly equivalent of active subscriptions using each subscription's stored price snapshot. Annual prices are divided by twelve. Results are grouped by currency; HabFarms does not invent foreign-exchange conversion.
+- **Cash collected this month:** posted Platform subscription payments in the calendar month, grouped by currency.
+- **Outstanding now:** due billing-period amount less posted allocations, grouped by currency.
+
+`platform_attention_items` surfaces deterministic follow-up work: trials ending in seven days, overdue receivables, grace ending in three days, suspended farms, failed or pending owner invitations, and incomplete onboarding. Each card drills into an existing customer, subscription, payment, or invitation workflow.
+
+## Portfolio and Customer 360
+
+`/platform/farms` uses a paginated server-side portfolio function and supports search by farm, owner, email, or phone plus account/subscription lifecycle filters. `/platform/farms/[farmId]` is a Customer 360 view for account identity, onboarding, invitation, subscription snapshot, billing periods, Platform payments, and Platform audit events. It never displays production, egg inventory, sales, farm expenses, feed costs, health records, customer debt, cash ledger, or farm profitability.
+
+Dedicated Platform views provide trial follow-up (`/platform/trials`), upcoming renewal obligations (`/platform/renewals`), and Platform subscription receivables (`/platform/collections`). They do not create automatic payment collection or customer-facing payment links.
+
+## Security and release rules
+
+`platform_dashboard_summary`, `platform_attention_items`, `platform_farm_portfolio`, `platform_trial_portfolio`, `platform_upcoming_renewals`, and `platform_subscription_collections` are `SECURITY DEFINER` functions with a fixed search path. Each checks `is_platform_admin()`, is revoked from public and anonymous roles, and is executable only by authenticated users. They access account, subscription, billing, payment, invitation, onboarding, membership, and platform audit tables only.
+
+Phase 3 is not public signup, self-service billing, automatic payment collection, tenant support impersonation, or a farm-data analytics feature. It requires local migration replay, database lint, application checks, staging deployment, and direct role/privacy UAT before approval. Production remains intentionally undeployed.

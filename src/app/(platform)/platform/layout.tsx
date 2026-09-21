@@ -1,14 +1,17 @@
 import { requirePlatformAdmin } from "@/lib/auth/context";
 import Link from "next/link";
-import { Building2, ClipboardList, CreditCard, LayoutDashboard, ReceiptText, ScrollText, Settings } from "lucide-react";
+import { Building2, ClipboardList, Clock3, CreditCard, LayoutDashboard, ReceiptText, RefreshCw, ScrollText, Settings } from "lucide-react";
 
 const navigation = [
   { href: "/platform", label: "Overview", icon: LayoutDashboard },
   { href: "/platform/farms", label: "Farms", icon: Building2 },
+  { href: "/platform/trials", label: "Trials", icon: Clock3 },
   { href: "/platform/invitations", label: "Invitations", icon: ClipboardList },
   { href: "/platform/audit", label: "Audit", icon: ScrollText },
   { href: "/platform/plans", label: "Plans", icon: Settings },
   { href: "/platform/subscriptions", label: "Subscriptions", icon: CreditCard },
+  { href: "/platform/collections", label: "Collections", icon: ReceiptText },
+  { href: "/platform/renewals", label: "Renewals", icon: RefreshCw },
   { href: "/platform/payments", label: "Payments", icon: ReceiptText },
 ];
 
