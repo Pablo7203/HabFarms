@@ -10,4 +10,6 @@ An incident includes suspected corruption, cross-farm exposure, destructive oper
 6. Test login/onboarding behavior, active memberships, RLS coverage, cross-farm denial, worker financial privacy, audit immutability, `/api/health`, and all Sprint runtime suites.
 7. Promote only after review. Reconfigure allowed Auth URLs and secrets, deploy the matching application version, smoke test, then reopen writes.
 
+For Platform incidents, also preserve `platform_audit_logs`, account/subscription metadata, invitation state, communications, and job-run history. Rebuild the Platform Admin allow-list from immutable Auth UUIDs only; do not grant Platform access from email text or customer-farm membership.
+
 For a failed migration, keep traffic on the last compatible application, inspect migration logs, restore into a new environment if rollback would be destructive, correct through a new forward migration, and rerun clean resets. For suspected corruption or access issues, preserve evidence and audit events before any correction.

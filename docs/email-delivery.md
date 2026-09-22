@@ -15,6 +15,8 @@ Do not claim production readiness until every item in the verification checklist
 5. Configure Supabase custom SMTP using dashboard secrets, never repository variables. Use a sender such as `HabFarms <no-reply@auth.<owned-domain>>` only after the provider verifies it.
 6. Disable click/open tracking for authentication messages so providers do not rewrite one-time links.
 
+For Phase 4 lifecycle messages, configure the same approved transactional provider as `RESEND_API_KEY` and `PLATFORM_EMAIL_FROM` in the application host only after sender verification. The Platform Operations console records provider acceptance as **sent**, provider request failures as **failed**, and unconfigured-provider work as **pending**. It does not treat a provider acceptance as proof of inbox delivery.
+
 No monitored support or Reply-To mailbox has been supplied. Leave Reply-To unset until the operator provides and monitors one; do not imply that a `no-reply` address accepts support requests.
 
 ## Environment URLs

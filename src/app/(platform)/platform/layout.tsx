@@ -1,6 +1,6 @@
 import { requirePlatformAdmin } from "@/lib/auth/context";
 import Link from "next/link";
-import { Building2, ClipboardList, Clock3, CreditCard, LayoutDashboard, ReceiptText, RefreshCw, ScrollText, Settings } from "lucide-react";
+import { Activity, Building2, ClipboardList, Clock3, CreditCard, LayoutDashboard, ReceiptText, RefreshCw, ScrollText, Settings } from "lucide-react";
 
 const navigation = [
   { href: "/platform", label: "Overview", icon: LayoutDashboard },
@@ -13,6 +13,8 @@ const navigation = [
   { href: "/platform/collections", label: "Collections", icon: ReceiptText },
   { href: "/platform/renewals", label: "Renewals", icon: RefreshCw },
   { href: "/platform/payments", label: "Payments", icon: ReceiptText },
+  { href: "/platform/operations", label: "Operations", icon: Activity },
+  { href: "/platform/settings", label: "Settings", icon: Settings },
 ];
 
 export default async function PlatformLayout({ children }: { children: React.ReactNode }) {

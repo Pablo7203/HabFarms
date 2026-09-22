@@ -8,12 +8,19 @@
 - [ ] Review Vercel environment variables; confirm the service-role key is server-only and limited to Auth invitation delivery/resend
 - [ ] Confirm Supabase Site URL, callback, confirmation, and password-reset URLs
 - [ ] Complete staging deployment and approval
+- [ ] Confirm the production Supabase migration delta from the linked production project; do not infer it from staging
+- [ ] Bootstrap the approved Platform Admin by immutable Supabase Auth UUID and verify this does not create a customer-farm membership
+- [ ] Configure and verify the controlled transactional sender, `RESEND_API_KEY`, `PLATFORM_EMAIL_FROM`, and `PLATFORM_RECONCILE_SECRET` as host secrets only
+- [ ] Record the Platform lifecycle scheduler owner, cadence, alert recipient, and first controlled run; do not enable a cron merely because code exists
 
 ## Deploy
 
 - [ ] Apply reviewed database migration in a controlled window
 - [ ] Deploy the matching application revision
 - [ ] Verify `/api/health`, login, onboarding protection, and dashboard
+- [ ] Verify `/platform` for a Platform Admin and denial for Farm Admin, Manager, Worker, and ordinary users
+- [ ] Verify Platform exports contain only customer/account/subscription/payment metadata—not tenant operational or financial records
+- [ ] Verify one lifecycle job, provider-accepted message, provider failure/retry, Platform settings change, internal note, and audit event
 
 ## Smoke test
 
@@ -42,6 +49,7 @@
 - [ ] Confirm audit events and no cross-farm leakage
 - [ ] Confirm managed backup status and next logical export/restore-test date
 - [ ] Record release owner, time, migration version, smoke-test evidence, and rollback decision
+- [ ] Record the next restore drill, lifecycle-job review, delivery/bounce review, and customer-onboarding check-in dates
 # Post-v1.0 farm performance release gate
 
 - [ ] Confirm staging migration 017 is applied and no production migration is applied.
