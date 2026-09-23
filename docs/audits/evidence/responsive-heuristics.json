@@ -1,0 +1,307 @@
+{
+  "mobile": [
+    {
+      "route": "dashboard",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Poultry Farm Management",
+        "h1": [
+          "Evelyn Farms"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 8
+      }
+    },
+    {
+      "route": "production",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Daily Production | Poultry Farm",
+        "h1": [
+          "Daily production"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "flocks",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Flocks | Poultry Farm",
+        "h1": [
+          "Flocks"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 4
+      }
+    },
+    {
+      "route": "rearing",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Rearing batches | Poultry Farm",
+        "h1": [
+          "Rearing"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "rearing/reports",
+      "loading": true,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "title": "Rearing reports | Poultry Farm",
+        "h1": [],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "feed",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Poultry Farm Management",
+        "h1": [
+          "Feed inventory"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "feed/planning",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Poultry Farm Management",
+        "h1": [
+          "Feed planning"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "health",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Poultry Farm Management",
+        "h1": [
+          "Health records"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 2
+      }
+    },
+    {
+      "route": "sales",
+      "error": "Error: Timed out waiting for tab 7 to navigate to https://habfarms-staging.vercel.app/sales."
+    },
+    {
+      "route": "collections",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Poultry Farm Management",
+        "h1": [
+          "Collections"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "expenses",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Expenses | Poultry Farm",
+        "h1": [
+          "Expenses"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 2
+      }
+    },
+    {
+      "route": "reports",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Poultry Farm Management",
+        "h1": [
+          "Reports"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "reports/daily-summary",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Poultry Farm Management",
+        "h1": [
+          "Daily farm summary"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    },
+    {
+      "route": "settings",
+      "loading": false,
+      "metrics": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "title": "Settings | Poultry Farm",
+        "h1": [
+          "Farm settings"
+        ],
+        "missingInputLabels": 1,
+        "unlabelledButtons": 0,
+        "smallTargets": 1
+      }
+    }
+  ],
+  "viewports": [
+    {
+      "requested": {
+        "width": 360,
+        "height": 800
+      },
+      "observed": {
+        "width": 360,
+        "scrollWidth": 345,
+        "height": 800,
+        "scrollHeight": 1758,
+        "overflow": false
+      }
+    },
+    {
+      "requested": {
+        "width": 375,
+        "height": 812
+      },
+      "observed": {
+        "width": 375,
+        "scrollWidth": 360,
+        "height": 812,
+        "scrollHeight": 1758,
+        "overflow": false
+      }
+    },
+    {
+      "requested": {
+        "width": 390,
+        "height": 844
+      },
+      "observed": {
+        "width": 390,
+        "scrollWidth": 375,
+        "height": 844,
+        "scrollHeight": 1738,
+        "overflow": false
+      }
+    },
+    {
+      "requested": {
+        "width": 768,
+        "height": 1024
+      },
+      "observed": {
+        "width": 768,
+        "scrollWidth": 753,
+        "height": 1024,
+        "scrollHeight": 1168,
+        "overflow": false
+      }
+    },
+    {
+      "requested": {
+        "width": 1024,
+        "height": 768
+      },
+      "observed": {
+        "width": 1024,
+        "scrollWidth": 1009,
+        "height": 768,
+        "scrollHeight": 1184,
+        "overflow": false
+      }
+    },
+    {
+      "requested": {
+        "width": 1440,
+        "height": 900
+      },
+      "observed": {
+        "width": 1440,
+        "scrollWidth": 1425,
+        "height": 900,
+        "scrollHeight": 1164,
+        "overflow": false
+      }
+    },
+    {
+      "requested": {
+        "width": 1920,
+        "height": 1080
+      },
+      "observed": {
+        "width": 1920,
+        "scrollWidth": 1905,
+        "height": 1080,
+        "scrollHeight": 1164,
+        "overflow": false
+      }
+    }
+  ]
+}

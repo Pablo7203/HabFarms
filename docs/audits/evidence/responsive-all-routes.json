@@ -1,0 +1,2792 @@
+[
+  {
+    "route": "dashboard",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "production",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "flocks",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "rearing",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "eggs",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "feed",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "feed/planning",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "feed/materials",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "feed/setup",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "feed/make",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 4,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 4,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 4,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 4,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 4,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 4,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 4,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "feed/production-history",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 390,
+        "scroll": 390,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1024,
+        "scroll": 1024,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "feed/suppliers",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 390,
+        "scroll": 390,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1024,
+        "scroll": 1024,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "health",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "health/reminders",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1024,
+        "scroll": 1024,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "sales",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "collections",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "customers",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "payables",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "expenses",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "cash-flow",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "reports",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "reports/daily-summary",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "reports/weekly-summary",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "reports/profitability",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "settings",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "settings/users",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1024,
+        "scroll": 1024,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "settings/audit",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "settings/subscription",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 390,
+        "scroll": 390,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 768,
+        "scroll": 768,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1024,
+        "scroll": 1024,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1440,
+        "scroll": 1440,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1920,
+        "scroll": 1920,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "rearing/reports",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  },
+  {
+    "route": "rearing/5f4cf036-13f0-41ac-a59e-bfc4647d42b8",
+    "loading": true,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 345,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 1
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 360,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 1
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 375,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 1
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 753,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 1
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 1
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 1
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 1
+      }
+    ]
+  },
+  {
+    "route": "platform",
+    "loading": false,
+    "checks": [
+      {
+        "size": {
+          "width": 360,
+          "height": 800
+        },
+        "viewport": 360,
+        "client": 345,
+        "scroll": 1354,
+        "overflow": true,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 375,
+          "height": 812
+        },
+        "viewport": 375,
+        "client": 360,
+        "scroll": 1354,
+        "overflow": true,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "viewport": 390,
+        "client": 375,
+        "scroll": 1354,
+        "overflow": true,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 768,
+          "height": 1024
+        },
+        "viewport": 768,
+        "client": 753,
+        "scroll": 1354,
+        "overflow": true,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1024,
+          "height": 768
+        },
+        "viewport": 1024,
+        "client": 1009,
+        "scroll": 1009,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1440,
+          "height": 900
+        },
+        "viewport": 1440,
+        "client": 1425,
+        "scroll": 1425,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      },
+      {
+        "size": {
+          "width": 1920,
+          "height": 1080
+        },
+        "viewport": 1920,
+        "client": 1905,
+        "scroll": 1905,
+        "overflow": false,
+        "unlabelledVisible": 0,
+        "unlabelledButtons": 0
+      }
+    ]
+  }
+]

@@ -1,6 +1,48 @@
 import { requireRole } from "@/lib/auth/context";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/card";
-import { farmToday } from "@/lib/farm-date";
+import { farmToday, formatFarmDate } from "@/lib/farm-date";
 import { FeedingPlanForm } from "@/components/forms/planning-forms";
-export default async function FeedPlanning(){const c=await requireRole(["admin","manager"]),s=await createClient(),[{data:plans},{data:flocks},{data:types}]=await Promise.all([s.from("v_flock_feed_plan_daily").select("*,flocks(flock_name),feed_types(name)").eq("farm_id",c.farm.id).order("effective_from",{ascending:false}),s.from("v_current_flock_status").select("flock_id,flock_name,current_live_birds").eq("farm_id",c.farm.id).eq("status","active"),s.from("feed_types").select("id,name").eq("farm_id",c.farm.id).eq("active",true)]);return <div><h1 className="text-3xl font-bold">Feed planning</h1><p className="mt-2 text-stone-600">Set an effective-dated daily feed target for each flock. Week 16 and older flocks may use the suggested 120 g target.</p><Card className="mt-6 p-5"><FeedingPlanForm flocks={(flocks??[]).map(x=>({id:x.flock_id,name:x.flock_name,birds:x.current_live_birds}))} types={types??[]} today={farmToday(c.farm.timezone)}/></Card><Card className="mt-6 overflow-hidden"><div className="grid grid-cols-5 gap-3 bg-stone-50 p-4 text-xs font-semibold text-stone-600"><span>Flock</span><span>Feed</span><span>Target</span><span>Birds</span><span>Target per day</span></div>{plans?.map(x=><div key={x.id} className="grid grid-cols-5 gap-3 border-t p-4 text-sm"><span>{x.flocks?.flock_name}</span><span>{x.feed_types?.name}</span><span>{x.grams_per_bird_per_day} g</span><span>{x.live_birds_at_effective_from}</span><span>{x.target_kg_per_day} kg</span></div>)}{!plans?.length&&<p className="p-6 text-sm text-stone-500">No feeding plans have been configured.</p>}</Card></div>}
+import { feedForecastBasisLabel, formatFeedRunway } from "@/lib/feed-forecast";
+
+export default async function FeedPlanning() {
+  const context = await requireRole(["admin", "manager"]);
+  const supabase = await createClient();
+  const [{ data: plans }, { data: flocks }, { data: types }, { data: forecasts }] = await Promise.all([
+    supabase.from("v_flock_feed_plan_daily").select("*,flocks(flock_name),feed_types(name)").eq("farm_id", context.farm.id).order("effective_from", { ascending: false }),
+    supabase.from("v_current_flock_status").select("flock_id,flock_name,current_live_birds").eq("farm_id", context.farm.id).eq("status", "active"),
+    supabase.from("feed_types").select("id,name").eq("farm_id", context.farm.id).eq("active", true),
+    supabase.from("v_feed_forecast").select("feed_type_id,feed_type_name,quantity_kg,days_remaining,estimated_finish_date,planned_daily_demand,average_daily_consumption,forecast_basis,alert_level").eq("farm_id", context.farm.id).order("days_remaining", { ascending: true, nullsFirst: false }),
+  ]);
+
+  return <div>
+    <h1 className="text-3xl font-bold">Feed planning</h1>
+    <p className="mt-2 text-stone-600">Set effective-dated daily targets for layer flocks. Rearing batch targets are managed on each batch; both are included in the shared stock forecast.</p>
+    <Card className="mt-6 p-5"><FeedingPlanForm flocks={(flocks ?? []).map((flock) => ({ id: flock.flock_id, name: flock.flock_name, birds: flock.current_live_birds }))} types={types ?? []} today={farmToday(context.farm.timezone)}/></Card>
+
+    <Card className="mt-6 overflow-hidden">
+      <div className="border-b border-stone-100 p-5"><h2 className="font-semibold">Configured layer-flock plans</h2><p className="mt-1 text-sm text-stone-500">Targets are farm-defined; changes do not alter past consumption.</p></div>
+      <div className="grid grid-cols-2 gap-3 bg-stone-50 p-4 text-xs font-semibold text-stone-600 sm:grid-cols-5"><span>Flock</span><span>Feed</span><span>Target</span><span>Birds at start</span><span>Target per day</span></div>
+      {plans?.map((plan) => <div key={plan.id} className="grid grid-cols-2 gap-3 border-t border-stone-100 p-4 text-sm sm:grid-cols-5"><span>{plan.flocks?.flock_name}</span><span>{plan.feed_types?.name}</span><span>{plan.grams_per_bird_per_day} g</span><span>{plan.live_birds_at_effective_from}</span><span>{plan.target_kg_per_day} kg</span></div>)}
+      {!plans?.length && <p className="p-6 text-sm text-stone-500">No layer-flock feeding plans have been configured.</p>}
+    </Card>
+
+    <Card className="mt-6 overflow-hidden">
+      <div className="border-b border-stone-100 p-5"><h2 className="font-semibold">Farm-wide forecast &amp; stock runway</h2><p className="mt-1 text-sm text-stone-500">Demand combines today’s effective plans for active layer flocks and rearing batches. Where no current plan exists, recent actual consumption is used as a fallback.</p></div>
+      <div className="grid grid-cols-2 gap-3 bg-stone-50 p-4 text-xs font-semibold text-stone-600 sm:grid-cols-5"><span>Feed type</span><span>On hand</span><span>Expected / day</span><span>Stock runway</span><span>Expected to run out</span></div>
+      {forecasts?.map((forecast) => {
+        const quantity = Number(forecast.quantity_kg ?? 0);
+        const demand = Number(forecast.planned_daily_demand ?? 0) > 0 ? Number(forecast.planned_daily_demand) : Number(forecast.average_daily_consumption ?? 0);
+        return <div key={forecast.feed_type_id} className="grid grid-cols-2 gap-3 border-t border-stone-100 p-4 text-sm sm:grid-cols-5">
+          <span className="font-medium">{forecast.feed_type_name}<small className="mt-1 block text-xs font-normal text-stone-500">{feedForecastBasisLabel(forecast.forecast_basis)}</small></span>
+          <span>{quantity.toLocaleString()} kg</span>
+          <span>{demand > 0 ? `${demand.toFixed(3)} kg` : "Not available"}</span>
+          <span className="font-semibold">{formatFeedRunway(forecast.days_remaining == null ? null : Number(forecast.days_remaining), quantity)}</span>
+          <span>{forecast.estimated_finish_date ? formatFarmDate(forecast.estimated_finish_date) : "Not estimated"}</span>
+        </div>;
+      })}
+      {!forecasts?.length && <p className="p-6 text-sm text-stone-500">No active feed types to forecast yet.</p>}
+      <p className="border-t border-stone-100 bg-white p-4 text-xs leading-5 text-stone-500">Runway is available stock ÷ expected daily demand. It is an estimate—not a reservation—and only posted feed-consumption movements change stock. Each feed product is forecast independently.</p>
+    </Card>
+  </div>;
+}

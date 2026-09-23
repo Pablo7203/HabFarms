@@ -33,6 +33,7 @@ import type { AppContext, FarmChoice } from "@/types/domain";
 const returnDestination = (pathname: string) => {
   const destinations = [
     ["/flocks/", "/flocks", "Flocks"],
+    ["/rearing/", "/rearing", "Rearing"],
     ["/production/", "/production", "Daily production"],
     ["/health/reminders", "/health", "Health"],
     ["/health/", "/health", "Health"],
@@ -73,6 +74,7 @@ export function AppShell({
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/production", label: "Daily Production", icon: NotebookPen },
     { href: "/flocks", label: "Flocks", icon: ChickenIcon },
+    { href: "/rearing", label: "Rearing", icon: ChickenIcon },
     { href: "/eggs", label: "Eggs", icon: Egg },
     { href: "/feed", label: "Feed", icon: Wheat },
     ...(commercial
@@ -110,7 +112,7 @@ export function AppShell({
   ];
   const navigationGroups = [
     { label: "Overview", items: links.filter((link) => link.href === "/dashboard") },
-    { label: "Farm operations", items: links.filter((link) => ["/production", "/flocks", "/eggs", "/health", "/health/reminders"].includes(link.href)) },
+    { label: "Farm operations", items: links.filter((link) => ["/production", "/flocks", "/rearing", "/eggs", "/health", "/health/reminders"].includes(link.href)) },
     { label: "Feed operations", items: links.filter((link) => ["/feed", "/feed/planning", "/feed/materials", "/feed/setup", "/feed/make", "/feed/production-history", "/feed/suppliers"].includes(link.href)) },
     { label: "Sales & customers", items: links.filter((link) => ["/sales", "/collections", "/customers"].includes(link.href)) },
     { label: "Finance", items: links.filter((link) => ["/payables", "/expenses", "/cash-flow", "/reports/profitability"].includes(link.href)) },

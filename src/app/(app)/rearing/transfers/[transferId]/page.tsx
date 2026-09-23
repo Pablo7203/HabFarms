@@ -1,0 +1,30 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowLeft, ArrowRight, CircleCheck, CircleX } from "lucide-react";
+import { ReverseRearingTransferForm } from "@/components/forms/rearing-transfer-form";
+import { requireAppContext } from "@/lib/auth/context";
+import { createClient } from "@/lib/supabase/server";
+import { formatFarmDate } from "@/lib/farm-date";
+import { money } from "@/lib/format";
+import { Card } from "@/components/ui/card";
+
+export const metadata = { title: "Pullet transfer details" };
+
+export default async function RearingTransferDetails({ params }: { params: Promise<{ transferId: string }> }) {
+  const { transferId } = await params, context = await requireAppContext(), supabase = await createClient();
+  const { data, error } = await supabase.rpc("get_rearing_transfer_detail", { target_transfer: transferId });
+  const t = Array.isArray(data) ? data[0] : data;
+  if (error || !t || t.farm_id !== context.farm.id) notFound();
+  const financial = context.membership.role !== "worker", admin = context.membership.role === "admin";
+  return <div className="mx-auto max-w-4xl pb-10">
+    <Link href={`/rearing/${t.source_batch_id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-800"><ArrowLeft size={16}/>Back to source batch</Link>
+    <header className="mt-4 flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-semibold text-emerald-800">Point-of-lay transfer · {t.status}</p><h1 className="mt-1 text-3xl font-bold tracking-tight">Transfer record</h1><p className="mt-2 text-stone-600">{formatFarmDate(t.transfer_date)} · {Number(t.quantity).toLocaleString()} birds</p></div><span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold ${t.status==="posted"?"bg-emerald-100 text-emerald-900":"bg-stone-100 text-stone-700"}`}>{t.status==="posted"?<CircleCheck size={16}/>:<CircleX size={16}/>} {t.status}</span></header>
+    <div className="mt-6 grid gap-5 md:grid-cols-2"><Card className="p-5"><h2 className="font-semibold">Bird movement</h2><div className="mt-4 grid grid-cols-2 gap-4 text-sm"><Info label="Source batch" value={t.source_batch_code} href={`/rearing/${t.source_batch_id}`}/><Info label="Destination flock" value={t.destination_flock_name} href={`/flocks/${t.destination_flock_id}`}/><Info label="Source population" value={`${Number(t.source_birds_before).toLocaleString()} → ${Number(t.source_birds_after).toLocaleString()}`}/><Info label="Destination population" value={`${Number(t.destination_birds_before).toLocaleString()} → ${Number(t.destination_birds_after).toLocaleString()}`}/><Info label="Transfer date" value={formatFarmDate(t.transfer_date)}/><Info label="Quantity" value={`${Number(t.quantity).toLocaleString()} birds`}/></div></Card>
+      <Card className="p-5"><h2 className="font-semibold">Transferred rearing cost</h2>{financial&&t.total_cost_transferred!=null?<><p className="mt-4 text-3xl font-bold tabular-nums">{money(Number(t.total_cost_transferred),context.farm.currency)}</p><dl className="mt-4 space-y-2 text-sm"><div className="flex justify-between gap-3"><dt className="text-stone-500">Unit cost snapshot</dt><dd className="font-medium">{money(Number(t.unit_cost_snapshot),context.farm.currency)} per bird</dd></div><div className="flex justify-between gap-3"><dt className="text-stone-500">Source cost before transfer</dt><dd className="font-medium">{money(Number(t.source_cost_before),context.farm.currency)}</dd></div><div className="flex justify-between gap-3"><dt className="text-stone-500">Remaining source cost</dt><dd className="font-medium">{money(Number(t.remaining_cost_after),context.farm.currency)}</dd></div></dl></>:<p className="mt-4 text-sm text-stone-600">Cost details are restricted to authorized farm financial roles.</p>}<p className="mt-4 border-t border-stone-100 pt-3 text-xs leading-5 text-stone-500">This is an internal management-cost basis only. The transfer is not cash, an expense, a purchase, or a posted biological asset.</p></Card></div>
+    <Card className="mt-5 p-5"><h2 className="font-semibold">Traceability</h2><p className="mt-2 text-sm text-stone-600">The transfer links the source rearing ledger to the layer-f flock movement ledger. Historical rearing mortality, feed, and health records remain on the source batch and are not copied as new flock activity.</p><div className="mt-4 flex flex-wrap gap-3"><Link className="rounded-lg border border-stone-300 px-3 py-2 text-sm font-semibold" href={`/rearing/${t.source_batch_id}`}>Open source batch</Link><Link className="rounded-lg border border-stone-300 px-3 py-2 text-sm font-semibold" href={`/flocks/${t.destination_flock_id}`}>Open destination flock</Link></div><p className="mt-3 text-xs text-stone-500">Recorded {new Date(t.created_at).toLocaleString()} · actor {t.created_by}</p></Card>
+    {t.status==="reversed"&&<Card className="mt-5 border-red-200 p-5"><h2 className="font-semibold text-red-900">Transfer reversed</h2><p className="mt-2 text-sm">{t.reversal_reason}</p><p className="mt-1 text-xs text-stone-500">{t.reversed_at?new Date(t.reversed_at).toLocaleString():""} · {t.reversed_by}</p></Card>}
+    {admin&&t.status==="posted"&&<details className="mt-5 rounded-2xl border border-red-200 bg-red-50/50 p-5"><summary className="cursor-pointer font-semibold text-red-900">Reverse this transfer</summary><p className="mt-2 text-sm text-red-900">Reversal is blocked if later rearing mortality/transfers or destination-flock movements/production depend on this transfer.</p><ReverseRearingTransferForm transferId={transferId}/></details>}
+  </div>;
+}
+
+function Info({ label, value, href }: { label: string; value: string; href?: string }) { return <div><dt className="text-xs text-stone-500">{label}</dt><dd className="mt-1 font-medium">{href?<Link href={href} className="text-emerald-800 underline underline-offset-2">{value}<ArrowRight size={13} className="ml-1 inline"/></Link>:value}</dd></div>; }

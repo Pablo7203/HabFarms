@@ -16,6 +16,13 @@ button:active, a:active { transform: translateY(1px) scale(.99); }
 .data-number { font-variant-numeric: tabular-nums; }
 ::selection { background: #dff2a9; color: #315d17; }
 
+/* Retain historical batch detail, but do not leave dead entry/edit controls
+   available after the batch has no birds or has been closed/transferred. */
+[data-batch-operational="false"] form,
+[data-batch-operational="false"] details { display: none !important; }
+[data-batch-operational="false"] h3:has(+ form) { display: none; }
+[data-batch-editable="false"] a[href$="/edit"] { display: none; }
+
 /* Palette bridge: legacy routes and forms inherit the same calm HabFarms grading. */
 [class~="bg-emerald-700"], [class~="bg-emerald-800"] { background-color: #7fb83b !important; }
 [class~="bg-emerald-600"] { background-color: #98cf43 !important; }

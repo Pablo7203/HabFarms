@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/card";
 import { Pagination, pageWindow } from "@/components/ui/pagination";
 
-type Row = { id: string; record_date: string; health_type: string; flock_name?: string; flocks?: { flock_name: string } | null; product_name: string; reason: string | null; next_due_date: string | null; cost: number };
+type Row = { id: string; record_date: string; health_type: string; flock_name?: string; flocks?: { flock_name: string } | null; rearing_batches?: { batch_code: string } | null; product_name: string; reason: string | null; next_due_date: string | null; cost?: number };
 
 export default async function Health({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const context = await requireAppContext();
@@ -14,8 +14,9 @@ export default async function Health({ searchParams }: { searchParams: Promise<R
   const params = await searchParams;
   const financial = context.membership.role !== "worker";
   const window = pageWindow(params.page);
-  let query = supabase.from("v_upcoming_health_actions").select("*").eq("farm_id", context.farm.id).order("record_date", { ascending: false });
-  if (!params.upcoming) query = supabase.from("health_records").select("*,flocks(flock_name)").eq("farm_id", context.farm.id).eq("status", "active").order("record_date", { ascending: false });
+  const fields = financial ? "*,flocks(flock_name),rearing_batches(batch_code)" : "id,farm_id,flock_id,rearing_batch_id,record_date,health_type,product_name,reason,next_due_date,status,flocks(flock_name),rearing_batches(batch_code)";
+  let query = supabase.from("v_upcoming_health_actions").select(fields).eq("farm_id", context.farm.id).order("record_date", { ascending: false });
+  if (!params.upcoming) query = supabase.from("health_records").select(fields).eq("farm_id", context.farm.id).eq("status", "active").order("record_date", { ascending: false });
   if (params.type) query = query.eq("health_type", params.type);
   if (params.from) query = query.gte("record_date", params.from);
   if (params.to) query = query.lte("record_date", params.to);
@@ -26,7 +27,7 @@ export default async function Health({ searchParams }: { searchParams: Promise<R
 
   return <div className="space-y-7">
     <div className="flex flex-wrap items-end justify-between gap-4">
-      <div><p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">Farm care</p><h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">Health records</h1><p className="mt-2 max-w-xl text-stone-600">Treatments, vaccines and follow-up care across your flocks.</p></div>
+      <div><p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">Farm care</p><h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">Health records</h1><p className="mt-2 max-w-xl text-stone-600">Treatments, vaccines and follow-up care across your layer flocks and rearing batches.</p></div>
       <div className="flex flex-wrap gap-2"><Link href="/health/reminders" className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-stone-300 bg-white px-4 text-sm font-semibold text-stone-700 transition hover:bg-stone-50"><CalendarClock size={17}/>Health schedule</Link><Link href="/health/new" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-800 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-900"><Plus size={18}/>New health record</Link></div>
     </div>
 
@@ -40,7 +41,7 @@ export default async function Health({ searchParams }: { searchParams: Promise<R
       <button className="min-h-11 self-end rounded-xl border border-stone-300 px-5 text-sm font-semibold transition hover:bg-stone-50">Apply filters</button>
     </form>
 
-    <Card className="overflow-hidden"><div className="border-b border-stone-100 px-5 py-4"><h2 className="font-semibold">Care activity</h2><p className="mt-1 text-sm text-stone-500">Open a record for its full treatment and follow-up history.</p></div><div className="divide-y divide-stone-100">{rows.map((row) => <Link key={row.id} href={`/health/${row.id}`} className="grid gap-3 px-5 py-4 transition hover:bg-emerald-50/45 md:grid-cols-[0.9fr_1fr_1.4fr_1fr_auto] md:items-center"><div><p className="text-sm text-stone-500">{row.record_date}</p><p className="mt-1 font-semibold capitalize">{row.health_type.replaceAll("_", " ")}</p></div><p className="font-medium">{row.flock_name ?? row.flocks?.flock_name ?? "Farm record"}</p><div><p>{row.product_name}</p><p className="mt-1 text-sm text-stone-500">{row.reason || "No reason recorded"}</p></div><span className={row.next_due_date ? "font-medium text-amber-800" : "text-stone-500"}>{row.next_due_date ? `Due ${row.next_due_date}` : "No follow-up"}</span>{financial && <p className="font-semibold data-number md:text-right">{money(row.cost, context.farm.currency)}</p>}</Link>)}{!rows.length && <div className="px-6 py-12 text-center"><HeartPulse className="mx-auto text-stone-300" size={28}/><p className="mt-3 font-semibold">No health records match</p><p className="mt-1 text-sm text-stone-500">Record a treatment or adjust your filters.</p></div>}</div></Card>
+    <Card className="overflow-hidden"><div className="border-b border-stone-100 px-5 py-4"><h2 className="font-semibold">Care activity</h2><p className="mt-1 text-sm text-stone-500">Open a record for its full treatment and follow-up history.</p></div><div className="divide-y divide-stone-100">{rows.map((row) => <Link key={row.id} href={`/health/${row.id}`} className="grid gap-3 px-5 py-4 transition hover:bg-emerald-50/45 md:grid-cols-[0.9fr_1fr_1.4fr_1fr_auto] md:items-center"><div><p className="text-sm text-stone-500">{row.record_date}</p><p className="mt-1 font-semibold capitalize">{row.health_type.replaceAll("_", " ")}</p></div><p className="font-medium">{row.flock_name ?? row.flocks?.flock_name ?? row.rearing_batches?.batch_code ?? "Farm record"}</p><div><p>{row.product_name}</p><p className="mt-1 text-sm text-stone-500">{row.reason || "No reason recorded"}</p></div><span className={row.next_due_date ? "font-medium text-amber-800" : "text-stone-500"}>{row.next_due_date ? `Due ${row.next_due_date}` : "No follow-up"}</span>{financial && <p className="font-semibold data-number md:text-right">{money(Number(row.cost??0), context.farm.currency)}</p>}</Link>)}{!rows.length && <div className="px-6 py-12 text-center"><HeartPulse className="mx-auto text-stone-300" size={28}/><p className="mt-3 font-semibold">No health records match</p><p className="mt-1 text-sm text-stone-500">Record a treatment or adjust your filters.</p></div>}</div></Card>
     <Pagination page={window.page} hasMore={rows.length === 50} base="/health" params={params}/>
   </div>;
 }

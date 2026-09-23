@@ -4,6 +4,7 @@ import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { Bell, CircleAlert, HeartPulse, Wheat, WalletCards, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { formatFeedRunway } from "@/lib/feed-forecast";
 
 type Alert = { id: string; title: string; detail: string; href: string; kind: "feed" | "health" | "finance" };
 const money = (value: unknown, currency: string) => new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: 2 }).format(Number(value ?? 0));
@@ -15,13 +16,13 @@ export function NotificationBell({ farmId, role, currency }: { farmId: string; r
       const supabase = createClient();
       const financial = role !== "worker";
       const [feed, health, collections, payables] = await Promise.all([
-        supabase.from("v_feed_forecast").select("feed_type_id,feed_type_name,quantity_kg,days_remaining,alert_level").eq("farm_id", farmId).in("alert_level", ["warning", "critical"]),
+        supabase.from("v_feed_forecast").select("feed_type_id,feed_type_name,quantity_kg,days_remaining,alert_level").eq("farm_id", farmId).in("alert_level", ["warning", "critical", "out_of_stock"]),
         supabase.from("v_health_reminder_status").select("id,title,flock_name,due_date,reminder_status").eq("farm_id", farmId).eq("status", "active").in("reminder_status", ["overdue", "due_today"]),
         financial ? supabase.from("v_credit_collections").select("sale_id,customer_name,outstanding_balance,collection_status").eq("farm_id", farmId).gt("outstanding_balance", 0).in("collection_status", ["overdue", "due_today"]) : Promise.resolve({ data: [] }),
         financial ? supabase.from("v_supplier_payables").select("id,supplier_name,outstanding_balance,supplier_due_status").eq("farm_id", farmId).gt("outstanding_balance", 0).in("supplier_due_status", ["overdue", "due_today"]) : Promise.resolve({ data: [] }),
       ]);
       const next: Alert[] = [
-        ...(feed.data ?? []).map((item) => ({ id: `feed-${item.feed_type_id}`, title: `${item.feed_type_name} is running low`, detail: `${Number(item.quantity_kg).toLocaleString()} kg remaining${item.days_remaining == null ? "" : ` · about ${Number(item.days_remaining).toFixed(1)} days`}`, href: "/feed/planning", kind: "feed" as const })),
+        ...(feed.data ?? []).map((item) => ({ id: `feed-${item.feed_type_id}`, title: item.alert_level === "out_of_stock" ? `${item.feed_type_name} is out of stock` : `${item.feed_type_name} is running low`, detail: `${Number(item.quantity_kg).toLocaleString()} kg available · ${formatFeedRunway(item.days_remaining==null?null:Number(item.days_remaining),Number(item.quantity_kg))}`, href: "/feed/planning", kind: "feed" as const })),
         ...(health.data ?? []).map((item) => ({ id: `health-${item.id}`, title: item.title, detail: `${item.flock_name} · ${String(item.reminder_status).replaceAll("_", " ")}`, href: "/health/reminders", kind: "health" as const })),
         ...(collections.data ?? []).map((item) => ({ id: `collection-${item.sale_id}`, title: `${item.customer_name ?? "Customer"} payment ${String(item.collection_status).replaceAll("_", " ")}`, detail: money(item.outstanding_balance, currency), href: "/collections", kind: "finance" as const })),
         ...(payables.data ?? []).map((item) => ({ id: `payable-${item.id}`, title: `${item.supplier_name ?? "Supplier"} payment ${String(item.supplier_due_status).replaceAll("_", " ")}`, detail: money(item.outstanding_balance, currency), href: "/payables", kind: "finance" as const })),
