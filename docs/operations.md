@@ -1,5 +1,11 @@
 # Operations
 
+## Public HabFarms website
+
+The public marketing homepage is served at `/`. Farm sign-in remains at `/login`, and the existing authenticated operational routes retain their current protection. Configure `NEXT_PUBLIC_SITE_URL` to the verified public website origin (for example, the eventual HabFarms domain) before launch. This value supplies the canonical URL, structured-data URL, and sitemap origin; until it is set, `robots.txt` disallows indexing and the sitemap is empty so a preview or guessed domain is not advertised to search engines. Keep that variable public-only; never put credentials or tenant data in it.
+
+Marketing screenshots and editorial images are optimized WebP assets under `public/images/marketing`. Before replacing a screenshot, sanitize account, farm, customer, and financial details and review the crop at desktop and mobile sizes. WhatsApp and email CTAs are in `src/components/marketing/marketing-site.tsx`; update them only after verifying official contact details. The public page intentionally directs enquiries to WhatsApp/email rather than writing to farm data or adding an unconfigured mail form.
+
 ## Platform management dashboard
 
 Platform staff use `/platform` to follow customer-account, subscription, and HabFarms subscription-payment health. The dashboard and its trial, renewal, collection, and portfolio drill-downs are control-plane only. Amounts are grouped by their recorded currency; operators must not combine currencies manually in the product.
