@@ -101,7 +101,7 @@ export function MarketingSite() {
           <div className={styles.photoShade} />
           <div className={styles.photoStamp}><span>On the farm</span><span>In clear view</span></div>
           <div className={styles.heroScreen} aria-label="A preview of the real HabFarms reports screen">
-            <div className={styles.screenTop}><span className={styles.screenDots}><i /><i /><i /></span><span>habfarms.app</span><span className={styles.screenLock}><ShieldCheck size={13} /> Secure workspace</span></div>
+            <div className={styles.screenTop}><span className={styles.screenDots}><i /><i /><i /></span><span>HabFarms workspace</span><span className={styles.screenLock}><ShieldCheck size={13} /> Farm records</span></div>
             <Image src="/images/marketing/reports.webp" alt="Actual HabFarms reports page, cropped to remove account and farm records" width={1180} height={831} sizes="(max-width: 800px) 92vw, 43vw" />
           </div>
         </div>
