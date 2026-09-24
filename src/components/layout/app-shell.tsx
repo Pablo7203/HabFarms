@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -66,10 +66,68 @@ export function AppShell({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [pendingDestination, setPendingDestination] = useState<string | null>(null);
+  const navigationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const admin = context.membership.role === "admin";
   const commercial = context.membership.role !== "worker";
   const back = returnDestination(pathname);
+
+  useEffect(() => {
+    const clearPending = () => {
+      if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+      navigationTimeout.current = null;
+      setPendingDestination(null);
+    };
+
+    // Links throughout the app use Next's client-side navigation. A global
+    // capture handler gives immediate feedback even when the clicked Link is
+    // deep inside a server-rendered page rather than the shared sidebar.
+    const onDocumentClick = (event: MouseEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) return;
+
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const anchor = target.closest<HTMLAnchorElement>("a[href]");
+      if (!anchor || anchor.hasAttribute("download") || anchor.getAttribute("target") === "_blank") return;
+
+      const destination = new URL(anchor.href, window.location.href);
+      if (
+        destination.origin !== window.location.origin ||
+        (destination.pathname === window.location.pathname && destination.search === window.location.search)
+      ) return;
+
+      const label = anchor.getAttribute("aria-label") || anchor.textContent?.trim().replace(/\s+/g, " ");
+      const fallback = destination.pathname.split("/").filter(Boolean).at(-1)?.replace(/[-_]/g, " ");
+      setPendingDestination(label || fallback || "page");
+      if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+      // A safety timeout prevents a stale indicator if a click is intercepted
+      // or the router reports an error without changing the route.
+      navigationTimeout.current = setTimeout(clearPending, 12000);
+    };
+
+    document.addEventListener("click", onDocumentClick, true);
+    return () => {
+      document.removeEventListener("click", onDocumentClick, true);
+      if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+      navigationTimeout.current = null;
+      setPendingDestination(null);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [pathname]);
   const links = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/production", label: "Daily Production", icon: NotebookPen },
@@ -158,6 +216,18 @@ export function AppShell({
   );
   return (
     <div className="min-h-screen bg-[#f2f6ed]">
+      {pendingDestination && (
+        <>
+          <div className="fixed inset-x-0 top-0 z-[100] h-1 overflow-hidden bg-emerald-100" aria-hidden="true">
+            <div className="h-full w-2/5 animate-pulse rounded-r-full bg-emerald-600" />
+          </div>
+          <div className="fixed right-4 top-20 z-[100] flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-lg sm:right-6" role="status" aria-live="polite">
+            <span className="size-4 animate-spin rounded-full border-2 border-emerald-200 border-t-emerald-700" aria-hidden="true" />
+            <span className="sr-only">Loading page: </span>
+            Opening {pendingDestination}…
+          </div>
+        </>
+      )}
       <a href="#main-content" className="sr-only z-50 rounded-lg bg-emerald-800 px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to content</a>
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-[#e4eadf] bg-white lg:flex">
         {nav}
