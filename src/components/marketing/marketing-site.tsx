@@ -235,13 +235,13 @@ export function MarketingSite() {
       <section className={styles.finalCta} aria-labelledby="final-cta-title">
         <Image className={styles.finalPhoto} src="/images/marketing/farm-manager.webp" alt="Poultry farm manager checking a phone beside a flock" fill sizes="100vw" />
         <div className={styles.finalShade} />
-        <div className={styles.finalCopy}><p className={styles.finalKicker}>A clearer view of your farm</p><h2 id="final-cta-title">Bring your farm records<br />into one place.</h2><p>See how HabFarms can fit into the way you work.</p><DemoLink className={styles.finalButton}>Book a Demo on WhatsApp</DemoLink><a className={styles.finalEmail} href="mailto:Habfarmtech@gmail.com">Or email Habfarmtech@gmail.com</a></div>
+        <div className={styles.finalCopy}><p className={styles.finalKicker}>A clearer view of your farm</p><h2 id="final-cta-title">Bring your farm records<br />into one place.</h2><p>See how HabFarms can fit into the way you work.</p><DemoLink className={styles.finalButton}>Book a Demo on WhatsApp</DemoLink><a className={styles.finalEmail} href="mailto:info@habfarm.com">Or email info@habfarm.com</a></div>
         <div className={styles.finalMark} aria-hidden="true"><ChickenIcon size={100} /></div>
       </section>
     </main>
 
     <footer className={styles.footer}>
-      <div className={styles.footerTop}><div className={styles.footerAbout}><Brand light /><p>Poultry farm records, brought together.</p></div><div className={styles.footerLinks}><div><h2>Explore</h2><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#rearing">DOC rearing</a><a href="#faq">FAQ</a></div><div><h2>Connect</h2><a href={whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a><a href="mailto:Habfarmtech@gmail.com">Habfarmtech@gmail.com</a><a href="tel:+233555152989">+233 55 515 2989</a></div><div><h2>Workspace</h2><Link href="/login">Log in</Link><DemoLink className={styles.footerDemo} /></div></div></div>
+      <div className={styles.footerTop}><div className={styles.footerAbout}><Brand light /><p>Poultry farm records, brought together.</p></div><div className={styles.footerLinks}><div><h2>Explore</h2><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#rearing">DOC rearing</a><a href="#faq">FAQ</a></div><div><h2>Connect</h2><a href={whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a><a href="mailto:info@habfarm.com">info@habfarm.com</a><a href="tel:+233555152989">+233 55 515 2989</a></div><div><h2>Workspace</h2><Link href="/login">Log in</Link><DemoLink className={styles.footerDemo} /></div></div></div>
       <div className={styles.footerBottom}><span>© {new Date().getFullYear()} HabFarms</span><span>Built for the people who keep farms moving.</span><a href="#main-content">Back to top ↑</a></div>
     </footer>
   </div>;

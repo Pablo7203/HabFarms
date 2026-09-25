@@ -28,7 +28,7 @@ const structuredData = {
   operatingSystem: "Web",
   description: "Poultry-farm management software for flock records, egg production, feed, sales, expenses and DOC rearing.",
   areaServed: { "@type": "Country", name: "Ghana" },
-  email: "Habfarmtech@gmail.com",
+  email: "info@habfarm.com",
   telephone: "+233555152989",
   ...(siteUrl ? { url: siteUrl } : {}),
 };
