@@ -17,16 +17,17 @@ Configure the following server-only values before expecting lifecycle email to l
 - `PLATFORM_RECONCILE_SECRET`
 - `RESEND_API_KEY`
 - `PLATFORM_EMAIL_FROM` — a verified sender, for example `HabFarms <billing@your-domain>`
+- `PLATFORM_ALERT_EMAIL` — the operations contact that receives a generic alert when the lifecycle job or message-delivery job fails
 
 Without the Resend values, messages remain **pending**. This is intentional: the UI must not claim an email was sent when no provider is configured. A message becomes **sent** only after Resend accepts it; inbox delivery, bounce, and complaint outcomes remain provider-side signals.
 
 Use `/platform/operations` to inspect recent runs, pending/failed communications, and retry pending messages after the provider is configured. The retry control is Platform Admin-only and only processes Platform communication metadata.
 
-Schedule this endpoint only after production launch approval. Vercel Cron runs in Production, not preview/staging deployments; staging can call the protected endpoint manually with a controlled secret for UAT. Do not add a production cron until its owner, cadence, and alert recipient are recorded.
+The approved Production schedule is daily at 00:00 UTC. Operational owner: HabFarms Platform Operations; operational contact: `info@habfarm.com`. The repository cron definition invokes this route with `GET` and authenticates with the Production-only `CRON_SECRET`; controlled manual runs continue to use `POST` and `PLATFORM_RECONCILE_SECRET`. Vercel Cron runs in the Production environment of each project where the cron definition is deployed; enable it only for the intended project/environment. Do not run an ad-hoc reconciliation against live Production data for setup verification because it may change customer lifecycle status. Review the Platform Operations job history and secure host logs after scheduled runs. If configured, generic failure alerts are sent to `PLATFORM_ALERT_EMAIL` for a failed lifecycle or delivery job; the alert intentionally omits customer data and provider response details. A successful provider acceptance is not proof of inbox delivery. `PLATFORM_EMAIL_TEST_ENABLED=true` exposes a Platform-Admin-only action that sends exactly one test message to the fixed `PLATFORM_ALERT_EMAIL`; keep it disabled in Production and do not use it to process the customer queue.
 
 ## Incident response
 
-1. If a lifecycle job fails, inspect the secure host logs and the latest Platform Operations entry; do not expose provider responses to customers.
+1. If a lifecycle or delivery job fails, inspect the secure host logs and the latest Platform Operations entry; check the generic alert at `PLATFORM_ALERT_EMAIL` and do not expose provider responses to customers.
 2. If messages fail, confirm the sender verification and provider credentials, then retry from `/platform/operations`.
 3. If a customer reports an incorrect account state, use the Platform audit timeline and subscription detail first. Do not alter tenant ledgers to resolve a billing issue.
 4. If a database recovery is needed, follow [recovery.md](recovery.md). Preserve audit evidence and do recovery in an isolated environment.

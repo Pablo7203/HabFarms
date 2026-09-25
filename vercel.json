@@ -1,4 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "ignoreCommand": "node scripts/vercel-ignore-build.mjs"
+  "ignoreCommand": "node scripts/vercel-ignore-build.mjs",
+  "crons": [
+    {
+      "path": "/api/platform/reconcile",
+      "schedule": "0 0 * * *"
+    }
+  ]
 }

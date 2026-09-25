@@ -14,13 +14,57 @@ const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => (
 
 export type DeliveryResult = { sent: number; failed: number; pending: number; providerConfigured: boolean };
 
-export async function deliverPlatformCommunications(limit = 25): Promise<DeliveryResult> {
+type PlatformEmailInput = { to: string; subject: string; text: string; html?: string };
+export type PlatformEmailResult = { accepted: boolean; providerConfigured: boolean };
+
+async function sendPlatformEmail({ to, subject, text, html }: PlatformEmailInput): Promise<PlatformEmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.PLATFORM_EMAIL_FROM;
+  if (!apiKey || !from) return { accepted: false, providerConfigured: false };
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [to], subject, text, html: html ?? `<p>${escapeHtml(text)}</p>` }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    return { accepted: response.ok, providerConfigured: true };
+  } catch {
+    return { accepted: false, providerConfigured: true };
+  }
+}
+
+export async function sendPlatformTestEmail(): Promise<PlatformEmailResult> {
+  const to = process.env.PLATFORM_ALERT_EMAIL;
+  if (!to || process.env.PLATFORM_EMAIL_TEST_ENABLED !== "true") return { accepted: false, providerConfigured: false };
+  const timestamp = new Date().toISOString();
+  return sendPlatformEmail({
+    to,
+    subject: "HabFarms transactional email test",
+    text: `This is a one-time test of HabFarms' configured transactional email delivery.\n\nRequested at: ${timestamp}\nThis message is not a customer lifecycle notification.`,
+  });
+}
+
+export async function sendPlatformFailureAlert(jobType: "subscription_lifecycle" | "communication_delivery", jobId?: string | null): Promise<boolean> {
+  const to = process.env.PLATFORM_ALERT_EMAIL;
+  if (!to) return false;
+  const timestamp = new Date().toISOString();
+  const jobLabel = jobType === "subscription_lifecycle" ? "Subscription lifecycle reconciliation" : "Lifecycle email delivery";
+  const jobReference = jobId ? `\nJob reference: ${jobId}` : "";
+  const result = await sendPlatformEmail({
+    to,
+    subject: `HabFarms alert: ${jobLabel} failed`,
+    text: `${jobLabel} failed at ${timestamp}.${jobReference}\n\nReview Platform Operations and the secure hosting logs. This alert omits customer and provider-response details.`,
+  });
+  return result.accepted;
+}
+
+export async function deliverPlatformCommunications(limit = 25): Promise<DeliveryResult> {
   const admin = createAuthAdminClient();
   const { data: raw } = await admin.from("platform_communications").select("id,farm_id,message_type,recipient_email,attempt_count,farms(name)").in("status", ["pending", "failed"]).order("created_at").limit(limit);
   const messages = (raw ?? []) as unknown as Communication[];
-  if (!apiKey || !from) return { sent: 0, failed: 0, pending: messages.length, providerConfigured: false };
+  if (!process.env.RESEND_API_KEY || !process.env.PLATFORM_EMAIL_FROM) return { sent: 0, failed: 0, pending: messages.length, providerConfigured: false };
 
   let sent = 0;
   let failed = 0;
@@ -30,12 +74,8 @@ export async function deliverPlatformCommunications(limit = 25): Promise<Deliver
     if (!copy) continue;
     const now = new Date().toISOString();
     try {
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from, to: [message.recipient_email], subject: copy.subject(farmName), text: copy.body(farmName), html: `<p>${escapeHtml(copy.body(farmName))}</p>` }),
-      });
-      if (!response.ok) throw new Error(`provider_${response.status}`);
+      const result = await sendPlatformEmail({ to: message.recipient_email, subject: copy.subject(farmName), text: copy.body(farmName) });
+      if (!result.accepted) throw new Error("provider_delivery_failed");
       await admin.from("platform_communications").update({ status: "sent", attempt_count: message.attempt_count + 1, attempted_at: now, sent_at: now, failed_at: null, last_error_category: null }).eq("id", message.id);
       await admin.rpc("platform_audit_system", { target_action: "communication.sent", target_farm: message.farm_id, target_type: "platform_communications", target_id: message.id, target_metadata: { message_type: message.message_type } });
       sent += 1;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createPlatformAccountNoteAction, retryPlatformCommunicationsAction, updatePlatformSettingsAction } from "@/app/actions/platform-operations";
+import { createPlatformAccountNoteAction, retryPlatformCommunicationsAction, sendPlatformTestEmailAction, updatePlatformSettingsAction } from "@/app/actions/platform-operations";
 
 export type PlatformSettingsValues = { company_name: string; support_name: string | null; support_email: string | null; support_phone: string | null; billing_contact_email: string | null; default_currency: string; default_trial_days: number; default_grace_days: number; trial_expiry_reminder_days: number; subscription_due_reminder_days: number; grace_ending_reminder_days: number; platform_timezone: string };
 
@@ -24,6 +24,11 @@ export function PlatformAccountNoteForm({ farmId }: { farmId: string }) {
 export function PlatformCommunicationsRetry() {
   const [pending, startTransition] = useTransition(); const [message, setMessage] = useState("");
   return <div className="mt-4 flex flex-wrap items-center gap-3"><button type="button" disabled={pending} onClick={() => startTransition(async () => setMessage((await retryPlatformCommunicationsAction()).message))} className="min-h-10 rounded-xl border border-stone-300 bg-white px-3 text-sm font-semibold hover:bg-stone-50 disabled:opacity-60">{pending ? "Running…" : "Retry pending messages"}</button>{message && <p role="status" className="text-sm text-stone-600">{message}</p>}</div>;
+}
+
+export function PlatformEmailTest() {
+  const [pending, startTransition] = useTransition(); const [message, setMessage] = useState("");
+  return <div className="mt-4 flex flex-wrap items-center gap-3"><button type="button" disabled={pending} onClick={() => startTransition(async () => setMessage((await sendPlatformTestEmailAction()).message))} className="min-h-10 rounded-xl border border-emerald-800 px-3 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 disabled:opacity-60">{pending ? "Sending one test…" : "Send one test email"}</button>{message && <p role="status" className="text-sm text-stone-600">{message}</p>}</div>;
 }
 
 function Field({ name, label, defaultValue, type = "text", required = true, maxLength }: { name: string; label: string; defaultValue: string; type?: string; required?: boolean; maxLength?: number }) { return <label className="text-sm font-medium">{label}<input name={name} type={type} defaultValue={defaultValue} required={required} maxLength={maxLength} className="mt-2 min-h-11 w-full rounded-xl border px-3" /></label>; }

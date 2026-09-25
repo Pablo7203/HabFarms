@@ -10,8 +10,9 @@
 - [ ] Complete staging deployment and approval
 - [ ] Confirm the production Supabase migration delta from the linked production project; do not infer it from staging
 - [ ] Bootstrap the approved Platform Admin by immutable Supabase Auth UUID and verify this does not create a customer-farm membership
-- [ ] Configure and verify the controlled transactional sender, `RESEND_API_KEY`, `PLATFORM_EMAIL_FROM`, and `PLATFORM_RECONCILE_SECRET` as host secrets only
-- [ ] Record the Platform lifecycle scheduler owner, cadence, alert recipient, and first controlled run; do not enable a cron merely because code exists
+- [ ] Configure and verify the controlled transactional sender, `RESEND_API_KEY`, `PLATFORM_EMAIL_FROM`, `PLATFORM_ALERT_EMAIL`, and `PLATFORM_RECONCILE_SECRET` in the intended hosting environment only
+- [ ] Keep `PLATFORM_EMAIL_TEST_ENABLED` disabled in Production; verify the one-message test in Staging only
+- [ ] Record the Platform lifecycle scheduler owner, cadence, alert recipient, and first controlled run; enable cron only for the intended project/environment after Staging verification
 
 ## Deploy
 

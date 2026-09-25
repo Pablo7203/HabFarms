@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requirePlatformAdmin } from "@/lib/auth/context";
 import { createClient } from "@/lib/supabase/server";
-import { deliverPlatformCommunications } from "@/lib/platform/communications";
+import { deliverPlatformCommunications, sendPlatformTestEmail } from "@/lib/platform/communications";
 import type { ActionResult } from "@/app/actions/auth";
 
 const settingsSchema = z.object({
@@ -45,4 +45,14 @@ export async function retryPlatformCommunicationsAction(): Promise<ActionResult>
   revalidatePath("/platform"); revalidatePath("/platform/operations"); revalidatePath("/platform/audit");
   if (!result.providerConfigured) return { ok: false, message: "No lifecycle email provider is configured. Messages remain pending; add RESEND_API_KEY and PLATFORM_EMAIL_FROM on the server first." };
   return { ok: true, message: `Delivery run complete: ${result.sent} sent, ${result.failed} failed, ${result.pending} still pending.` };
+}
+
+export async function sendPlatformTestEmailAction(): Promise<ActionResult> {
+  await requirePlatformAdmin();
+  if (process.env.PLATFORM_EMAIL_TEST_ENABLED !== "true") return { ok: false, message: "The one-message email test is disabled in this environment." };
+  if (!process.env.PLATFORM_ALERT_EMAIL) return { ok: false, message: "The operations alert recipient is not configured." };
+  const result = await sendPlatformTestEmail();
+  if (!result.providerConfigured) return { ok: false, message: "Email delivery is not configured for this environment." };
+  if (!result.accepted) return { ok: false, message: "The test message was not accepted. Check the secure provider logs; no customer messages were changed." };
+  return { ok: true, message: "Resend accepted one test email to the configured operations contact. Check that inbox and Resend logs; acceptance does not guarantee inbox delivery." };
 }
