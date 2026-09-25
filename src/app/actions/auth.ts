@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema } from "@/lib/validation/auth";
+import { forgotPasswordSchema, loginSchema, resetPasswordSchema } from "@/lib/validation/auth";
 import { userMessage } from "@/lib/utils";
 export type ActionResult = { ok: boolean; message: string; id?: string; nextPath?: string };
 
@@ -28,11 +28,8 @@ export async function loginAction(input: unknown): Promise<ActionResult> {
   if (error) return { ok: false, message: "Email or password is incorrect." }; redirect("/dashboard");
 }
 export async function signupAction(input: unknown): Promise<ActionResult> {
-  const parsed = signupSchema.safeParse(input); if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
-  const origin = (await headers()).get("origin") ?? "http://localhost:3000";
-  const supabase = await createClient(); const { error } = await supabase.auth.signUp({ email: parsed.data.email, password: parsed.data.password, options: { data: { full_name: parsed.data.fullName }, emailRedirectTo: `${origin}/auth/callback` } });
-  if (error) return { ok: false, message: error.message.includes("registered") ? "An account already exists for this email." : userMessage(error) };
-  return { ok: true, message: "Account created. Check your email to confirm your address, then sign in." };
+  void input;
+  return { ok: false, message: "Self-service account creation is disabled. HabFarms accounts are created by the platform; contact your farm administrator for access." };
 }
 export async function forgotPasswordAction(input: unknown): Promise<ActionResult> {
   const parsed = forgotPasswordSchema.safeParse(input); if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
