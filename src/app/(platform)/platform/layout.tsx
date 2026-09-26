@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import { requirePlatformAdmin } from "@/lib/auth/context";
 import Link from "next/link";
 import { Activity, Building2, ClipboardList, Clock3, CreditCard, LayoutDashboard, ReceiptText, RefreshCw, ScrollText, Settings } from "lucide-react";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 const navigation = [
   { href: "/platform", label: "Overview", icon: LayoutDashboard },

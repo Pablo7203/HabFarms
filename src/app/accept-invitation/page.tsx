@@ -3,6 +3,8 @@ import { AcceptInvitationForm } from "@/components/forms/user-management";
 import { Card } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 
+export const metadata = { title: "Accept invitation", robots: { index: false, follow: false } };
+
 export default async function AcceptInvitationPage() {
   const supabase = await createClient();
   const {

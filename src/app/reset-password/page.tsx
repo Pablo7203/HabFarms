@@ -2,7 +2,7 @@ import { AuthForm } from "@/components/forms/auth-form";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Reset password" };
+export const metadata = { title: "Reset password", robots: { index: false, follow: false } };
 
 export default async function ResetPage() {
   const supabase = await createClient();

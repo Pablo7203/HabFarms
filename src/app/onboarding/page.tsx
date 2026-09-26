@@ -5,7 +5,7 @@ import { PlatformOnboarding } from "@/components/forms/platform-onboarding";
 import { getCurrentAppContext, getCurrentFarmAccount, requireAuth } from "@/lib/auth/context";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Create your farm" };
+export const metadata = { title: "Create your farm", robots: { index: false, follow: false } };
 
 export default async function OnboardingPage() {
   await requireAuth();

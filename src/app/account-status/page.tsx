@@ -5,7 +5,7 @@ import { getCurrentFarmAccount, requireAuth } from "@/lib/auth/context";
 import { createClient } from "@/lib/supabase/server";
 import { money } from "@/lib/format";
 
-export const metadata = { title: "Farm account status" };
+export const metadata = { title: "Farm account status", robots: { index: false, follow: false } };
 
 export default async function AccountStatusPage() {
   await requireAuth();

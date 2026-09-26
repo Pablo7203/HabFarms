@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/context";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
+
 export default async function AuthLayout({ children }: { children: React.ReactNode }) { if (await getCurrentUser()) redirect("/dashboard"); return <main className="grid min-h-screen lg:grid-cols-[1fr_1.1fr]"><section className="flex items-center justify-center bg-white px-6 py-12">{children}</section><aside className="relative hidden overflow-hidden bg-emerald-950 bg-cover bg-center p-12 text-white lg:flex lg:flex-col lg:justify-between" style={{ backgroundImage: "url('/images/login-poultry-farm.png')" }}><div className="absolute inset-0 bg-gradient-to-t from-[#102f22]/95 via-[#153e2b]/55 to-[#1d4d35]/20"/><div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-r from-[#123c2a]/45 to-transparent"/><div className="absolute -right-32 -top-32 size-96 rounded-full border border-white/20" /><p className="relative text-sm font-semibold uppercase tracking-[0.2em] text-emerald-100">Built for daily farm work</p><div className="relative max-w-xl"><h2 className="text-5xl font-semibold leading-tight text-white">One trusted place for your farm records.</h2><p className="mt-6 text-lg leading-8 text-white/85">Begin with a secure farm workspace. Production, inventory, and finance tools will grow from reliable transactions—not fragile summaries.</p></div><p className="relative text-sm text-white/75">Simple. Calm. Practical.</p></aside></main>; }
