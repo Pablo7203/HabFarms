@@ -4,10 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth/context";
 import type { ActionResult } from "./auth";
 
-export async function saveFeedingPlanAction(input: { flockId: string; feedTypeId: string; grams: number; effectiveFrom: string; notes?: string }): Promise<ActionResult> {
+export async function saveFeedingPlanAction(input: { flockId: string; feedTypeId: string; dailyFeedKg: number; effectiveFrom: string; notes?: string }): Promise<ActionResult> {
   await requireRole(["admin", "manager"]); const s = await createClient();
-  const { error } = await s.rpc("save_flock_feeding_plan", { target_flock: input.flockId, target_feed_type: input.feedTypeId, target_grams: input.grams, target_effective_from: input.effectiveFrom, target_notes: input.notes ?? null });
-  if (error) return { ok: false, message: error.message }; revalidatePath("/feed/planning"); revalidatePath("/feed"); revalidatePath("/dashboard"); return { ok: true, message: "Feeding plan saved." };
+  if (!Number.isFinite(input.dailyFeedKg) || input.dailyFeedKg <= 0 || input.dailyFeedKg > 100000) return { ok: false, message: "Enter a daily feed amount greater than 0 and no more than 100,000 kg." };
+  const { error } = await s.rpc("save_flock_daily_feeding_plan", { target_flock: input.flockId, target_feed_type: input.feedTypeId, target_daily_kg: input.dailyFeedKg, target_effective_from: input.effectiveFrom, target_notes: input.notes ?? null });
+  if (error) return { ok: false, message: error.message }; revalidatePath("/feed/planning"); revalidatePath("/feed"); revalidatePath("/dashboard"); return { ok: true, message: "Daily flock feed target saved." };
 }
 
 export async function createHealthReminderAction(input: { flockId: string; activityType: string; title: string; dueDate: string; notes?: string }): Promise<ActionResult> {

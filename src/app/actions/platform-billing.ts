@@ -89,6 +89,46 @@ export async function recordSubscriptionPaymentAction(input: unknown): Promise<A
 
 const subscriptionIdInput = z.object({ subscriptionId: z.string().uuid() });
 
+const manualInvoiceInput = z.object({
+  farmId: z.string().uuid(),
+  description: z.string().trim().min(3).max(500),
+  amount: z.string().trim().regex(/^\d{1,12}(?:\.\d{1,2})?$/, "Enter an amount with no more than two decimal places.").transform(Number).refine((value) => value > 0, "The amount must be greater than zero."),
+  currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/),
+  invoiceDate: z.string().date(),
+  dueDate: z.string().date(),
+}).refine((value) => value.dueDate >= value.invoiceDate, { message: "The due date cannot be before the invoice date." });
+
+export async function createManualInvoiceAction(input: unknown): Promise<ActionResult & { invoiceId?: string }> {
+  const parsed = manualInvoiceInput.safeParse(input);
+  if (!parsed.success) return failure(parsed.error.issues[0].message);
+  await requirePlatformAdmin();
+  const value = parsed.data, supabase = await createClient();
+  const { data, error } = await supabase.rpc("platform_create_manual_invoice", {
+    target_farm: value.farmId,
+    target_description: value.description,
+    target_amount: value.amount,
+    target_currency: value.currency,
+    target_invoice_date: value.invoiceDate,
+    target_due_date: value.dueDate,
+  });
+  if (error || typeof data !== "string") return { ...failure("We could not issue this invoice. Check the details and try again."), invoiceId: undefined };
+  revalidatePath("/platform/invoices");
+  revalidatePath(`/platform/farms/${value.farmId}`);
+  return { ok: true, message: "Manual invoice issued.", invoiceId: data };
+}
+
+const manualInvoiceVoidInput = z.object({ invoiceId: z.string().uuid(), reason: z.string().trim().min(3).max(500) });
+export async function voidManualInvoiceAction(input: unknown): Promise<ActionResult> {
+  const parsed = manualInvoiceVoidInput.safeParse(input);
+  if (!parsed.success) return failure("Provide a void reason of at least three characters.");
+  await requirePlatformAdmin();
+  const { error } = await (await createClient()).rpc("platform_void_manual_invoice", { target_invoice: parsed.data.invoiceId, target_reason: parsed.data.reason });
+  if (error) return failure("We could not void this invoice. It may already be void.");
+  revalidatePath("/platform/invoices");
+  revalidatePath(`/platform/invoices/manual/${parsed.data.invoiceId}`);
+  return { ok: true, message: "Invoice voided and retained in the audit history." };
+}
+
 export async function prepareSubscriptionBillingPeriodAction(input: unknown): Promise<ActionResult> {
   const parsed = subscriptionIdInput.safeParse(input);
   if (!parsed.success) return failure("A valid subscription is required.");

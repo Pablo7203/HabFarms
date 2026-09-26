@@ -10,6 +10,7 @@ const navigation = [
   { href: "/platform/audit", label: "Audit", icon: ScrollText },
   { href: "/platform/plans", label: "Plans", icon: Settings },
   { href: "/platform/subscriptions", label: "Subscriptions", icon: CreditCard },
+  { href: "/platform/invoices", label: "Invoices", icon: ReceiptText },
   { href: "/platform/collections", label: "Collections", icon: ReceiptText },
   { href: "/platform/renewals", label: "Renewals", icon: RefreshCw },
   { href: "/platform/payments", label: "Payments", icon: ReceiptText },

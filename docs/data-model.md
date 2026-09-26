@@ -1,7 +1,7 @@
 # Data model
 
 - **Farm/Auth:** Supabase Auth users synchronize to `profiles`; `farm_members` assigns one farm role. `farms` and `farm_settings` hold configuration.
-- **Flocks:** `flocks` plus dated `bird_movements` derive live-bird history.
+- **Flocks:** `flocks` plus dated `bird_movements` derive live-bird history. Movement writes lock the flock and a deferred database constraint validates the full chronological balance, including direct database writes; a decrease cannot take the flock below zero. Opening-population corrections remain admin-only and revalidate that history.
 - **Production:** one daily record per flock/date creates egg, feed, death, and cull movements atomically.
 - **Egg inventory:** immutable-style movements are the source of truth; current stock is derived.
 - **Egg grades:** each farm has one canonical `egg_grades` lookup. `Unsorted` means produced but not yet graded; sellable sizes are Smaller, Small, Medium, Large, and Bigger. Grade movements and sales never borrow stock from another grade.

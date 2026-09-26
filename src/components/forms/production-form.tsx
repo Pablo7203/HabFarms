@@ -247,22 +247,28 @@ export function ProductionForm({
         {field("culls", "Culls")}
         {field("feedConsumedKg", "Feed consumed (kg)", "0.001")}
       </div>
-      {feed > 0 && (
-        <label className="block text-sm font-medium">
-          Feed type
-          <select
-            className="mt-2 min-h-11 w-full rounded-lg border px-3"
-            {...register("feedTypeId")}
-          >
-            <option value="">Select feed type</option>
-            {feedTypes.map((x) => (
-              <option key={x.id} value={x.id}>
-                {x.name} · {x.quantity_kg} kg available
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
+      <label className="block text-sm font-medium">
+        Feed type{feed > 0 ? " *" : ""}
+        <select
+          className="mt-2 min-h-11 w-full rounded-lg border px-3"
+          aria-describedby="feed-type-help"
+          {...register("feedTypeId")}
+        >
+          <option value="">{feedTypes.length ? "Select feed type" : "No feed types configured"}</option>
+          {feedTypes.map((x) => (
+            <option key={x.id} value={x.id}>
+              {x.name} · {x.quantity_kg} kg available
+            </option>
+          ))}
+        </select>
+        <span id="feed-type-help" className="mt-1 block text-xs font-normal text-stone-600">
+          {feedTypes.length
+            ? feed > 0
+              ? "Required when recording feed consumed."
+              : "Select a type if you are recording feed consumed."
+            : "Set up a feed type before recording feed consumption."}
+        </span>
+      </label>
       <div className="grid gap-5 sm:grid-cols-2">
         {field("transportCost", "Transport cost", "0.01")}
         {field("otherCost", "Other cost", "0.01")}
