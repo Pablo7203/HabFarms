@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -181,7 +182,7 @@ export function AppShell({
     <>
       {farms.length > 1 ? <FarmSwitcher farms={farms} activeFarmId={context.farm.id} /> : (
         <div className="flex h-16 items-center gap-3 px-5">
-          <div className="grid size-10 place-items-center rounded-xl bg-[#98cf43] font-bold text-[#294c14] shadow-sm">P</div>
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-stone-200 bg-white shadow-sm"><Image src="/brand/habfarms-icon-small.svg" alt="" width={34} height={34} unoptimized /></div>
           <div className="min-w-0"><p className="text-xs text-stone-500">Poultry Farm</p><p className="truncate font-semibold text-stone-900">{context.farm.name}</p></div>
         </div>
       )}

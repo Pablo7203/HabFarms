@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="title desc">
-  <title id="title">HabFarms</title>
-  <desc id="desc">A simplified chicken, rising sun and green farm fields.</desc>
+  <title id="title">HabFarms small icon</title>
+  <desc id="desc">A simplified chicken, rising sun and farm fields.</desc>
   <defs>
     <linearGradient id="sun" x1=".18" y1=".12" x2=".78" y2=".9"><stop offset="0" stop-color="#F8BE32"/><stop offset="1" stop-color="#F59A23"/></linearGradient>
     <linearGradient id="comb" x1=".2" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#F15A30"/><stop offset="1" stop-color="#E84426"/></linearGradient>

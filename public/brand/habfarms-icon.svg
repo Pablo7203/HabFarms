@@ -1,22 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="title desc">
-  <title id="title">HabFarms</title>
-  <desc id="desc">A simplified chicken, rising sun and green farm fields.</desc>
+  <title id="title">HabFarms icon</title>
+  <desc id="desc">A white chicken above green farm fields with a golden rising sun.</desc>
   <defs>
-    <linearGradient id="sun" x1=".18" y1=".12" x2=".78" y2=".9"><stop offset="0" stop-color="#F8BE32"/><stop offset="1" stop-color="#F59A23"/></linearGradient>
-    <linearGradient id="comb" x1=".2" y1="0" x2=".85" y2="1"><stop offset="0" stop-color="#F15A30"/><stop offset="1" stop-color="#E84426"/></linearGradient>
+    <linearGradient id="sun" x1=".18" y1=".12" x2=".78" y2=".9">
+      <stop offset="0" stop-color="#F8BE32"/>
+      <stop offset="1" stop-color="#F59A23"/>
+    </linearGradient>
+    <linearGradient id="comb" x1=".2" y1="0" x2=".85" y2="1">
+      <stop offset="0" stop-color="#F15A30"/>
+      <stop offset="1" stop-color="#E84426"/>
+    </linearGradient>
+    <linearGradient id="land" x1=".2" y1="0" x2=".8" y2="1">
+      <stop offset="0" stop-color="#287D24"/>
+      <stop offset="1" stop-color="#06452D"/>
+    </linearGradient>
   </defs>
-  <g transform="translate(35 0)">
+  <g id="habfarms-mark" transform="translate(35 0)">
     <path fill="url(#sun)" d="M156 383C205 236 346 139 505 139c62 0 119 16 169 46-56 33-96 81-122 139-26 58-46 107-91 155-77-65-177-103-305-96Z"/>
     <path fill="#287D24" d="M72 669c-4-123 34-224 112-302l31 55c59-54 129-79 205-67 50 8 95 37 131 79-36 48-82 81-139 93-62 13-119-8-164-58-25 48-34 101-28 155 5 45 21 86 47 124H96c-16-26-24-53-24-79Z"/>
     <path fill="#287D24" d="M741 456c72 35 119 102 135 184 17 84-10 162-76 223l-52-38c47-51 65-110 54-173-10-59-40-107-89-142l28-54Z"/>
     <path fill="#FFFFFF" d="M227 439c-20-29-47-30-63-8-22 31-6 68 35 100-28 67-24 146 15 207 47 74 143 114 263 110 124-4 224-55 275-134 39-61 40-138 10-200 16-42 23-89 4-126-21-40-61-67-107-74-46-7-81 10-110 42-32 35-50 81-85 120-40 45-99 62-154 42-34-13-63-48-83-79Z"/>
+    <path fill="#FFF9EA" d="M267 495c45 53 111 71 173 48 48-18 82-56 104-103-8 68-48 117-102 141-67 30-139 4-175-86Z"/>
     <path fill="url(#comb)" d="M589 331c-22-20-19-52 2-67 13-9 30-9 43 1-8-30 6-58 30-67 25-9 46 10 51 35 11-25 34-31 53-20 20 12 23 42 10 64 22-9 46 4 49 27 4 25-17 48-39 59-43-35-98-56-149-44Z"/>
     <path fill="#F8BE32" d="M754 402c32-14 74-3 101 22-28 7-63 17-97 8-9-9-9-21-4-30Z"/>
     <path fill="url(#comb)" d="M753 432c29 9 48 42 48 78 0 33-20 61-49 62-28 1-47-24-45-55 2-33 21-71 46-85Z"/>
     <circle cx="688" cy="378" r="21" fill="#06452D"/>
-    <path fill="#06452D" d="M78 684c93-47 198-59 310-34 120 27 225 88 309 181 29 32 53 64 73 97-132 42-296 39-444-15C197 866 109 784 78 684Z"/>
+    <circle cx="682" cy="371" r="5.5" fill="#FFFFFF"/>
+    <circle cx="697" cy="377" r="2.8" fill="#FFFFFF"/>
+    <path fill="url(#land)" d="M78 684c93-47 198-59 310-34 120 27 225 88 309 181 29 32 53 64 73 97-132 42-296 39-444-15C197 866 109 784 78 684Z"/>
     <path fill="#67AD18" d="M451 733c63-62 141-81 218-52 63 23 111 73 148 132-45 52-103 88-172 108-48-75-109-141-194-188Z"/>
     <path fill="#67AD18" d="M91 735c105-57 211-67 321-39 105 27 193 83 266 169l-44 38c-73-82-156-132-248-155-100-25-192-14-276 37l-19-50Z"/>
-    <path d="M92 733c105-52 219-60 328-30 103 28 193 84 267 168" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-width="18"/>
+    <path fill="#287D24" d="M105 791c91-40 181-48 271-26 81 20 151 62 211 123l-44 35c-54-52-114-87-183-104-80-20-160-13-239 23l-16-51Z"/>
+    <path d="M86 705c116-43 224-39 330-9 105 30 193 85 265 165M103 770c99-41 194-37 285-12 79 22 149 62 209 120" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-width="13"/>
   </g>
 </svg>

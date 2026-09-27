@@ -1,5 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, type Resolver } from "react-hook-form";
@@ -25,7 +26,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     const action = mode === "login" ? loginAction : mode === "forgot" ? forgotPasswordAction : resetPasswordAction;
     const result = await action(values); setMessage({ ok: result.ok, text: result.message }); if (result.ok && mode === "reset") router.push("/dashboard");
   });
-  return <div className="w-full max-w-md"><div className="mb-8"><div className="mb-6 flex items-center gap-3"><div className="grid size-10 place-items-center rounded-xl bg-emerald-700 text-lg font-bold text-white">P</div><span className="font-semibold text-stone-900">Poultry Farm</span></div><h1 className="text-3xl font-bold tracking-tight text-stone-950">{config.title}</h1><p className="mt-2 text-stone-600">{config.subtitle}</p></div>
+  return <div className="w-full max-w-md"><div className="mb-8"><Link href="/" className="mb-6 inline-flex rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700" aria-label="HabFarms home"><Image src="/brand/habfarms-logo.svg" alt="" width={1650} height={440} className="h-auto w-[200px]" unoptimized /></Link><h1 className="text-3xl font-bold tracking-tight text-stone-950">{config.title}</h1><p className="mt-2 text-stone-600">{config.subtitle}</p></div>
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       {mode !== "reset" && <Field label="Email address" error={errors.email?.message as string | undefined}><Input type="email" autoComplete="email" {...register("email")} /></Field>}
       {(mode === "login" || mode === "reset") && <Field label={mode === "reset" ? "New password" : "Password"} error={errors.password?.message as string | undefined}><Input type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} {...register("password")} /></Field>}

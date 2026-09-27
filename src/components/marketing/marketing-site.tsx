@@ -19,7 +19,6 @@ import {
   Wheat,
   X,
 } from "lucide-react";
-import { ChickenIcon } from "@/components/ui/chicken-icon";
 import styles from "./marketing-site.module.css";
 
 const whatsapp = `https://wa.me/233555152989?text=${encodeURIComponent("Hello HabFarms, I am interested in your poultry farm management system and would like to book a demo.")}`;
@@ -39,8 +38,7 @@ function DemoLink({ className, children = "Book a Demo" }: { className: string; 
 
 function Brand({ light = false }: { light?: boolean }) {
   return <Link href="/" className={`${styles.brand} ${light ? styles.brandLight : ""}`} aria-label="HabFarms home">
-    <span className={styles.brandMark}><ChickenIcon size={34} /></span>
-    <span className={styles.brandName}>Hab<span>Farms</span></span>
+    <Image src={light ? "/brand/habfarms-logo-light.svg" : "/brand/habfarms-logo.svg"} alt="" width={1650} height={440} className={styles.brandLogo} unoptimized />
   </Link>;
 }
 
@@ -236,7 +234,7 @@ export function MarketingSite() {
         <Image className={styles.finalPhoto} src="/images/marketing/farm-manager.webp" alt="Poultry farm manager checking a phone beside a flock" fill sizes="100vw" />
         <div className={styles.finalShade} />
         <div className={styles.finalCopy}><p className={styles.finalKicker}>A clearer view of your farm</p><h2 id="final-cta-title">Bring your farm records<br />into one place.</h2><p>See how HabFarms can fit into the way you work.</p><DemoLink className={styles.finalButton}>Book a Demo on WhatsApp</DemoLink><a className={styles.finalEmail} href="mailto:info@habfarm.com">Or email info@habfarm.com</a></div>
-        <div className={styles.finalMark} aria-hidden="true"><ChickenIcon size={100} /></div>
+        <div className={styles.finalMark} aria-hidden="true"><Image src="/brand/habfarms-icon.svg" alt="" width={100} height={100} unoptimized /></div>
       </section>
     </main>
 

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { NumberInputWheelGuard } from "@/components/ui/number-input-wheel-guard";
 import "./globals.css";
 
@@ -10,7 +10,18 @@ export const metadata: Metadata = {
   applicationName: "HabFarms",
   title: { default: "HabFarms | Poultry Farm Management Software", template: "%s | HabFarms" },
   description: "A poultry-farm operations workspace for flocks, production, feed, finance and rearing.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  appleWebApp: { capable: true, title: "HabFarms", statusBarStyle: "default" },
   ...(googleSiteVerification ? { verification: { google: googleSiteVerification } } : {}),
 };
+
+export const viewport: Viewport = { themeColor: "#06452D" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) { return <html lang="en"><body><NumberInputWheelGuard />{children}</body></html>; }
