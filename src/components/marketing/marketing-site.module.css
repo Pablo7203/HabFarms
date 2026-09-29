@@ -291,6 +291,7 @@
 
 @media (max-width: 520px) {
   .site { --content: calc(100% - 36px); }
+  .brand { gap: 5px; }
   .brandLogo { width: 154px; }
   .headerInner { gap: 8px; }
   .headerActions { gap: 0; }

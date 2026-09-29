@@ -28,6 +28,7 @@ import { logoutAction } from "@/app/actions/auth";
 import { ChickenIcon } from "@/components/ui/chicken-icon";
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { FarmSwitcher } from "@/components/layout/farm-switcher";
+import { PwaControls } from "@/components/pwa/pwa-controls";
 import { cn } from "@/lib/utils";
 import type { AppContext, FarmChoice } from "@/types/domain";
 
@@ -60,19 +61,30 @@ const returnDestination = (pathname: string) => {
 export function AppShell({
   context,
   farms,
+  farmSelectionExplicit,
   children,
 }: {
   context: AppContext;
   farms: FarmChoice[];
+  farmSelectionExplicit: boolean;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [pendingDestination, setPendingDestination] = useState<string | null>(null);
   const navigationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const logoutSubmitting = useRef(false);
   const pathname = usePathname();
   const admin = context.membership.role === "admin";
   const commercial = context.membership.role !== "worker";
   const back = returnDestination(pathname);
+
+  async function guardLogout(event: React.FormEvent<HTMLFormElement>) {
+    if (logoutSubmitting.current) return;
+    event.preventDefault();
+    const form = event.currentTarget;
+    logoutSubmitting.current = true;
+    form.requestSubmit();
+  }
 
   useEffect(() => {
     const clearPending = () => {
@@ -180,7 +192,7 @@ export function AppShell({
   ].filter((group) => group.items.length);
   const nav = (
     <>
-      {farms.length > 1 ? <FarmSwitcher farms={farms} activeFarmId={context.farm.id} /> : (
+      {farms.length > 1 || !farmSelectionExplicit ? <FarmSwitcher farms={farms} activeFarmId={context.farm.id} farmSelectionExplicit={farmSelectionExplicit} /> : (
         <div className="flex h-16 items-center gap-3 px-5">
           <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-stone-200 bg-white shadow-sm"><Image src="/brand/habfarms-icon-small.svg" alt="" width={34} height={34} unoptimized /></div>
           <div className="min-w-0"><p className="text-xs text-stone-500">Poultry Farm</p><p className="truncate font-semibold text-stone-900">{context.farm.name}</p></div>
@@ -207,7 +219,7 @@ export function AppShell({
           </Link>
         ))}</div></div>)}
       </nav>
-      <form action={logoutAction} className="border-t border-stone-200 p-3">
+      <form action={logoutAction} onSubmit={guardLogout} className="border-t border-stone-200 p-3">
         <button className="flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium text-stone-600 hover:bg-stone-100">
           <LogOut size={19} />
           Sign out
@@ -274,6 +286,7 @@ export function AppShell({
             )}
           </div>
           <div className="ml-auto flex shrink-0 items-center gap-3">
+            <PwaControls />
             <NotificationBell farmId={context.farm.id} role={context.membership.role} currency={context.farm.currency} />
             <div className="text-right">
             <p className="text-sm font-semibold text-stone-900">

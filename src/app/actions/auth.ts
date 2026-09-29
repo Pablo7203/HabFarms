@@ -25,7 +25,20 @@ export async function switchActiveFarmAction(farmId: string): Promise<ActionResu
 export async function loginAction(input: unknown): Promise<ActionResult> {
   const parsed = loginSchema.safeParse(input); if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
   const supabase = await createClient(); const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  if (error) return { ok: false, message: "Email or password is incorrect." }; redirect("/dashboard");
+  if (error) return { ok: false, message: "Email or password is incorrect." };
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    const cookieStore = await cookies();
+    const currentFarmId = cookieStore.get("habfarms_active_farm")?.value;
+    const { data: currentMembership } = currentFarmId
+      ? await supabase.from("farm_members").select("farm_id").eq("farm_id", currentFarmId).eq("user_id", user.id).eq("active", true).maybeSingle()
+      : { data: null };
+    const { data: initialMembership } = currentMembership
+      ? { data: currentMembership }
+      : await supabase.from("farm_members").select("farm_id").eq("user_id", user.id).eq("active", true).order("created_at").limit(1).maybeSingle();
+    if (initialMembership) cookieStore.set("habfarms_active_farm", initialMembership.farm_id, { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
+  }
+  redirect("/dashboard");
 }
 export async function signupAction(input: unknown): Promise<ActionResult> {
   void input;

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 
@@ -18,6 +19,21 @@ export async function GET(request: Request) {
     : code
       ? await supabase.auth.exchangeCodeForSession(code)
       : { error: new Error("Missing authentication token") };
+
+  if (!error) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const cookieStore = await cookies();
+      const currentFarmId = cookieStore.get("habfarms_active_farm")?.value;
+      const { data: currentMembership } = currentFarmId
+        ? await supabase.from("farm_members").select("farm_id").eq("farm_id", currentFarmId).eq("user_id", user.id).eq("active", true).maybeSingle()
+        : { data: null };
+      const { data: initialMembership } = currentMembership
+        ? { data: currentMembership }
+        : await supabase.from("farm_members").select("farm_id").eq("user_id", user.id).eq("active", true).order("created_at").limit(1).maybeSingle();
+      if (initialMembership) cookieStore.set("habfarms_active_farm", initialMembership.farm_id, { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
+    }
+  }
 
   return NextResponse.redirect(new URL(error ? "/login" : next, url.origin));
 }

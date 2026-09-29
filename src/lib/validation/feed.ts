@@ -12,3 +12,6 @@ export const purchaseSchema=z.object({supplierId:z.union([z.literal(""),z.uuid()
 export const openingSchema=z.object({feedTypeId:z.uuid(),effectiveDate:z.iso.date(),bags:n.positive(),bagSizeKg:n.positive(),costPerBag:n.nonnegative(),notes:text});
 export const adjustmentSchema=z.object({feedTypeId:z.uuid(),movementDate:z.iso.date(),movementType:z.enum(["adjustment","wastage"]),direction:z.enum(["IN","OUT"]),quantityKg:n.positive(),unitCost:z.union([z.literal(""),n.nonnegative()]),reason:z.string().trim().min(3).max(300),notes:text});
 export const feedPaymentSchema=z.object({paymentDate:z.iso.date(),amount:n.positive(),paymentMethod:z.enum(["cash","momo","bank_transfer","other"]),reference:text,notes:text});
+export const feedInventoryBagCountSchema=z.object({bagCount:z.union([z.literal(""),z.coerce.number().int().min(0).max(1000000)])});
+export const flockFeedConsumptionSchema=z.object({flockId:z.uuid(),feedTypeId:z.uuid(),consumptionDate:z.iso.date(),quantityKg:n.positive().max(100000),notes:text});
+export const flockFeedConsumptionUpdateSchema=z.object({feedTypeId:z.uuid(),quantityKg:n.positive().max(100000),notes:text});

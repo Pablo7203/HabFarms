@@ -5,13 +5,13 @@ import { ArrowLeftRight, Check, ChevronDown, LoaderCircle } from "lucide-react";
 import { switchActiveFarmAction } from "@/app/actions/auth";
 import type { FarmChoice } from "@/types/domain";
 
-export function FarmSwitcher({ farms, activeFarmId }: { farms: FarmChoice[]; activeFarmId: string }) {
+export function FarmSwitcher({ farms, activeFarmId, farmSelectionExplicit = true }: { farms: FarmChoice[]; activeFarmId: string; farmSelectionExplicit?: boolean }) {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const activeFarm = farms.find((farm) => farm.id === activeFarmId) ?? farms[0];
 
   const selectFarm = (farmId: string) => {
-    if (farmId === activeFarmId || pending) {
+    if ((farmId === activeFarmId && farmSelectionExplicit) || pending) {
       setOpen(false);
       return;
     }
@@ -22,7 +22,7 @@ export function FarmSwitcher({ farms, activeFarmId }: { farms: FarmChoice[]; act
         // A full navigation makes the newly written farm cookie available to every
         // server component before the destination renders.  Client-side refreshes
         // could leave the previous farm visible until the user reloaded manually.
-        window.location.assign(result.nextPath ?? "/dashboard");
+        window.location.assign(farmId === activeFarmId ? window.location.href : result.nextPath ?? "/dashboard");
       }
     });
   };
@@ -36,7 +36,7 @@ export function FarmSwitcher({ farms, activeFarmId }: { farms: FarmChoice[]; act
         <div className="min-w-0 flex-1">
           <p className="text-xs font-medium text-stone-500">Poultry Farm</p>
           <p className="truncate text-base font-bold text-stone-900">{activeFarm.name}</p>
-          <p className="mt-0.5 flex items-center gap-1.5 text-xs font-semibold text-emerald-700"><span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />Active farm</p>
+          <p className="mt-0.5 flex items-center gap-1.5 text-xs font-semibold text-emerald-700"><span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />{farmSelectionExplicit ? "Active farm" : "Confirm active farm"}</p>
         </div>
         <button
           type="button"
@@ -53,7 +53,7 @@ export function FarmSwitcher({ farms, activeFarmId }: { farms: FarmChoice[]; act
       {open && (
         <div id="farm-switcher-menu" role="menu" aria-label="Choose active farm" className="absolute left-3 right-3 top-[calc(100%-2px)] z-50 overflow-hidden rounded-2xl border border-stone-200 bg-white p-2 shadow-[0_18px_36px_rgba(41,76,20,0.16)]">
           {farms.map((farm) => {
-            const selected = farm.id === activeFarmId;
+            const selected = farm.id === activeFarmId && farmSelectionExplicit;
             return (
               <button
                 key={farm.id}
