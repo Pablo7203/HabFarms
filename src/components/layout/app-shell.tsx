@@ -174,35 +174,49 @@ export function AppShell({
   return (
     <div className="min-h-screen bg-[#f2f6ed]">
       <a href="#main-content" className="sr-only z-50 rounded-lg bg-emerald-800 px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to content</a>
-      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-[#e4eadf] bg-white lg:flex">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-[#e4eadf] bg-white xl:flex">
         {nav}
       </aside>
+      <aside aria-label="Farm navigation" className="fixed inset-y-0 left-0 z-20 hidden w-[4.5rem] flex-col border-r border-[#e4eadf] bg-white lg:flex xl:hidden">
+        <button type="button" onClick={() => setOpen(true)} aria-label={`Open menu for ${context.farm.name}`} title={context.farm.name} className="mx-auto mt-3 grid size-11 place-items-center rounded-xl bg-[#f2f8e5] text-sm font-bold text-[#315d17]">
+          {context.farm.name.slice(0, 1).toUpperCase()}
+        </button>
+        <nav aria-label="Quick navigation" className="mt-4 flex-1 space-y-2 overflow-y-auto px-2">
+          {navigationGroups.map((group) => <div key={group.label} className="space-y-1 border-b border-stone-100 pb-2 last:border-0">{group.items.map(({ href, label, icon: Icon }) => <Link key={href} href={href} onClick={() => setOpen(false)} aria-label={label} title={label} className={cn("mx-auto grid size-11 place-items-center rounded-xl", pathname === href || pathname.startsWith(`${href}/`) ? "bg-emerald-50 text-emerald-800" : "text-stone-600 hover:bg-stone-100 hover:text-stone-900")}><Icon size={19} strokeWidth={1.8} /></Link>)}</div>)}
+        </nav>
+        <form action={logoutAction} onSubmit={guardLogout} className="border-t border-stone-200 p-2">
+          <button aria-label="Sign out" title="Sign out" className="mx-auto grid size-11 place-items-center rounded-xl text-stone-600 hover:bg-stone-100"><LogOut size={19} /></button>
+        </form>
+      </aside>
       {open && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 xl:hidden">
           <button
             aria-label="Close menu"
             className="absolute inset-0 bg-stone-950/30"
             onClick={() => setOpen(false)}
           />
-          <aside className="relative flex h-full w-[min(18rem,calc(100vw-2.5rem))] flex-col bg-white shadow-xl">
-            <button
-              aria-label="Close menu"
-              onClick={() => setOpen(false)}
-              className="absolute right-3 top-3 grid size-10 place-items-center rounded-lg hover:bg-stone-100"
-            >
-              <X />
-            </button>
+          <aside aria-label="Navigation menu" className="relative flex h-full w-[min(18rem,calc(100vw-2.5rem))] flex-col bg-white shadow-xl">
+            <div className="flex h-14 shrink-0 items-center justify-between border-b border-stone-200 px-4">
+              <p className="text-sm font-semibold text-stone-800">Menu</p>
+              <button
+                aria-label="Close menu"
+                onClick={() => setOpen(false)}
+                className="grid size-10 place-items-center rounded-lg hover:bg-stone-100"
+              >
+                <X size={20} />
+              </button>
+            </div>
             {nav}
           </aside>
         </div>
       )}
-      <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between gap-1 border-b border-[#e4eadf] bg-white/95 px-2 sm:gap-3 sm:px-6">
+      <div className="lg:pl-[4.5rem] xl:pl-64">
+        <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between gap-1 border-b border-[#e4eadf] bg-white/95 px-2 sm:gap-3 sm:px-6 xl:px-8">
           <div className="flex min-w-0 items-center gap-2">
             <button
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
-              className="grid size-10 shrink-0 place-items-center rounded-lg hover:bg-stone-100 sm:size-11 lg:hidden"
+              className="grid size-10 shrink-0 place-items-center rounded-lg hover:bg-stone-100 sm:size-11 xl:hidden"
             >
               <Menu />
             </button>
@@ -229,7 +243,7 @@ export function AppShell({
             </div>
           </div>
         </header>
-        <main id="main-content" className="mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">{children}</main>
+        <main id="main-content" className="mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8 2xl:px-12">{children}</main>
       </div>
     </div>
   );

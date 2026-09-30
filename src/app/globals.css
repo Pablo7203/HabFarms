@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
-:root { color-scheme: light; --farm-lime: #98cf43; --farm-lime-deep: #659d24; --farm-mist: #f2f6ed; --farm-ink: #202821; }
+:root {
+  color-scheme: light;
+  --farm-lime: #98cf43;
+  --farm-lime-deep: #659d24;
+  --farm-mist: #f2f6ed;
+  --farm-ink: #202821;
+  --farm-surface: #fffefb;
+  --farm-border: #e3e8de;
+  --farm-card-radius: 1.35rem;
+}
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; background: var(--farm-mist); }
 body { margin: 0; color: var(--farm-ink); background: var(--farm-mist); font-family: Aptos, "Segoe UI Variable", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif; }
