@@ -3,6 +3,7 @@ const productionProjectId = "prj_cRdCqG1IKn6dgYQL0B0kUgK9j8EC";
 const approvedProductionReleaseMessages = new Set([
   "release: deploy HabFarms logo refresh 2026-09-27",
   "release: explain production feed ledger errors 2026-09-28",
+  "release: deploy HabFarms PWA login start 2026-09-30",
 ]);
 
 if (process.env.VERCEL_PROJECT_ID === stagingProjectId) {
