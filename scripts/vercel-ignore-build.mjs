@@ -1,9 +1,6 @@
 const stagingProjectId = "prj_kVFfydcwPQaoBamCSKtJy5Q0STXT";
 const productionProjectId = "prj_cRdCqG1IKn6dgYQL0B0kUgK9j8EC";
-const approvedProductionReleaseMessages = new Set([
-  "release: deploy seo hardening 2026-09-26",
-  "release: deploy branded route loading state 2026-09-30",
-]);
+const approvedProductionReleaseMessage = "release: deploy seo hardening 2026-09-26";
 
 if (process.env.VERCEL_PROJECT_ID === stagingProjectId) {
   console.log("HabFarms staging project: build enabled.");
@@ -13,7 +10,7 @@ if (process.env.VERCEL_PROJECT_ID === stagingProjectId) {
 if (
   process.env.VERCEL_PROJECT_ID === productionProjectId &&
   process.env.VERCEL_GIT_COMMIT_REF === "main" &&
-  approvedProductionReleaseMessages.has(process.env.VERCEL_GIT_COMMIT_MESSAGE)
+  process.env.VERCEL_GIT_COMMIT_MESSAGE === approvedProductionReleaseMessage
 ) {
   console.log("Approved one-time HabFarms SEO production release: build enabled.");
   process.exit(1);
