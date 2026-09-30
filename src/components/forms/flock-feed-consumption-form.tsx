@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
+import { useRouter } from "next/navigation";
 import { createFlockFeedConsumptionAction, updateFlockFeedConsumptionAction } from "@/app/actions/feed";
 
 type Option = { id: string; name: string };
@@ -14,6 +15,7 @@ function Submit({ label }: { label: string }) {
 }
 
 export function FlockFeedConsumptionForm({ flocks, feedTypes, today, canBackdate, record }: { flocks: Option[]; feedTypes: Option[]; today: string; canBackdate: boolean; record?: { id: string; feedTypeId: string; quantityKg: number; notes: string | null } }) {
+  const router = useRouter();
   const action = record ? updateFlockFeedConsumptionAction.bind(null, record.id) : createFlockFeedConsumptionAction;
   const [state, formAction] = useActionState(async (_previous: State, formData: FormData) => {
     const input = record
@@ -22,6 +24,10 @@ export function FlockFeedConsumptionForm({ flocks, feedTypes, today, canBackdate
     const result = await action(input);
     return result;
   }, initial);
+
+  useEffect(() => {
+    if (state.ok) router.push(record ? "/feed/usage?updated=1" : "/feed/usage?created=1");
+  }, [record, router, state.ok]);
 
   return <form action={formAction} className="space-y-5">
     {record ? <div className="rounded-xl bg-stone-50 px-4 py-3 text-sm text-stone-600">Flock and date remain fixed so this correction cannot create a duplicate feed issue.</div> : <>

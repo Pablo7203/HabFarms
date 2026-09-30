@@ -73,6 +73,7 @@ function Shell({
   );
 }
 export function FeedTypeForm({ id }: { id?: string }) {
+  const router = useRouter();
   return (
     <Shell
       action={(f) =>
@@ -83,7 +84,7 @@ export function FeedTypeForm({ id }: { id?: string }) {
           active: true,
         })
       }
-      onSuccess={id ? undefined : (form) => form.reset()}
+      onSuccess={() => router.push(id ? "/feed/types?updated=1" : "/feed/types?created=1")}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field name="name" label="Feed type" />
@@ -120,7 +121,7 @@ export function SupplierForm({ id, types=[], materials=[] }: { id?: string; type
           active: true,
         })
       }
-      onSuccess={() => setTimeout(() => router.push("/feed/suppliers?created=1"), 500)}
+      onSuccess={() => router.push(id ? `/feed/suppliers/${id}?updated=1` : "/feed/suppliers?created=1")}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field name="name" label="Supplier name" />
@@ -256,6 +257,7 @@ export function OpeningForm({
   types: Option[];
   today: string;
 }) {
+  const router = useRouter();
   return (
     <Shell
       submit="Set opening stock"
@@ -269,6 +271,7 @@ export function OpeningForm({
           notes: f.get("notes"),
         })
       }
+      onSuccess={() => router.push("/feed?opening=recorded")}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <label>
@@ -324,6 +327,7 @@ export function AdjustmentForm({
   types: Option[];
   today: string;
 }) {
+  const router = useRouter();
   return (
     <Shell
       submit="Record adjustment"
@@ -339,6 +343,7 @@ export function AdjustmentForm({
           notes: f.get("notes"),
         })
       }
+      onSuccess={() => router.push("/feed?adjustment=recorded")}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <label>

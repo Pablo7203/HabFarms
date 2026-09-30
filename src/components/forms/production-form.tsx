@@ -109,19 +109,6 @@ export function ProductionForm({
       )}
     </label>
   );
-  if (status?.ok && !record)
-    return (
-      <div className="rounded-xl bg-emerald-50 p-6">
-        <h2 className="font-semibold">Production recorded.</h2>
-        <p>{status.text}</p>
-        <Button
-          className="mt-4"
-          onClick={() => router.push(`/production/${status.id}`)}
-        >
-          View record
-        </Button>
-      </div>
-    );
   return (
     <form
       className="space-y-7"
@@ -130,12 +117,13 @@ export function ProductionForm({
           const r = record
             ? await updateProductionAction(record.id, v)
             : await createProductionAction(v);
-          setStatus({
-            ok: r.ok,
-            text: r.message,
-            id: "id" in r ? r.id : undefined,
-          });
-          if (r.ok && record) router.refresh();
+          if (r.ok) {
+            if (record) router.push(`/production/${record.id}?updated=1`);
+            else if ("id" in r && r.id) router.push(`/production/${r.id}`);
+            else router.push("/production");
+            return;
+          }
+          setStatus({ ok: false, text: r.message });
         }),
       )}
     >

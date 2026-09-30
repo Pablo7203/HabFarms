@@ -38,7 +38,6 @@ export function FlockForm({
   const router = useRouter();
   const [pending, start] = useTransition();
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const schema = flock ? (isAdmin ? adminFlockUpdateSchema : flockUpdateSchema) : flockSchema;
   const { register, handleSubmit, watch, formState: { errors } } = useForm<Values>({
     resolver: zodResolver(schema) as unknown as Resolver<Values>,
@@ -70,7 +69,6 @@ export function FlockForm({
   return (
     <form className="grid gap-5 sm:grid-cols-2" onSubmit={handleSubmit((values) => start(async () => {
       setError("");
-      setSuccess("");
       if (flock && isAdmin && needsReason && values.correctionReason.trim().length < 5) {
         setError("Add a correction reason of at least 5 characters before changing opening birds or the start date.");
         return;
@@ -82,10 +80,7 @@ export function FlockForm({
         : await createFlockAction(values);
       if (!result.ok) setError(result.message);
       else if (!flock && result.id) router.push(`/flocks/${result.id}`);
-      else {
-        setSuccess(result.message);
-        router.refresh();
-      }
+      else if (flock) router.push(`/flocks/${flock.id}?updated=1`);
     }))}>
       {flock && currentLive !== undefined && (
         <Card className="grid gap-4 bg-stone-50 p-4 sm:col-span-2 sm:grid-cols-2">
@@ -145,7 +140,7 @@ export function FlockForm({
       )}
 
       <label className="block text-sm font-medium sm:col-span-2">Notes<textarea className="mt-2 min-h-28 w-full rounded-xl border border-stone-300 p-3" {...register("notes")} /></label>
-      {(error || success) && <p aria-live="polite" className={`text-sm sm:col-span-2 ${error ? "text-red-700" : "text-emerald-800"}`}>{error || success}</p>}
+      {error && <p aria-live="polite" className="text-sm text-red-700 sm:col-span-2">{error}</p>}
       <div className="sm:col-span-2"><Button disabled={pending}>{pending ? "Saving..." : flock ? "Save flock" : "Create flock"}</Button></div>
     </form>
   );

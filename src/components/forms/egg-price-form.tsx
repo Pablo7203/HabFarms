@@ -1,5 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { setEggPriceAction } from "@/app/actions/eggs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ export function EggPriceForm({
   grades: G[];
   today: string;
 }) {
+  const router = useRouter();
   const [pending, start] = useTransition(),
     [status, setStatus] = useState<{ ok: boolean; message: string } | null>(
       null,
@@ -19,17 +21,17 @@ export function EggPriceForm({
     <form
       className="grid gap-4 sm:grid-cols-2"
       action={(form) =>
-        start(async () =>
-          setStatus(
-            await setEggPriceAction({
+        start(async () => {
+          const result = await setEggPriceAction({
               eggGradeId: String(form.get("grade")),
               effectiveFrom: String(form.get("date")),
               cratePrice: String(form.get("crate")),
               looseEggPrice: String(form.get("loose")),
               notes: String(form.get("notes")),
-            }),
-          ),
-        )
+            });
+          if (result.ok) router.push("/eggs/pricing?updated=1");
+          else setStatus(result);
+        })
       }
     >
       <label>
@@ -85,7 +87,7 @@ export function EggPriceForm({
       </label>
       {status && (
         <p
-          role="alert"
+          role={status.ok ? "status" : "alert"}
           className={`sm:col-span-2 rounded-lg p-3 ${status.ok ? "bg-emerald-50" : "bg-red-50 text-red-700"}`}
         >
           {status.message}
