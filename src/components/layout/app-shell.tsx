@@ -163,6 +163,7 @@ export function AppShell({
         ))}</div></div>)}
       </nav>
       <form action={logoutAction} onSubmit={guardLogout} className="border-t border-stone-200 p-3">
+        <PwaControls />
         <button className="flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium text-stone-600 hover:bg-stone-100">
           <LogOut size={19} />
           Sign out
@@ -183,7 +184,7 @@ export function AppShell({
             className="absolute inset-0 bg-stone-950/30"
             onClick={() => setOpen(false)}
           />
-          <aside className="relative flex h-full w-72 flex-col bg-white shadow-xl">
+          <aside className="relative flex h-full w-[min(18rem,calc(100vw-2.5rem))] flex-col bg-white shadow-xl">
             <button
               aria-label="Close menu"
               onClick={() => setOpen(false)}
@@ -196,12 +197,12 @@ export function AppShell({
         </div>
       )}
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-[#e4eadf] bg-white/95 px-4 sm:px-6">
+        <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between gap-1 border-b border-[#e4eadf] bg-white/95 px-2 sm:gap-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-2">
             <button
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
-              className="grid size-11 shrink-0 place-items-center rounded-lg hover:bg-stone-100 lg:hidden"
+              className="grid size-10 shrink-0 place-items-center rounded-lg hover:bg-stone-100 sm:size-11 lg:hidden"
             >
               <Menu />
             </button>
@@ -216,14 +217,13 @@ export function AppShell({
               </Link>
             )}
           </div>
-          <div className="ml-auto flex shrink-0 items-center gap-3">
-            <PwaControls />
+          <div className="ml-auto flex min-w-0 shrink items-center gap-1 sm:gap-3">
             <NotificationBell farmId={context.farm.id} role={context.membership.role} currency={context.farm.currency} />
-            <div className="text-right">
-            <p className="text-sm font-semibold text-stone-900">
+            <div className="min-w-0 max-w-[min(10rem,32vw)] text-right sm:max-w-none">
+            <p className="truncate text-xs font-semibold text-stone-900 sm:text-sm">
               {context.profile?.full_name || context.user.email}
             </p>
-            <p className="text-xs capitalize text-stone-500">
+            <p className="text-[10px] capitalize text-stone-500 sm:text-xs">
               {context.membership.role}
             </p>
             </div>

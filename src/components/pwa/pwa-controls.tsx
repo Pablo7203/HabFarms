@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useState, useSyncExternalStore } from "react";
 import { Download } from "lucide-react";
 
 type InstallPromptEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: "accepted" | "dismissed" }> };
@@ -30,6 +30,7 @@ function subscribeToInstalled(callback: () => void) {
 export function PwaControls() {
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
   const [installHelp, setInstallHelp] = useState(false);
+  const helpId = useId();
   const isInstalled = useSyncExternalStore(subscribeToInstalled, getInstalledSnapshot, () => false);
 
   useEffect(() => {
@@ -65,13 +66,13 @@ export function PwaControls() {
   if (isInstalled) return null;
 
   return (
-    <div className="relative flex items-center gap-2">
+    <div className="relative flex w-full shrink-0 items-center gap-2">
       {!isInstalled && (
-        <button type="button" onClick={install} aria-expanded={installHelp} aria-controls="pwa-install-help" className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-stone-300 bg-white px-3 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700">
-          <Download size={16} aria-hidden="true" /> <span className="hidden sm:inline">Install app</span><span className="sm:hidden">Install</span>
+        <button type="button" onClick={install} aria-expanded={installHelp} aria-controls={helpId} className="inline-flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-medium text-stone-600 hover:bg-stone-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700">
+          <Download size={18} aria-hidden="true" /> <span>Install app</span>
         </button>
       )}
-      <div id="pwa-install-help" hidden={!installHelp} role="status" className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-stone-200 bg-white p-4 text-left text-sm shadow-xl">
+      <div id={helpId} hidden={!installHelp} role="status" className="fixed left-3 right-3 top-[4.75rem] z-[70] mt-0 w-auto max-w-md rounded-xl border border-stone-200 bg-white p-4 text-left text-sm shadow-xl sm:absolute sm:left-auto sm:right-0 sm:top-full sm:z-50 sm:mt-2 sm:w-80">
           <p className="font-semibold text-stone-900">Install HabFarms</p>
           <p className="mt-1 text-stone-600">Use your browser&apos;s menu and choose <strong>Install app</strong> or <strong>Add to Home Screen</strong>. On iPhone or iPad, tap Share, then Add to Home Screen.</p>
       </div>

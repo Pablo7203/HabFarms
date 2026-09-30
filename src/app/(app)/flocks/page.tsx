@@ -19,13 +19,13 @@ export default async function FlocksPage({ searchParams }: { searchParams: Promi
   const canManage = context.membership.role !== "worker";
 
   return <section aria-labelledby="flocks-heading">
-    <header className="flex flex-wrap items-end justify-between gap-5 border-b border-stone-200/90 pb-6">
+    <header className="flex flex-col items-start gap-4 border-b border-stone-200/90 pb-5 sm:flex-row sm:items-end sm:justify-between sm:gap-5 sm:pb-6">
       <div className="max-w-xl">
-        <p className="text-sm font-semibold tracking-[0.08em] text-emerald-800">Farm operations</p>
-        <h1 id="flocks-heading" className="mt-2 text-4xl font-bold tracking-[-0.04em] text-stone-900 sm:text-5xl">Flocks</h1>
-        <p className="mt-3 text-pretty leading-7 text-stone-600">Each flock is a living operational record. Bird counts are calculated from the movement ledger, not typed in manually.</p>
+        <p className="text-xs font-semibold tracking-[0.08em] text-emerald-800 sm:text-sm">Farm operations</p>
+        <h1 id="flocks-heading" className="mt-1 text-3xl font-bold tracking-[-0.04em] text-stone-900 sm:mt-2 sm:text-5xl">Flocks</h1>
+        <p className="mt-2 max-w-prose text-sm leading-6 text-stone-600 sm:mt-3 sm:text-base sm:leading-7">Each flock is a living operational record. Bird counts are calculated from the movement ledger, not typed in manually.</p>
       </div>
-      {canManage && <Link href="/flocks/new" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_-18px_rgba(6,78,59,0.9)] hover:-translate-y-px hover:bg-emerald-800"><Plus size={18} />New flock</Link>}
+      {canManage && <Link href="/flocks/new" className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-[0_12px_24px_-18px_rgba(6,78,59,0.9)] hover:-translate-y-px hover:bg-emerald-800 sm:w-auto"><Plus size={18} />New flock</Link>}
     </header>
 
     <nav className="mt-6 flex flex-wrap gap-2" aria-label="Flock status filter">
