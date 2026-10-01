@@ -14,7 +14,7 @@ export default async function Purchase({ params }: { params: Promise<{ id: strin
   const [{ data: purchase }, { data: payments }, { data: movements }, { data: receipt }] = await Promise.all([
     supabase.from("v_feed_purchase_receivables").select("*").eq("id", id).maybeSingle(),
     supabase.from("feed_purchase_payments").select("*").eq("feed_purchase_id", id).order("payment_date", { ascending: false }),
-    supabase.from("feed_inventory_movements").select("*").eq("source_id", id).order("created_at"),
+    supabase.from("feed_inventory_movements").select("id,direction,quantity_kg,movement_type,created_at").eq("source_id", id).order("created_at"),
     supabase.from("purchase_receipts").select("*").eq("source_type", "feed_purchase").eq("source_id", id).maybeSingle(),
   ]);
 
