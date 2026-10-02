@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createPlatformFarmAction, resendPlatformOwnerInvitationAction, revokePlatformOwnerInvitationAction } from "@/app/actions/platform";
+import { ConfirmActionDialog } from "@/components/ui/confirm-action-dialog";
 
 type Plan = { id: string; name: string; default_trial_days: number };
 type Notice = { ok: boolean; message: string } | null;
@@ -19,5 +20,5 @@ export function PlatformFarmForm({ plans, today }: { plans: Plan[]; today: strin
 export function OwnerInvitationActions({ invitationId, canResend, canRevoke }: { invitationId: string; canResend: boolean; canRevoke: boolean }) {
   const [notice, setNotice] = useState<Notice>(null), [pending, start] = useTransition();
   if (!canResend && !canRevoke) return null;
-  return <div className="mt-4 space-y-2"><div className="flex flex-wrap gap-2">{canResend && <button disabled={pending} onClick={() => start(async () => setNotice(await resendPlatformOwnerInvitationAction(invitationId)))} className="min-h-11 rounded-xl border px-4 text-sm font-semibold">Resend invitation</button>}{canRevoke && <button disabled={pending} onClick={() => { if (confirm("Revoke this owner invitation? The link will no longer work.")) start(async () => setNotice(await revokePlatformOwnerInvitationAction(invitationId))); }} className="min-h-11 rounded-xl border border-red-200 px-4 text-sm font-semibold text-red-700">Revoke invitation</button>}</div>{notice && <p role="status" className={`text-sm ${notice.ok ? "text-emerald-800" : "text-red-700"}`}>{notice.message}</p>}</div>;
+  return <div className="mt-4 space-y-2"><div className="flex flex-wrap gap-2">{canResend && <button disabled={pending} onClick={() => start(async () => setNotice(await resendPlatformOwnerInvitationAction(invitationId)))} className="min-h-11 rounded-xl border px-4 text-sm font-semibold">Resend invitation</button>}{canRevoke && <ConfirmActionDialog triggerLabel="Revoke invitation" title="Revoke this owner invitation?" description="The invitation link will stop working, and the owner will no longer be able to use it to activate this farm." confirmLabel="Revoke invitation" disabled={pending} triggerClassName="min-h-11 rounded-xl border border-red-200 px-4 text-sm font-semibold text-red-700 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-60" onConfirm={async () => { const response = await revokePlatformOwnerInvitationAction(invitationId); setNotice(response); return response; }} />}</div>{notice && <p role="status" className={`text-sm ${notice.ok ? "text-emerald-800" : "text-red-700"}`}>{notice.message}</p>}</div>;
 }

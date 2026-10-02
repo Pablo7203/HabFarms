@@ -9,6 +9,7 @@ import {
   updateMemberAction,
 } from "@/app/actions/users";
 import { createClient } from "@/lib/supabase/client";
+import { ConfirmActionDialog } from "@/components/ui/confirm-action-dialog";
 
 type Result = { ok: boolean; message: string };
 const Notice = ({ result }: { result: Result | null }) =>
@@ -90,20 +91,19 @@ export function InvitationActions({ id }: { id: string }) {
         >
           {pending ? "Working..." : "Resend"}
         </button>
-        <button
+        <ConfirmActionDialog
+          triggerLabel="Revoke"
+          title="Revoke this invitation?"
+          description="The recipient will no longer be able to use this invitation to join the farm."
+          confirmLabel="Revoke invitation"
           disabled={pending}
-          onClick={() => {
-            if (
-              confirm(
-                "Revoke this invitation? The recipient will no longer be able to join this farm.",
-              )
-            )
-              start(async () => setResult(await revokeInvitationAction(id)));
+          triggerClassName="min-h-11 rounded-lg border border-red-200 px-3 text-sm font-semibold text-red-700 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+          onConfirm={async () => {
+            const response = await revokeInvitationAction(id);
+            setResult(response);
+            return response;
           }}
-          className="min-h-11 rounded-lg border border-red-200 px-3 text-sm font-semibold text-red-700"
-        >
-          Revoke
-        </button>
+        />
       </div>
       <Notice result={result} />
     </div>
@@ -151,27 +151,29 @@ export function MemberActions({
         >
           Update role
         </button>
-        <button
-          disabled={pending}
-          onClick={() => {
-            if (
-              confirm(
-                `${active ? "Remove" : "Restore"} farm access for this user?`,
-              )
-            )
-              start(async () =>
-                setResult(
-                  await updateMemberAction({
-                    membershipId: id,
-                    active: !active,
-                  }),
-                ),
-              );
-          }}
-          className={`min-h-11 rounded-lg border px-3 text-sm font-semibold ${active ? "border-red-200 text-red-700" : "text-emerald-700"}`}
-        >
-          {active ? "Deactivate" : "Reactivate"}
-        </button>
+        {active ? (
+          <ConfirmActionDialog
+            triggerLabel="Deactivate"
+            title="Remove this user's farm access?"
+            description="They will lose access to this farm immediately. Their existing farm records will remain."
+            confirmLabel="Deactivate user"
+            disabled={pending}
+            triggerClassName="min-h-11 rounded-lg border border-red-200 px-3 text-sm font-semibold text-red-700 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
+            onConfirm={async () => {
+              const response = await updateMemberAction({ membershipId: id, active: false });
+              setResult(response);
+              return response;
+            }}
+          />
+        ) : (
+          <button
+            disabled={pending}
+            onClick={() => start(async () => setResult(await updateMemberAction({ membershipId: id, active: true })))}
+            className="min-h-11 rounded-lg border px-3 text-sm font-semibold text-emerald-700"
+          >
+            Reactivate
+          </button>
+        )}
       </div>
       <Notice result={result} />
     </div>
