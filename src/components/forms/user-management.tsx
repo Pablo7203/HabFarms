@@ -1,6 +1,5 @@
 "use client";
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import {
   acceptInvitationAction,
   inviteUserAction,
@@ -194,7 +193,6 @@ export function AcceptInvitationForm({
   const [password, setPassword] = useState(""),
     [result, setResult] = useState<Result | null>(null),
     [pending, start] = useTransition();
-  const router = useRouter();
   return (
     <form
       className="rounded-xl border bg-white p-5"
@@ -213,9 +211,7 @@ export function AcceptInvitationForm({
               return;
             }
           }
-          const accepted = await acceptInvitationAction({ invitationId: id });
-          setResult(accepted);
-          if (accepted.ok && accepted.nextPath) router.replace(accepted.nextPath);
+          setResult(await acceptInvitationAction({ invitationId: id }));
         });
       }}
     >
@@ -240,18 +236,16 @@ export function AcceptInvitationForm({
       <div className="mt-4">
         <Notice result={result} />
       </div>
-      {result?.ok ? <p className="mt-4 text-sm font-medium text-emerald-800">Opening your farm…</p> : (
-        <button
-          disabled={pending}
-          className="mt-4 min-h-11 w-full rounded-lg bg-emerald-700 px-4 font-semibold text-white disabled:opacity-60"
-        >
-          {pending
-            ? "Accepting..."
-            : requiresPasswordSetup
-              ? "Set Password and Accept Invitation"
-              : "Accept Invitation"}
-        </button>
-      )}
+      <button
+        disabled={pending}
+        className="mt-4 min-h-11 w-full rounded-lg bg-emerald-700 px-4 font-semibold text-white disabled:opacity-60"
+      >
+        {pending
+          ? "Accepting..."
+          : requiresPasswordSetup
+            ? "Set Password and Accept Invitation"
+            : "Accept Invitation"}
+      </button>
     </form>
   );
 }

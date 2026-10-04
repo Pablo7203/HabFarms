@@ -2,6 +2,7 @@
 import { headers } from "next/headers";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createClient as createStatelessClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { createAuthAdminClient } from "@/lib/supabase/admin";
@@ -63,23 +64,29 @@ export async function acceptInvitationAction(input: unknown): Promise<ActionResu
   const { data: pendingInvitations, error: pendingError } = await supabase.rpc(
     "get_pending_farm_invitations",
   );
+  if (pendingError) {
+    console.error("[invitation-acceptance] Could not verify pending invitation", pendingError);
+    return { ok: false, message: "We couldn't verify this invitation. Please refresh and try again." };
+  }
   const ownsInvitation = pendingInvitations?.some(
     (invitation: { id: string }) => invitation.id === parsed.data.invitationId,
   );
-  if (pendingError || !ownsInvitation) {
+  if (!ownsInvitation) {
     return { ok: false, message: "This invitation is no longer valid." };
   }
 
   const { data: member, error } = await supabase.rpc("accept_farm_invitation", {
     target_invitation: parsed.data.invitationId,
   });
-  if (error || !member) return { ok: false, message: "This invitation is no longer valid." };
+  if (error || !member) {
+    if (error) console.error("[invitation-acceptance] Invitation RPC failed", error);
+    return { ok: false, message: "This invitation is no longer valid." };
+  }
   const farmId = (Array.isArray(member) ? member[0] : member).farm_id as string;
   (await cookies()).set("habfarms_active_farm", farmId, { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
-  const { data: accountRows } = await supabase.rpc("get_my_farm_access", { target_farm: farmId });
-  const account = accountRows?.[0];
-  const nextPath = account?.account_status === "onboarding" && account.primary_owner_user_id === user.id ? "/onboarding" : "/dashboard";
-
   revalidatePath("/settings/users");
-  return { ok: true, message: "Invitation accepted. Opening your farm…", nextPath };
+  // The protected app layout sends newly accepted farm owners to onboarding;
+  // regular members continue to the dashboard. Redirect here so acceptance
+  // does not depend on a client-side router transition or a second account lookup.
+  redirect("/dashboard");
 }
