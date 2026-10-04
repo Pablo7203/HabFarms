@@ -12,6 +12,10 @@ function message(error: { message: string }) {
   if (insufficientFeed) {
     return `The feed ledger shows only ${insufficientFeed[1]} kg available on ${insufficientFeed[2]}. Check the opening stock and feed purchases dated on or before that date, then retry.`;
   }
+  const productionBirdLimit = m.match(/(\d+) eligible birds can produce a maximum of (\d+) eggs/i);
+  if (productionBirdLimit) {
+    return `This flock has ${productionBirdLimit[1]} eligible birds on the selected date, so eggs collected cannot exceed ${productionBirdLimit[2]}. Check the flock count and production date, or correct the egg total.`;
+  }
   if (m.includes("already exists")) return "A production record already exists for this flock on this date.";
   if (m.includes("Deaths and culls") || m.includes("exceed available live birds")) return "Deaths and culls cannot exceed the available live birds.";
   if (m.includes("Cannot decrease by") || m.includes("Bird movement would make flock population negative")) return "That decrease exceeds the live birds available on the selected date. Reduce the quantity or correct the date.";
