@@ -20,11 +20,11 @@ export default async function RearingDailyPage({
   const query = await searchParams;
   const context = await requireAppContext();
   const supabase = await createClient();
-  const [{ data: batch }, { data: record }] = await Promise.all([
+  const [{ data: batch, error: batchError }, { data: record, error: recordError }] = await Promise.all([
     supabase
-      .from("rearing_batches")
-      .select("id,batch_code,arrival_date,status,feeding_stage,current_birds")
-      .eq("id", batchId)
+      .from("v_rearing_population")
+      .select("batch_id,batch_code,arrival_date,status,current_birds")
+      .eq("batch_id", batchId)
       .eq("farm_id", context.farm.id)
       .maybeSingle(),
     query.record
@@ -43,6 +43,10 @@ export default async function RearingDailyPage({
           .eq("record_date", farmToday(context.farm.timezone))
           .maybeSingle(),
   ]);
+  if (batchError || recordError) {
+    console.error("Could not load the rearing daily record", batchError ?? recordError);
+    throw new Error("Could not load the rearing daily record.");
+  }
   if (!batch) notFound();
   if (query.record && !record) notFound();
 
