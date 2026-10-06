@@ -39,7 +39,7 @@ type Values = {
   creditDays: number | string;
 };
 type PriceBook = Record<string, { crate: number | null; loose: number | null }>;
-type StockBook = Record<string, { onDate: number; current: number }>;
+type StockBook = Record<string, { onDate: number; current: number; sellable: number }>;
 
 const addDays = (date: string, days: number) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isInteger(days) || days < 1 || days > 365) return "";
@@ -70,7 +70,7 @@ export function SaleForm({
   const [stockRefreshing, startStockRefresh] = useTransition();
   const [status, setStatus] = useState<{ ok: boolean; text: string; id?: string } | null>(null);
   const [stockBook, setStockBook] = useState<StockBook>(
-    Object.fromEntries(grades.map((grade) => [grade.id, { onDate: grade.total_eggs, current: grade.total_eggs }])),
+    Object.fromEntries(grades.map((grade) => [grade.id, { onDate: grade.total_eggs, current: grade.total_eggs, sellable: grade.total_eggs }])),
   );
   const [stockDate, setStockDate] = useState(today);
   const [stockError, setStockError] = useState<string | null>(null);
@@ -272,6 +272,7 @@ export function SaleForm({
                   <span>Available: <b>{grade?.full_crates ?? 0} crates + {grade?.loose_eggs ?? 0} loose</b> ({grade?.total_eggs ?? 0} eggs)</span>
                 ) : (
                   <div className="flex flex-1 flex-wrap items-start justify-between gap-3">
+                    <span className="font-medium text-emerald-900">Maximum sellable on {saleDate || "selected day"}: <b>{!saleDate ? "Choose a sale date" : stockError ? "Unavailable" : stockDate === saleDate && grade && stockBook[grade.id] ? describeStock(stockBook[grade.id].sellable) : "Loading…"}</b></span>
                     <span>End of {saleDate || "selected day"}: <b>{!saleDate ? "Choose a sale date" : stockError ? "Unavailable" : stockDate === saleDate && grade && stockBook[grade.id] ? describeStock(stockBook[grade.id].onDate) : "Loading…"}</b></span>
                     <span>Current stock: <b>{stockBook[grade?.id ?? ""] ? describeStock(stockBook[grade!.id].current) : "—"}</b></span>
                   </div>
