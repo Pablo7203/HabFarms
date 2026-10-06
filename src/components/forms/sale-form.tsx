@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { saleEditSchema, saleSchema } from "@/lib/validation/sales";
 import { money } from "@/lib/format";
 import { postSaleAction, updateSaleAction } from "@/app/actions/sales";
-import { getEggPricesAction } from "@/app/actions/eggs";
+import { getEggPricesAction, getEggSaleStockAction } from "@/app/actions/eggs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -39,6 +39,7 @@ type Values = {
   creditDays: number | string;
 };
 type PriceBook = Record<string, { crate: number | null; loose: number | null }>;
+type StockBook = Record<string, { onDate: number; current: number }>;
 
 const addDays = (date: string, days: number) => {
   const value = new Date(`${date}T12:00:00Z`);
@@ -64,7 +65,14 @@ export function SaleForm({
   const router = useRouter();
   const [pending, start] = useTransition();
   const [refreshing, startRefresh] = useTransition();
+  const [stockRefreshing, startStockRefresh] = useTransition();
   const [status, setStatus] = useState<{ ok: boolean; text: string; id?: string } | null>(null);
+  const [stockBook, setStockBook] = useState<StockBook>(
+    Object.fromEntries(grades.map((grade) => [grade.id, { onDate: grade.total_eggs, current: grade.total_eggs }])),
+  );
+  const [stockDate, setStockDate] = useState(today);
+  const [stockError, setStockError] = useState<string | null>(null);
+  const stockRequest = useRef(0);
   const [priceBook, setPriceBook] = useState<PriceBook>(
     Object.fromEntries(grades.map((grade) => [grade.id, { crate: grade.crate_price, loose: grade.loose_egg_price }])),
   );
@@ -127,6 +135,27 @@ export function SaleForm({
     });
   };
 
+  const refreshStock = (date: string) => {
+    if (record) return;
+    const request = ++stockRequest.current;
+    setStockDate("");
+    setStockError(null);
+    if (!date) return;
+    startStockRefresh(async () => {
+      const result = await getEggSaleStockAction(date);
+      if (request !== stockRequest.current) return;
+      if (!result.ok) {
+        setStockError(result.message ?? "Egg stock could not be loaded.");
+        return;
+      }
+      setStockBook(result.stock);
+      setStockDate(date);
+    });
+  };
+
+  const describeStock = (eggs: number) =>
+    `${Math.floor(eggs / crateSize)} crates + ${eggs % crateSize} loose (${eggs} eggs)`;
+
   const suggested = (gradeId: string, unit: "crate" | "loose_egg") =>
     unit === "crate" ? priceBook[gradeId]?.crate : priceBook[gradeId]?.loose;
 
@@ -160,8 +189,10 @@ export function SaleForm({
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="text-sm font-medium">
           Sale Date
-          <Input className="mt-2" type="date" disabled={!!record} {...saleDateRegistration} onChange={(event) => { saleDateRegistration.onChange(event); refreshPrices(event.target.value); }} />
+          <Input className="mt-2" type="date" disabled={!!record} {...saleDateRegistration} onChange={(event) => { saleDateRegistration.onChange(event); refreshPrices(event.target.value); refreshStock(event.target.value); }} />
           {refreshing && <span className="mt-1 block text-xs text-stone-500">Refreshing effective prices…</span>}
+          {stockRefreshing && <span className="mt-1 block text-xs text-stone-500">Checking stock for this date…</span>}
+          {stockError && <span role="alert" className="mt-1 block text-xs text-red-700">{stockError}</span>}
           {errors.saleDate && <span className="mt-1 block text-sm text-red-700">{errors.saleDate.message}</span>}
         </label>
         <label className="text-sm font-medium">
@@ -234,8 +265,15 @@ export function SaleForm({
                   {errors.items?.[index]?.pricePerUnit && <span className="mt-1 block text-sm text-red-700">{errors.items[index]?.pricePerUnit?.message}</span>}
                 </label>
               </div>
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm">
-                <span>Available: <b>{grade?.full_crates ?? 0} crates + {grade?.loose_eggs ?? 0} loose</b> ({grade?.total_eggs ?? 0} eggs)</span>
+              <div className="mt-3 flex flex-wrap items-start justify-between gap-3 text-sm">
+                {record ? (
+                  <span>Available: <b>{grade?.full_crates ?? 0} crates + {grade?.loose_eggs ?? 0} loose</b> ({grade?.total_eggs ?? 0} eggs)</span>
+                ) : (
+                  <div className="flex flex-1 flex-wrap items-start justify-between gap-3">
+                    <span>End of {saleDate || "selected day"}: <b>{stockError ? "Unavailable" : stockDate === saleDate && grade && stockBook[grade.id] ? describeStock(stockBook[grade.id].onDate) : "Loading…"}</b></span>
+                    <span>Current stock: <b>{stockBook[grade?.id ?? ""] ? describeStock(stockBook[grade!.id].current) : "—"}</b></span>
+                  </div>
+                )}
                 {fields.length > 1 && <button type="button" className="min-h-11 px-3 text-red-700" onClick={() => remove(index)}>Remove line</button>}
               </div>
             </div>
