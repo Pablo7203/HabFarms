@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { Card } from "@/components/ui/card";
 
 export function DateFilter({ from, to, children, exportType }: { from: string; to: string; children?: React.ReactNode; exportType?: string }) {
-  return <form className="mt-6 grid gap-3 rounded-2xl border bg-white p-4 sm:grid-cols-2 lg:grid-cols-5"><label className="text-sm font-medium">From<input name="from" type="date" defaultValue={from} className="mt-2 min-h-11 w-full rounded-lg border px-3" /></label><label className="text-sm font-medium">To<input name="to" type="date" defaultValue={to} className="mt-2 min-h-11 w-full rounded-lg border px-3" /></label>{children}<button className="min-h-11 self-end rounded-lg border px-4 text-sm font-semibold">Apply filters</button>{exportType && <Link href={`/reports/export?type=${exportType}&from=${from}&to=${to}`} className="inline-flex min-h-11 items-center justify-center self-end rounded-lg border px-4 text-sm font-semibold">Export CSV</Link>}</form>;
+  return <form className="mt-6 grid gap-3 rounded-2xl border bg-white p-4 sm:grid-cols-2 lg:grid-cols-5"><label className="text-sm font-medium">From<input name="from" type="date" defaultValue={from} className="mt-2 min-h-11 w-full rounded-lg border px-3" /></label><label className="text-sm font-medium">To<input name="to" type="date" defaultValue={to} className="mt-2 min-h-11 w-full rounded-lg border px-3" /></label>{children}<button className="min-h-11 self-end rounded-lg border px-4 text-sm font-semibold">Apply filters</button>{exportType && <button type="submit" name="type" value={exportType} formAction="/reports/export" formMethod="get" className="min-h-11 self-end rounded-lg border px-4 text-sm font-semibold">Export CSV</button>}</form>;
 }
 
 export function Kpis({ items }: { items: Array<[string, string | number, string?]> }) {

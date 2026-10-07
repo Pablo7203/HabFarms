@@ -135,7 +135,7 @@ export function AppShell({
   ].filter((group) => group.items.length);
   const nav = (
     <>
-      {farms.length > 1 || !farmSelectionExplicit ? <FarmSwitcher farms={farms} activeFarmId={context.farm.id} farmSelectionExplicit={farmSelectionExplicit} /> : (
+      {farms.length > 1 ? <FarmSwitcher farms={farms} activeFarmId={context.farm.id} farmSelectionExplicit={farmSelectionExplicit} /> : (
         <div className="flex h-16 items-center gap-3 px-5">
           <div className="grid size-10 shrink-0 place-items-center rounded-xl border border-stone-200 bg-white shadow-sm"><Image src="/brand/habfarms-icon-small.svg" alt="" width={34} height={34} unoptimized /></div>
           <div className="min-w-0"><p className="text-xs text-stone-500">Poultry Farm</p><p className="truncate font-semibold text-stone-900">{context.farm.name}</p></div>

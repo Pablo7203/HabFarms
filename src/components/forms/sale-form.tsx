@@ -110,7 +110,7 @@ export function SaleForm({
   const total = Math.max(0, items.reduce((sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.pricePerUnit) || 0), 0) - discount);
   const outstanding = Math.max(0, total - paid);
   const credit = Number(watch("creditDays")) || 0;
-  const due = credit ? addDays(saleDate, credit) : "";
+  const due = !record && outstanding > 0 && credit ? addDays(saleDate, credit) : "";
   const totalEggs = items.reduce((sum, item) => sum + (Number(item.quantity) || 0) * (item.unit === "crate" ? crateSize : 1), 0);
 
   useEffect(() => {
@@ -293,7 +293,7 @@ export function SaleForm({
         {!record && <label className="text-sm font-medium">Payment Received<Input className="mt-2" type="number" min="0" step="0.01" {...register("amountPaid")} /></label>}
         {!record && <label className="text-sm font-medium">Payment Method<select className="mt-2 min-h-11 w-full rounded-lg border px-3" {...register("paymentMethod")}><option value="cash">Cash</option><option value="momo">Mobile money</option><option value="bank_transfer">Bank transfer</option><option value="other">Other</option></select></label>}
       </div>
-      {(outstanding > 0 || record) && <fieldset className="grid gap-4 rounded-xl border border-amber-200 bg-amber-50 p-5 sm:grid-cols-2"><legend className="px-2 font-semibold">Credit Terms</legend><label className="text-sm font-medium">Credit Period (days)<Input className="mt-2 bg-white" type="number" min="1" max="365" {...register("creditDays")} />{errors.creditDays && <span className="mt-1 block text-sm text-red-700">{errors.creditDays.message}</span>}</label><div><p className="text-sm font-medium">Payment Due Date</p><p className="mt-2 min-h-11 rounded-lg border bg-white px-3 py-2.5">{due || (credit ? "Choose a valid sale date" : "Enter a credit period")}</p></div></fieldset>}
+      {!record && outstanding > 0 && <fieldset className="grid gap-4 rounded-xl border border-amber-200 bg-amber-50 p-5 sm:grid-cols-2"><legend className="px-2 font-semibold">Credit Terms</legend><label className="text-sm font-medium">Credit Period (days)<Input className="mt-2 bg-white" type="number" min="1" max="365" {...register("creditDays")} />{errors.creditDays && <span className="mt-1 block text-sm text-red-700">{errors.creditDays.message}</span>}</label><div><p className="text-sm font-medium">Payment Due Date</p><p className="mt-2 min-h-11 rounded-lg border bg-white px-3 py-2.5">{due || (credit ? "Choose a valid sale date" : "Enter a credit period")}</p></div></fieldset>}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {[["Total eggs", totalEggs], ["Sale total", money(total, currency)], ["Paid now", money(paid, currency)], ["Outstanding", money(outstanding, currency)], ["Payment due", due || "—"]].map(([label, value]) => <div key={label} className="rounded-lg bg-stone-50 p-3"><p className="text-xs text-stone-500">{label}</p><p className="font-semibold">{value}</p></div>)}
       </div>
