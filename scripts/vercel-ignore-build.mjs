@@ -1,6 +1,6 @@
 const stagingProjectId = "prj_kVFfydcwPQaoBamCSKtJy5Q0STXT";
 const productionProjectId = "prj_cRdCqG1IKn6dgYQL0B0kUgK9j8EC";
-const approvedProductionReleaseMessage = "release: deploy seo hardening 2026-09-26";
+const approvedProductionReleaseMessage = "release: deploy admin egg sale correction 2026-10-08";
 const approvedManualReleaseBranch = "release/admin-egg-sale-correction";
 const approvedManualReleaseMessage = "release: deploy admin egg sale correction 2026-10-08";
 
