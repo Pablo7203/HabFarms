@@ -55,6 +55,7 @@ export default async function RearingDailyPage({
   const canOperate =
     ["active", "partially_transferred"].includes(batch.status) &&
     Number(batch.current_birds) > 0;
+  const canCorrect = ["admin", "manager"].includes(context.membership.role);
   const { data: opening, error } = await supabase.rpc("rearing_balance_at", {
     target_batch: batchId,
     target_date: recordDate,
@@ -94,7 +95,7 @@ export default async function RearingDailyPage({
         {isWorker && record
           ? "Today’s daily record"
           : record
-            ? canOperate
+            ? canCorrect
               ? "Correct daily record"
               : "Daily record"
             : "Daily rearing entry"}
@@ -109,8 +110,9 @@ export default async function RearingDailyPage({
           role="status"
           className="mt-5 border-stone-200 bg-stone-50 p-4 text-sm text-stone-700"
         >
-          This batch has no birds currently in rearing or is closed. This page
-          is read-only; historical records remain available.
+          This batch has no birds currently in rearing or is closed. New daily
+          operations are unavailable. Admins and managers can still correct a
+          saved record; the ledger checks historical balances before saving.
         </Card>
       )}
 
@@ -134,7 +136,7 @@ export default async function RearingDailyPage({
               record.
             </p>
           </div>
-        ) : canOperate ? (
+        ) : canOperate || (record && canCorrect) ? (
           <RearingDailyForm
             batchId={batchId}
             today={today}

@@ -6,8 +6,14 @@ import { rearingBatchSchema, rearingBatchUpdateSchema, rearingDailySchema } from
 import type { ActionResult } from "@/app/actions/auth";
 
 function errorMessage(message: string) {
+  if (message.includes("A daily record already exists for this batch and date")) return "A daily record already exists for this batch on that date. Choose another date.";
   if (message.includes("already exists")) return "That batch code or daily record already exists.";
-  if (message.includes("available") || message.includes("negative")) return "Deaths cannot exceed the birds available on that date.";
+  if (message.includes("population negative") || message.includes("nonnegative")) return "This correction would make the batch's bird balance negative on a later date. Review later records or transfers before saving.";
+  if (message.includes("available")) return "Deaths cannot exceed the birds available on the selected date. No changes were saved.";
+  if (message.includes("Invalid rearing daily record date or values")) return "Choose a date from the batch arrival date through today, and enter a non-negative whole number of deaths.";
+  if (message.includes("mortality ledger integrity")) return "This record's mortality history needs support review before it can be corrected. No changes were saved.";
+  if (message.includes("Workers may record today only")) return "Workers can only submit today's daily rearing record.";
+  if (message.includes("Only farm admins or managers")) return "Only farm admins or managers can correct a saved daily record.";
   if (message.includes("Invalid rearing batch") || message.includes("hatch")) return "Check the batch details and dates, then try again.";
   if (message.includes("supplier")) return "Choose an active supplier from this farm.";
   if (message.includes("permission") || message.includes("access denied")) return "You do not have permission to make this change.";
@@ -54,5 +60,5 @@ export async function saveRearingDailyRecordAction(batchId: string, recordId: st
   const { error } = await supabase.rpc("save_rearing_daily_record", { target_batch: batchId, target_record_date: d.recordDate, target_deaths: d.deaths, target_observations: d.observations, target_record: recordId });
   if (error) return { ok: false, message: errorMessage(error.message) };
   revalidatePath(`/rearing/${batchId}`); revalidatePath(`/rearing/${batchId}/daily`); revalidatePath("/rearing");
-  return { ok: true, message: recordId ? "Daily record corrected with an audited mortality reversal." : "Daily record saved." };
+  return { ok: true, message: recordId ? "Daily record corrected. Mortality changes were recorded in the audit ledger." : "Daily record saved." };
 }
