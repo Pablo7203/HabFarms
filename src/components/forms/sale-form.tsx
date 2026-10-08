@@ -106,7 +106,7 @@ export function SaleForm({
   const customerId = watch("customerId");
   const saleDate = watch("saleDate");
   const discount = Number(watch("discount")) || 0;
-  const paid = record ? 0 : Number(watch("amountPaid")) || 0;
+  const paid = Number(watch("amountPaid")) || 0;
   const total = Math.max(0, items.reduce((sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.pricePerUnit) || 0), 0) - discount);
   const outstanding = Math.max(0, total - paid);
   const credit = Number(watch("creditDays")) || 0;
@@ -191,7 +191,7 @@ export function SaleForm({
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="text-sm font-medium">
           Sale Date
-          <Input className="mt-2" type="date" disabled={!!record} {...saleDateRegistration} onChange={(event) => { saleDateRegistration.onChange(event); refreshPrices(event.target.value); refreshStock(event.target.value); }} />
+          <Input className="mt-2" type="date" {...saleDateRegistration} onChange={(event) => { saleDateRegistration.onChange(event); refreshPrices(event.target.value); refreshStock(event.target.value); }} />
           {refreshing && <span className="mt-1 block text-xs text-stone-500">Refreshing effective prices…</span>}
           {stockRefreshing && <span className="mt-1 block text-xs text-stone-500">Checking stock for this date…</span>}
           {stockError && <span role="alert" className="mt-1 block text-xs text-red-700">{stockError}</span>}
@@ -269,7 +269,7 @@ export function SaleForm({
               </div>
               <div className="mt-3 flex flex-wrap items-start justify-between gap-3 text-sm">
                 {record ? (
-                  <span>Available: <b>{grade?.full_crates ?? 0} crates + {grade?.loose_eggs ?? 0} loose</b> ({grade?.total_eggs ?? 0} eggs)</span>
+                  <span className="text-stone-600">Inventory history will be revalidated for this date when you save.</span>
                 ) : (
                   <div className="flex flex-1 flex-wrap items-start justify-between gap-3">
                     <span className="font-medium text-emerald-900">Maximum sellable on {saleDate || "selected day"}: <b>{!saleDate ? "Choose a sale date" : stockError ? "Unavailable" : stockDate === saleDate && grade && stockBook[grade.id] ? describeStock(stockBook[grade.id].sellable) : "Loading…"}</b></span>
@@ -293,7 +293,7 @@ export function SaleForm({
         {!record && <label className="text-sm font-medium">Payment Received<Input className="mt-2" type="number" min="0" step="0.01" {...register("amountPaid")} /></label>}
         {!record && <label className="text-sm font-medium">Payment Method<select className="mt-2 min-h-11 w-full rounded-lg border px-3" {...register("paymentMethod")}><option value="cash">Cash</option><option value="momo">Mobile money</option><option value="bank_transfer">Bank transfer</option><option value="other">Other</option></select></label>}
       </div>
-      {!record && outstanding > 0 && <fieldset className="grid gap-4 rounded-xl border border-amber-200 bg-amber-50 p-5 sm:grid-cols-2"><legend className="px-2 font-semibold">Credit Terms</legend><label className="text-sm font-medium">Credit Period (days)<Input className="mt-2 bg-white" type="number" min="1" max="365" {...register("creditDays")} />{errors.creditDays && <span className="mt-1 block text-sm text-red-700">{errors.creditDays.message}</span>}</label><div><p className="text-sm font-medium">Payment Due Date</p><p className="mt-2 min-h-11 rounded-lg border bg-white px-3 py-2.5">{due || (credit ? "Choose a valid sale date" : "Enter a credit period")}</p></div></fieldset>}
+      {outstanding > 0 && <fieldset className="grid gap-4 rounded-xl border border-amber-200 bg-amber-50 p-5 sm:grid-cols-2"><legend className="px-2 font-semibold">Credit Terms</legend><label className="text-sm font-medium">Credit Period (days)<Input className="mt-2 bg-white" type="number" min="1" max="365" {...register("creditDays")} />{errors.creditDays && <span className="mt-1 block text-sm text-red-700">{errors.creditDays.message}</span>}</label><div><p className="text-sm font-medium">Payment Due Date</p><p className="mt-2 min-h-11 rounded-lg border bg-white px-3 py-2.5">{due || (credit ? "Choose a valid sale date" : "Enter a credit period")}</p></div></fieldset>}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {[["Total eggs", totalEggs], ["Sale total", money(total, currency)], ["Paid now", money(paid, currency)], ["Outstanding", money(outstanding, currency)], ["Payment due", due || "—"]].map(([label, value]) => <div key={label} className="rounded-lg bg-stone-50 p-3"><p className="text-xs text-stone-500">{label}</p><p className="font-semibold">{value}</p></div>)}
       </div>
