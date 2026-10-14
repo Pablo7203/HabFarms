@@ -34,7 +34,7 @@ export function RearingFeedConsumptionForm({ batchId, today, arrivalDate, feedTy
   const router = useRouter();
   const form = useSubmit(async (f) => {
     const result = await recordRearingFeedAction(batchId, { feedTypeId: f.get("feedTypeId"), consumptionDate: f.get("date"), quantityKg: f.get("quantityKg"), dailyRecordId: dailyRecordId ?? "", notes: f.get("notes") });
-    if (result.ok) router.refresh(); return result;
+    if (result.ok) router.replace(`/rearing/${batchId}`); return result;
   });
   return <form onSubmit={form.submit} className="grid gap-4 sm:grid-cols-2">
     <label className={field}>Feed product<select required name="feedTypeId" defaultValue="" className={select}><option value="" disabled>Select feed</option>{feedTypes.map(x => <option key={x.id} value={x.id}>{x.name} · {(x.availableKg ?? 0).toLocaleString()} kg available</option>)}</select><span className="mt-1 block text-xs font-normal text-stone-500">Available quantities are the farm-wide live balance; they can change if another user records feed use.</span></label>

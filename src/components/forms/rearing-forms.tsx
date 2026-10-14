@@ -1,12 +1,35 @@
 "use client";
 import { useState, useTransition, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { createRearingBatchAction, postBroilerDispatchAction, recordRearingWeightSampleAction, saveRearingDailyRecordAction, updateRearingBatchAction } from "@/app/actions/rearing";
+import { changeRearingStageAction, createRearingBatchAction, postBroilerDispatchAction, recordRearingWeightSampleAction, saveRearingDailyRecordAction, updateRearingBatchAction } from "@/app/actions/rearing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 type Supplier = { id: string; name: string };
 type BatchValues = { batchCode?: string; birdPurpose?: "layer_pullet" | "broiler"; breed: string; supplierId: string; arrivalDate: string; hatchDate: string; initialQuantity?: number; notes: string };
+export function RearingStageForm({ batchId, stage, stages }: { batchId: string; stage: string; stages: { value: string; label: string }[] }) {
+  const [pending, start] = useTransition(), [selectedStage, setSelectedStage] = useState(stage), [error, setError] = useState(""), [message, setMessage] = useState(""), router = useRouter();
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setError(""); setMessage("");
+    const values = new FormData(event.currentTarget);
+    start(async () => {
+      const result = await changeRearingStageAction(batchId, values);
+      if (!result.ok) { setError(result.message); return; }
+      setMessage(result.message);
+      router.refresh();
+    });
+  }
+  return <form onSubmit={submit} className="flex w-full flex-wrap gap-2 sm:w-auto">
+    <label className="sr-only" htmlFor="batch-stage">Set batch stage</label>
+    <select id="batch-stage" name="stage" value={selectedStage} onChange={event => setSelectedStage(event.target.value)} disabled={pending} className="min-h-11 flex-1 rounded-lg border border-stone-300 bg-white px-3 disabled:opacity-60 sm:flex-none">
+      {stages.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+    </select>
+    <Button disabled={pending} variant="secondary">{pending ? "Saving stage…" : "Save stage"}</Button>
+    {error && <p role="alert" className="basis-full rounded-lg bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+    {message && <p role="status" className="basis-full rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900">{message}</p>}
+  </form>;
+}
+
 export function RearingBatchForm({ today, suppliers, batch }: { today: string; suppliers: Supplier[]; batch?: BatchValues & { id: string } }) {
   const [pending, start] = useTransition(), [error, setError] = useState(""), router = useRouter();
   function submit(event: FormEvent<HTMLFormElement>) {

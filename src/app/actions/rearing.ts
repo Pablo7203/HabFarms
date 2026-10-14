@@ -44,12 +44,14 @@ export async function updateRearingBatchAction(batchId: string, input: unknown):
   return { ok: true, message: "Batch details updated." };
 }
 
-export async function changeRearingStageAction(batchId: string, formData: FormData) {
+export async function changeRearingStageAction(batchId: string, formData: FormData): Promise<ActionResult> {
   await requireRole(["admin", "manager"]);
   const stage = String(formData.get("stage") ?? ""), supabase = await createClient();
+  if (!["brooding", "growing", "finishing", "ready_for_transfer", "ready_for_market"].includes(stage)) return { ok: false, message: "Choose a valid lifecycle stage and try again." };
   const { error } = await supabase.rpc("change_rearing_batch_stage", { target_batch: batchId, new_stage: stage });
-  if (error) throw new Error(errorMessage(error.message));
+  if (error) return { ok: false, message: errorMessage(error.message) };
   revalidatePath(`/rearing/${batchId}`); revalidatePath("/rearing");
+  return { ok: true, message: "Lifecycle stage updated." };
 }
 
 export async function saveRearingDailyRecordAction(batchId: string, recordId: string | null, input: unknown): Promise<ActionResult> {
