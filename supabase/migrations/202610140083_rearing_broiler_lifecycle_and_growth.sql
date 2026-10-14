@@ -207,8 +207,12 @@ create or replace function public.record_rearing_weight_sample(
 ) returns public.rearing_weight_samples language plpgsql security definer set search_path='' as $$
 declare b public.rearing_batches; f_today date; created public.rearing_weight_samples; available integer;
 begin
-  select rb, (now() at time zone fa.timezone)::date into b,f_today
-  from public.rearing_batches rb join public.farms fa on fa.id=rb.farm_id where rb.id=target_batch for update of rb;
+  select rb into b
+  from public.rearing_batches rb where rb.id=target_batch for update;
+  if b.id is not null then
+    select (now() at time zone fa.timezone)::date into f_today
+    from public.farms fa where fa.id=b.farm_id;
+  end if;
   if b.id is null or not public.has_farm_role(b.farm_id,array['admin','manager','worker']) then raise exception 'Rearing weight sample access denied' using errcode='42501'; end if;
   if target_date is null or target_date<b.arrival_date or target_date>f_today or target_sample_size is null or target_sample_size<=0
     or target_average_weight_kg is null or target_average_weight_kg<=0 or target_average_weight_kg>50
