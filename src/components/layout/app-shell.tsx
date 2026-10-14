@@ -1,8 +1,8 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   BarChart3,
@@ -70,11 +70,53 @@ export function AppShell({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   const logoutSubmitting = useRef(false);
+  const navigationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingNavigationRef = useRef<string | null>(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const navigationKey = `${pathname}?${searchParams.toString()}`;
+  const navigating = pendingNavigation === navigationKey;
   const admin = context.membership.role === "admin";
   const commercial = context.membership.role !== "worker";
   const back = returnDestination(pathname);
+
+  useEffect(() => {
+    if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+    if (pendingNavigationRef.current === null) return;
+    const clearPending = setTimeout(() => {
+      pendingNavigationRef.current = null;
+      setPendingNavigation(null);
+    }, 0);
+    return () => clearTimeout(clearPending);
+  }, [navigationKey]);
+
+  useEffect(() => {
+    function showNavigationFeedback(event: MouseEvent) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (!(event.target instanceof Element)) return;
+      const anchor = event.target.closest<HTMLAnchorElement>("a[href]");
+      if (!anchor || anchor.target || anchor.hasAttribute("download")) return;
+      const destination = new URL(anchor.href, window.location.href);
+      if (destination.origin !== window.location.origin) return;
+      if (destination.pathname === window.location.pathname && destination.search === window.location.search) return;
+
+      pendingNavigationRef.current = navigationKey;
+      setPendingNavigation(navigationKey);
+      if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+      navigationTimeout.current = setTimeout(() => {
+        pendingNavigationRef.current = null;
+        setPendingNavigation(null);
+      }, 15000);
+    }
+
+    document.addEventListener("click", showNavigationFeedback, true);
+    return () => {
+      document.removeEventListener("click", showNavigationFeedback, true);
+      if (navigationTimeout.current) clearTimeout(navigationTimeout.current);
+    };
+  }, [navigationKey]);
 
   async function guardLogout(event: React.FormEvent<HTMLFormElement>) {
     if (logoutSubmitting.current) return;
@@ -173,6 +215,12 @@ export function AppShell({
   );
   return (
     <div className="min-h-screen bg-[#f2f6ed]">
+      {navigating && <div role="status" aria-live="polite" aria-busy="true" className="fixed inset-0 z-[100] grid place-items-center bg-[#f2f6ed]/80 p-5 backdrop-blur-sm">
+        <div className="flex min-w-64 items-center gap-3 rounded-2xl border border-[#e3e8de] bg-[#fffefb] p-5 shadow-lg">
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#f2f8e5]"><Image src="/brand/habfarms-icon-small.svg" alt="" width={38} height={38} unoptimized priority className="motion-safe:animate-pulse motion-reduce:animate-none" /></span>
+          <span><span className="block text-sm font-semibold text-[#315d17]">{pathname.startsWith("/rearing") ? "Opening DOC records" : "Loading your farm workspace"}</span><span className="mt-1 block text-xs text-stone-500">Getting the latest information ready.</span></span>
+        </div>
+      </div>}
       <a href="#main-content" className="sr-only z-50 rounded-lg bg-emerald-800 px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to content</a>
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-[#e4eadf] bg-white xl:flex">
         {nav}
@@ -232,7 +280,7 @@ export function AppShell({
             )}
           </div>
           <div className="ml-auto flex min-w-0 shrink items-center gap-1 sm:gap-3">
-            <NotificationBell farmId={context.farm.id} role={context.membership.role} currency={context.farm.currency} />
+            <NotificationBell farmId={context.farm.id} role={context.membership.role} currency={context.farm.currency} timezone={context.farm.timezone} />
             <div className="min-w-0 max-w-[min(10rem,32vw)] text-right sm:max-w-none">
             <p className="truncate text-xs font-semibold text-stone-900 sm:text-sm">
               {context.profile?.full_name || context.user.email}

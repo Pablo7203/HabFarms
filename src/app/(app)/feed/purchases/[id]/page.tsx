@@ -11,14 +11,16 @@ export default async function Purchase({ params }: { params: Promise<{ id: strin
   const context = await requireRole(["admin", "manager"]);
   const { id } = await params;
   const supabase = await createClient();
-  const [{ data: purchase }, { data: payments }, { data: movements }, { data: receipt }] = await Promise.all([
-    supabase.from("v_feed_purchase_receivables").select("*").eq("id", id).maybeSingle(),
-    supabase.from("feed_purchase_payments").select("*").eq("feed_purchase_id", id).order("payment_date", { ascending: false }),
-    supabase.from("feed_inventory_movements").select("id,direction,quantity_kg,movement_type,created_at").eq("source_id", id).order("created_at"),
-    supabase.from("purchase_receipts").select("*").eq("source_type", "feed_purchase").eq("source_id", id).maybeSingle(),
+  const [{ data: purchase }, { data: payments }, { data: movements }, { data: receipt }, { data: feedTypes }] = await Promise.all([
+    supabase.from("v_feed_purchase_receivables").select("*").eq("farm_id", context.farm.id).eq("id", id).maybeSingle(),
+    supabase.from("feed_purchase_payments").select("*").eq("farm_id", context.farm.id).eq("feed_purchase_id", id).order("payment_date", { ascending: false }),
+    supabase.from("feed_inventory_movements").select("id,direction,quantity_kg,movement_type,created_at").eq("farm_id", context.farm.id).eq("source_id", id).order("created_at"),
+    supabase.from("purchase_receipts").select("*").eq("farm_id", context.farm.id).eq("source_type", "feed_purchase").eq("source_id", id).maybeSingle(),
+    supabase.from("feed_types").select("id,name").eq("farm_id", context.farm.id),
   ]);
 
   if (!purchase) notFound();
+  const feedTypeName = feedTypes?.find((feedType) => feedType.id === purchase.feed_type_id)?.name ?? "Unknown feed type";
   const signedReceipt = receipt ? await supabase.storage.from("purchase-receipts").createSignedUrl(receipt.storage_path, 3600) : null;
   const receiptUrl = signedReceipt?.data?.signedUrl ?? null;
 
@@ -26,18 +28,19 @@ export default async function Purchase({ params }: { params: Promise<{ id: strin
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div><p className="text-sm text-emerald-700">{purchase.purchase_number}</p><h1 className="text-3xl font-bold">Feed purchase</h1></div>
-        <Link href={`/feed/purchases/${id}/edit`} className="rounded-lg border bg-white px-4 py-3 text-sm font-semibold">Edit purchase</Link>
+        {purchase.status === "completed" && <Link href={`/feed/purchases/${id}/edit`} className="min-h-11 rounded-lg border bg-white px-4 py-3 text-sm font-semibold">Correct purchase details</Link>}
       </div>
       <div className="mt-7 grid gap-4 sm:grid-cols-4">
         {[["Total kg", purchase.total_kg], ["Total", money(purchase.total_cost,context.farm.currency)], ["Paid", money(purchase.total_paid,context.farm.currency)], ["Outstanding", money(purchase.outstanding_balance,context.farm.currency)]].map(([label, value]) => <Card key={label} className="p-5"><p className="text-xs text-stone-500">{label}</p><b className="mt-2 block text-xl">{value}</b></Card>)}
       </div>
       <div className="mt-7 grid gap-6 lg:grid-cols-2">
-        <Card className="p-6"><h2 className="font-semibold">Purchase snapshot</h2><p className="mt-4">{purchase.bags} bags × {purchase.bag_size_kg} kg</p><p>{money(purchase.cost_per_bag,context.farm.currency)}/bag · {money(purchase.cost_per_kg,context.farm.currency)}/kg</p><p className="capitalize">Status: {purchase.status}</p></Card>
-        <Card className="p-6"><h2 className="font-semibold">Inventory movements</h2>{movements?.map((movement) => <p key={movement.id} className="mt-3">{movement.direction} {movement.quantity_kg} kg · {movement.movement_type}</p>)}</Card>
+        <Card className="p-6"><h2 className="font-semibold">Purchase snapshot</h2><p className="mt-4">Feed type: <span className="font-medium">{feedTypeName}</span></p><p>{purchase.bags} bags × {purchase.bag_size_kg} kg</p><p>{money(purchase.cost_per_bag,context.farm.currency)}/bag · {money(purchase.cost_per_kg,context.farm.currency)}/kg</p><p className="mt-3 text-sm text-stone-600">If the purchase price was entered incorrectly, correct the purchase details. Payments are tracked separately and stay in the payment history.</p><p className="capitalize">Status: {purchase.status}</p></Card>
+        <Card className="p-6"><h2 className="font-semibold">Inventory movements</h2>{movements?.map((movement: { id: string; direction: string; quantity_kg: number; movement_type: string }) => <p key={movement.id} className="mt-3">{movement.direction} {movement.quantity_kg} kg · {movement.movement_type}</p>)}</Card>
       </div>
+      {purchase.status !== "completed" && <p role="status" className="mt-4 rounded-xl bg-stone-50 p-4 text-sm text-stone-600">This purchase is {purchase.status} and can’t be edited. Completed purchases can be corrected; voided records remain in the audit history.</p>}
       <Card className="mt-7 p-6"><h2 className="font-semibold">Receipt evidence</h2><p className="mt-1 text-sm text-stone-600">Keep a photo of the cash or bank receipt with this purchase for audit and reconciliation.</p>{receiptUrl ? <a href={receiptUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex rounded-lg border px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">View {receipt?.file_name}</a> : <p className="mt-4 text-sm text-stone-500">No receipt image has been attached.</p>}<PurchaseReceiptForm purchaseId={id}/></Card>
       {Number(purchase.outstanding_balance) > 0 && <Card className="mt-7 p-6"><h2 className="mb-4 font-semibold">Record supplier payment</h2><FeedPaymentForm id={id} today={farmToday(context.farm.timezone)}/></Card>}
-      <Card className="mt-7 divide-y"><h2 className="p-5 font-semibold">Payment history</h2>{payments?.map((payment) => <div key={payment.id} className="grid grid-cols-3 p-5"><span>{payment.payment_date}</span><span>{money(payment.amount,context.farm.currency)}</span><span>{payment.voided_at ? "Voided" : payment.payment_method}</span></div>)}</Card>
+      <Card className="mt-7 divide-y"><h2 className="p-5 font-semibold">Payment history</h2>{payments?.map((payment: { id: string; payment_date: string; amount: number; voided_at: string | null; payment_method: string }) => <div key={payment.id} className="grid grid-cols-3 p-5"><span>{payment.payment_date}</span><span>{money(payment.amount,context.farm.currency)}</span><span>{payment.voided_at ? "Voided" : payment.payment_method}</span></div>)}</Card>
     </div>
   );
 }

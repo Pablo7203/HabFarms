@@ -20,29 +20,33 @@ export default async function RearingDailyPage({
   const query = await searchParams;
   const context = await requireAppContext();
   const supabase = await createClient();
-  const [{ data: batch }, { data: record }] = await Promise.all([
+  const [{ data: batch, error: batchError }, { data: record, error: recordError }] = await Promise.all([
     supabase
-      .from("rearing_batches")
-      .select("id,batch_code,arrival_date,status,feeding_stage,current_birds")
-      .eq("id", batchId)
+      .from("v_rearing_population")
+      .select("batch_id,batch_code,arrival_date,status,current_birds,bird_purpose")
+      .eq("batch_id", batchId)
       .eq("farm_id", context.farm.id)
       .maybeSingle(),
     query.record
       ? supabase
           .from("rearing_daily_records")
-          .select("id,record_date,deaths,observations")
+          .select("id,record_date,deaths,observations,feed_check,water_check,brooder_temperature_c")
           .eq("id", query.record)
           .eq("rearing_batch_id", batchId)
           .eq("farm_id", context.farm.id)
           .maybeSingle()
       : supabase
           .from("rearing_daily_records")
-          .select("id,record_date,deaths,observations")
+          .select("id,record_date,deaths,observations,feed_check,water_check,brooder_temperature_c")
           .eq("rearing_batch_id", batchId)
           .eq("farm_id", context.farm.id)
           .eq("record_date", farmToday(context.farm.timezone))
           .maybeSingle(),
   ]);
+  if (batchError || recordError) {
+    console.error("Could not load the rearing daily record", batchError ?? recordError);
+    throw new Error("Could not load the rearing daily record.");
+  }
   if (!batch) notFound();
   if (query.record && !record) notFound();
 
@@ -57,13 +61,17 @@ export default async function RearingDailyPage({
   });
   if (error) throw new Error("Could not calculate the population at this date.");
 
-  const [{ data: feedTypes }, { data: feedRows }] = await Promise.all([
+  const [{ data: feedTypes }, { data: feedStockRows }, { data: feedRows }] = await Promise.all([
     supabase
       .from("feed_types")
       .select("id,name")
       .eq("farm_id", context.farm.id)
       .eq("active", true)
       .order("name"),
+    supabase
+      .from("v_feed_forecast")
+      .select("feed_type_id,quantity_kg")
+      .eq("farm_id", context.farm.id),
     supabase
       .from("v_rearing_feed_history")
       .select("id,feed_name,consumption_date,quantity_kg,active")
@@ -96,8 +104,8 @@ export default async function RearingDailyPage({
             : "Daily rearing entry"}
       </h1>
       <p className="mt-2 text-sm text-stone-600">
-        Batch {batch.batch_code} · {formatFarmDate(recordDate)}. Deaths are
-        posted once to this batch’s population ledger.
+      Batch {batch.batch_code} · {formatFarmDate(recordDate)}. Deaths are
+        posted once to this batch’s population ledger; feed and water checks are optional.
       </p>
 
       {!canOperate && (
@@ -125,6 +133,7 @@ export default async function RearingDailyPage({
             <p className="mt-1 whitespace-pre-wrap text-sm">
               {record.observations || "No observations recorded."}
             </p>
+            <p className="mt-4 text-sm">Feed check: <span className="capitalize">{record.feed_check?.replaceAll("_"," ") ?? "Not recorded"}</span> · Water check: <span className="capitalize">{record.water_check?.replaceAll("_"," ") ?? "Not recorded"}{record.brooder_temperature_c != null ? ` · Brooder ${record.brooder_temperature_c}°C` : ""}</span></p>
             <p className="mt-5 text-xs text-stone-500">
               Workers can record today’s operations but cannot correct a posted
               record.
@@ -136,6 +145,7 @@ export default async function RearingDailyPage({
             today={today}
             arrivalDate={batch.arrival_date}
             openingBirds={Number(opening ?? 0)}
+            broiler={batch.bird_purpose === "broiler"}
             record={
               record
                 ? {
@@ -143,6 +153,9 @@ export default async function RearingDailyPage({
                     recordDate: record.record_date,
                     deaths: record.deaths,
                     observations: record.observations ?? "",
+                    feedCheck: record.feed_check,
+                    waterCheck: record.water_check,
+                    brooderTemperatureC: record.brooder_temperature_c,
                   }
                 : undefined
             }
@@ -175,8 +188,9 @@ export default async function RearingDailyPage({
           <h2 className="font-semibold">Actual feed consumed</h2>
           <p className="mt-1 text-sm text-stone-500">
             Feed quantities post to shared stock and are linked to this daily
-            record.
+            record. Availability below is the current farm-wide balance.
           </p>
+          {feedTypes?.length ? <ul aria-label="Feed available now" className="mt-4 flex flex-wrap gap-2">{feedTypes.map((feed: { id: string; name: string }) => <li key={feed.id} className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-950">{feed.name} <b className="ml-1">{Number((feedStockRows ?? []).find((stock: { feed_type_id: string; quantity_kg: number }) => stock.feed_type_id === feed.id)?.quantity_kg ?? 0).toLocaleString()} kg</b></li>)}</ul> : null}
         </div>
         {canOperate ? (
           <div className="p-5">
@@ -184,9 +198,10 @@ export default async function RearingDailyPage({
               batchId={batchId}
               today={today}
               arrivalDate={batch.arrival_date}
-              feedTypes={(feedTypes ?? []).map((x) => ({
+              feedTypes={(feedTypes ?? []).map((x: { id: string; name: string }) => ({
                 id: x.id,
                 name: x.name,
+                availableKg: Number((feedStockRows ?? []).find((stock: { feed_type_id: string; quantity_kg: number }) => stock.feed_type_id === x.id)?.quantity_kg ?? 0),
               }))}
               dailyRecordId={record?.id}
               date={recordDate}
@@ -199,7 +214,7 @@ export default async function RearingDailyPage({
           </p>
         )}
         <div className="divide-y divide-stone-100">
-          {feedRows?.map((row) => (
+          {feedRows?.map((row: { id: string; feed_name: string; quantity_kg: number; active: boolean }) => (
             <div
               key={row.id}
               className="flex justify-between gap-3 px-5 py-3 text-sm"
