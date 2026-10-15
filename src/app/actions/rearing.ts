@@ -7,6 +7,12 @@ import type { ActionResult } from "@/app/actions/auth";
 
 function errorMessage(message: string) {
   const normalized = message.toLowerCase();
+  if (normalized.includes("a daily record already exists for this batch and date")) return "A daily record already exists for this batch on that date. Choose another date.";
+  if (normalized.includes("population negative") || normalized.includes("nonnegative")) return "This correction would make the batch's bird balance negative on a later date. Review later records or transfers before saving.";
+  if (normalized.includes("invalid rearing daily record date or values")) return "Choose a date from the batch arrival date through today, and enter a non-negative whole number of deaths.";
+  if (normalized.includes("mortality ledger integrity")) return "This record's mortality history needs support review before it can be corrected. No changes were saved.";
+  if (normalized.includes("workers may record today only")) return "Workers can only submit today's daily rearing record.";
+  if (normalized.includes("only farm admins or managers")) return "Only farm admins or managers can correct a saved daily record.";
   if (normalized.includes("sample size exceeds")) return "The sample includes more birds than were available in this batch on that date. Enter a smaller sample size.";
   if (normalized.includes("check the sample date, sample size, average weight, and uniformity")) return "Check that the sample date is after arrival and not in the future, the sample size is within the birds available, the average weight is between 0 and 50 kg, and uniformity is between 0 and 100%.";
   if (normalized.includes("dispatches in date order")) return "Record broiler dispatches in date order. Correct later entries before backdating this one.";
