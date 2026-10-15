@@ -11,6 +11,7 @@ import { elapsedAge } from "@/lib/rearing-lifecycle";
 import { pageWindow } from "@/components/ui/pagination";
 import { CalendarDays, ClipboardList, ArrowUpRight, Pencil, Plus } from "lucide-react";
 import { money } from "@/lib/format";
+import { ShowMoreList } from "@/components/ui/show-more-list";
 
 export const metadata = { title: "Rearing batch" };
 type Params = { history?: string; page?: string; recordsPage?: string };
