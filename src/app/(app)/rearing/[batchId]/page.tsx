@@ -24,7 +24,7 @@ export default async function RearingBatchDetail({params,searchParams}:{params:P
     supabase.from("v_rearing_population").select("*").eq("batch_id",batchId).eq("farm_id",context.farm.id).maybeSingle(),
     supabase.from("rearing_daily_records").select("id,record_date,deaths,observations,created_at,updated_at").eq("rearing_batch_id",batchId).eq("farm_id",context.farm.id).eq("record_date",today).maybeSingle(),
     (()=>{let q=supabase.from("v_rearing_population_history").select("*").eq("rearing_batch_id",batchId).eq("farm_id",context.farm.id);if(history==="mortality")q=q.in("movement_type",["death","reversal"]);return q.order("movement_date",{ascending:false}).order("created_at",{ascending:false}).range(movementPage.from,movementPage.to)})(),
-    supabase.from("rearing_daily_records").select("id,record_date,deaths,observations,updated_at").eq("rearing_batch_id",batchId).eq("farm_id",context.farm.id).order("record_date",{ascending:false}).range(recordPage.from,recordPage.to),
+    supabase.from("rearing_daily_records").select("id,record_date,deaths,observations,feed_check,water_check,brooder_temperature_c,updated_at").eq("rearing_batch_id",batchId).eq("farm_id",context.farm.id).order("record_date",{ascending:false}).range(recordPage.from,recordPage.to),
   ]);
   if(!batch)notFound();
   const broiler=batch.bird_purpose==="broiler";

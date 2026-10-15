@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select extensions.plan(13);
+select extensions.plan(14);
 
 select extensions.ok(
   exists(select 1 from information_schema.columns where table_schema='public' and table_name='rearing_batches' and column_name='bird_purpose'),
@@ -28,6 +28,10 @@ select extensions.ok(
 select extensions.ok(
   to_regprocedure('public.record_rearing_weight_sample(uuid,date,integer,numeric,numeric,text)') is not null,
   'growth sample RPC exists'
+);
+select extensions.ok(
+  position('select rb.* into b' in lower(pg_get_functiondef('public.record_rearing_weight_sample(uuid,date,integer,numeric,numeric,text)'::regprocedure)))>0,
+  'growth sample RPC assigns the batch row to its composite variable by columns'
 );
 select extensions.ok(
   to_regprocedure('public.post_rearing_broiler_dispatch(uuid,date,integer,text,numeric,text)') is not null

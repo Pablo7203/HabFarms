@@ -110,7 +110,7 @@ export function SaleForm({
   const total = Math.max(0, items.reduce((sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.pricePerUnit) || 0), 0) - discount);
   const outstanding = Math.max(0, total - paid);
   const credit = Number(watch("creditDays")) || 0;
-  const due = credit ? addDays(saleDate, credit) : "";
+  const due = outstanding > 0 && credit ? addDays(saleDate, credit) : "";
   const totalEggs = items.reduce((sum, item) => sum + (Number(item.quantity) || 0) * (item.unit === "crate" ? crateSize : 1), 0);
 
   useEffect(() => {

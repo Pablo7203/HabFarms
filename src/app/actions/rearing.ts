@@ -6,19 +6,21 @@ import { broilerDispatchSchema, rearingBatchSchema, rearingBatchUpdateSchema, re
 import type { ActionResult } from "@/app/actions/auth";
 
 function errorMessage(message: string) {
-  if (message.includes("sample size exceeds")) return "The sample includes more birds than were available in this batch on that date.";
-  if (message.includes("dispatches in date order")) return "Record broiler dispatches in date order. Correct later entries before backdating this one.";
-  if (message.includes("only an active broiler batch")) return "This action is only available for an active broiler batch marked Ready for market.";
-  if (message.includes("brooder temperature is only")) return "Brooder temperature can only be recorded for broiler batches.";
-  if (message.includes("already exists")) return "That batch code or daily record already exists.";
-  if (message.includes("dispatch quantity")) return "The number being sold or dispatched exceeds the birds available on that date.";
-  if (message.includes("ready for market")) return "Mark this broiler batch Ready for market before recording a sale or dispatch.";
-  if (message.includes("later population movement")) return "A later bird movement exists. Review the batch history before reversing this dispatch.";
-  if (message.includes("available") || message.includes("negative")) return "The quantity entered exceeds birds available on that date. Check the batch movement history and try again.";
-  if (message.includes("Invalid rearing batch") || message.includes("hatch")) return "Check the batch details and dates, then try again.";
-  if (message.includes("supplier")) return "Choose an active supplier from this farm.";
-  if (message.includes("permission") || message.includes("access denied")) return "You do not have permission to make this change.";
-  console.error("Rearing operation failed", message);
+  const normalized = message.toLowerCase();
+  if (normalized.includes("sample size exceeds")) return "The sample includes more birds than were available in this batch on that date. Enter a smaller sample size.";
+  if (normalized.includes("check the sample date, sample size, average weight, and uniformity")) return "Check that the sample date is after arrival and not in the future, the sample size is within the birds available, the average weight is between 0 and 50 kg, and uniformity is between 0 and 100%.";
+  if (normalized.includes("dispatches in date order")) return "Record broiler dispatches in date order. Correct later entries before backdating this one.";
+  if (normalized.includes("only an active broiler batch")) return "This action is only available for an active broiler batch marked Ready for market.";
+  if (normalized.includes("brooder temperature is only")) return "Brooder temperature can only be recorded for broiler batches.";
+  if (normalized.includes("already exists")) return "That batch code or daily record already exists.";
+  if (normalized.includes("dispatch quantity")) return "The number being sold or dispatched exceeds the birds available on that date.";
+  if (normalized.includes("ready for market")) return "Mark this broiler batch Ready for market before recording a sale or dispatch.";
+  if (normalized.includes("later population movement")) return "A later bird movement exists. Review the batch history before reversing this dispatch.";
+  if (normalized.includes("available") || normalized.includes("negative")) return "The quantity entered exceeds birds available on that date. Check the batch movement history and try again.";
+  if (normalized.includes("invalid rearing batch") || normalized.includes("hatch")) return "Check the batch details and dates, then try again.";
+  if (normalized.includes("supplier")) return "Choose an active supplier from this farm.";
+  if (normalized.includes("permission") || normalized.includes("access denied")) return "You do not have permission to make this change.";
+  console.error("Rearing operation failed", { message });
   return "We couldn't save this rearing record. Please try again.";
 }
 
