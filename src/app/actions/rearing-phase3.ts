@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { actionErrorMessage } from "@/lib/utils";
 import { requireRole } from "@/lib/auth/context";
 import type { ActionResult } from "@/app/actions/auth";
 import { rearingTransferSchema } from "@/lib/validation/rearing-phase2";
@@ -54,9 +55,9 @@ export async function postRearingTransferAction(batchId: string, input: unknown)
   if (error || !data) {
     const message = error?.message.toLowerCase() ?? "";
     if (message.includes("population") || message.includes("available") || message.includes("quantity")) return { ok: false, message: "The batch population changed or the quantity is no longer available. Review the updated transfer details." };
-    if (message.includes("cost") || message.includes("historical")) return { ok: false, message: error?.message ?? "Reconcile the batch cost history before transferring." };
+    if (message.includes("cost") || message.includes("historical")) return { ok: false, message: "Batch costs need attention before this transfer can be completed. Review the batch cost entries, then try again." };
     if (message.includes("access denied") || message.includes("permission")) return { ok: false, message: "You do not have permission to transfer birds from this batch." };
-    return { ok: false, message: error?.message ?? "The transfer could not be posted. No changes were committed." };
+    return { ok: false, message: error ? actionErrorMessage(error, "The transfer couldn't be posted. No changes were committed. Check the batch and destination flock, then try again.") : "The transfer couldn't be posted. No changes were committed. Refresh the page and try again." };
   }
   const transfer = Array.isArray(data) ? data[0] : data;
   const destinationId = transfer.destination_flock_id as string;
@@ -79,7 +80,7 @@ export async function reverseRearingTransferAction(transferId: string, reason: s
   const row = Array.isArray(details) ? details[0] : details;
   if (detailsError || !row || row.farm_id !== context.farm.id) return { ok: false, message: "Transfer not found in the selected farm." };
   const { error } = await supabase.rpc("reverse_rearing_transfer", { target_transfer: transferId, target_reason: reason.trim() });
-  if (error) return { ok: false, message: error.message };
+  if (error) return { ok: false, message: error.message.toLowerCase().includes("permission") || error.message.toLowerCase().includes("access denied") ? "You don't have permission to reverse this transfer." : "The transfer couldn't be reversed. Confirm it is still active and try again." };
   revalidatePath(`/rearing/${row.source_batch_id}`);
   revalidatePath(`/rearing/transfers/${transferId}`);
   revalidatePath(`/flocks/${row.destination_flock_id}`);
