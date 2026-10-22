@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ConfirmActionDialog } from "@/components/ui/confirm-action-dialog";
 import { Input } from "@/components/ui/input";
 import { archiveRawMaterialAction, createFeedProductionAction, createRawMaterialAction, deleteUnusedRawMaterialAction, postMaterialPurchaseBatchAction, saveFeedRecipeAction, setMaterialOpeningStockAction, updateRawMaterialAction, uploadPurchaseReceiptAction } from "@/app/actions/feed";
 
@@ -65,8 +66,8 @@ export function FeedRecipeForm({ feeds, materials, today, initialRecipe }: { fee
 export function MaterialLifecycleActions({ materialId, hasHistory, isAdmin }: { materialId: string; hasHistory: boolean; isAdmin: boolean }) {
   const router=useRouter(),[message,setMessage]=useState(""),[pending,start]=useTransition();
   const archive=()=>start(async()=>{const r=await archiveRawMaterialAction(materialId);setMessage(r.message);if(r.ok)setTimeout(()=>router.push("/feed/materials"),450)});
-  const remove=()=>{if(!confirm("Delete this unused material permanently? This cannot be undone."))return;start(async()=>{const r=await deleteUnusedRawMaterialAction(materialId);setMessage(r.message);if(r.ok)setTimeout(()=>router.push("/feed/materials"),450)})};
-  return <div className="mt-6 border-t pt-5"><p className="text-sm text-stone-600">{hasHistory?"This material has history, so archiving preserves past purchasing and feed-cost records.":"This material has no history and can be deleted permanently."}</p><div className="mt-3 flex flex-wrap gap-3"><Button type="button" variant="secondary" disabled={pending} onClick={archive}>{pending?"Working…":"Archive material"}</Button>{isAdmin&&!hasHistory&&<Button type="button" variant="ghost" disabled={pending} onClick={remove} className="text-red-700 hover:bg-red-50">Delete unused material</Button>}</div><Notice message={message}/></div>;
+  const remove=async()=>{const r=await deleteUnusedRawMaterialAction(materialId);setMessage(r.message);if(r.ok)setTimeout(()=>router.push("/feed/materials"),450);return r};
+  return <div className="mt-6 border-t pt-5"><p className="text-sm text-stone-600">{hasHistory?"This material has history, so archiving preserves past purchasing and feed-cost records.":"This material has no history and can be deleted permanently."}</p><div className="mt-3 flex flex-wrap gap-3"><Button type="button" variant="secondary" disabled={pending} onClick={archive}>{pending?"Working…":"Archive material"}</Button>{isAdmin&&!hasHistory&&<ConfirmActionDialog triggerLabel="Delete unused material" title="Delete this material?" description="This permanently removes the unused material. It has no purchase or feed-cost history, and this action cannot be undone." confirmLabel="Delete material" disabled={pending} triggerClassName="min-h-11 rounded-xl px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 disabled:cursor-not-allowed disabled:opacity-60" onConfirm={remove}/>}</div><Notice message={message}/></div>;
 }
 export function MakeFeedForm({ feeds, recipe, balances, today }: { feeds: Option[]; recipe: { feed_type_id: string; id: string; basis_kg: number; items: { material_id: string; name: string; quantity_kg: number }[] } | null; balances: Record<string, number>; today: string }) {
   const router=useRouter(),[feed,setFeed]=useState(feeds[0]?.id??""),[planned,setPlanned]=useState(recipe?.basis_kg?.toString()??"100"),[message,setMessage]=useState(""),[pending,start]=useTransition(),scale=Number(planned||0)/(recipe?.basis_kg||100);

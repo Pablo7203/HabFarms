@@ -10,6 +10,7 @@ import { requirePlatformAdmin } from "@/lib/auth/context";
 import { getCurrentFarmAccount } from "@/lib/auth/context";
 import { createFlockAction } from "@/app/actions/operations";
 import { platformFarmSchema } from "@/lib/validation/platform";
+import { farmCurrencySchema, farmTimezoneSchema } from "@/lib/validation/farm";
 import { z } from "zod";
 import type { ActionResult } from "@/app/actions/auth";
 
@@ -89,7 +90,7 @@ async function requireOnboardingOwner() {
 }
 
 export async function savePlatformOnboardingSettingsAction(input: unknown): Promise<ActionResult> {
-  const parsed = z.object({ name: z.string().trim().min(2).max(120), currency: z.string().regex(/^[A-Z]{3}$/), timezone: z.string().min(1).max(80), crateSize: z.coerce.number().int().min(1), feedBagSizeKg: z.coerce.number().positive(), openingCashBalance: z.coerce.number().min(0), defaultEggPricePerCrate: z.coerce.number().min(0), defaultLooseEggPrice: z.coerce.number().min(0), feedAlertWarningDays: z.coerce.number().int().min(0), feedAlertCriticalDays: z.coerce.number().int().min(0), averageFeedDaysWindow: z.coerce.number().int().positive() }).safeParse(input);
+  const parsed = z.object({ name: z.string().trim().min(2).max(120), currency: farmCurrencySchema, timezone: farmTimezoneSchema, crateSize: z.coerce.number().int().min(1), feedBagSizeKg: z.coerce.number().positive(), openingCashBalance: z.coerce.number().min(0), defaultEggPricePerCrate: z.coerce.number().min(0), defaultLooseEggPrice: z.coerce.number().min(0), feedAlertWarningDays: z.coerce.number().int().min(0), feedAlertCriticalDays: z.coerce.number().int().min(0), averageFeedDaysWindow: z.coerce.number().int().positive() }).safeParse(input);
   if (!parsed.success) return { ok: false, message: parsed.error.issues[0].message };
   const context = await requireOnboardingOwner(), d = parsed.data, supabase = await createClient();
   const { error } = await supabase.rpc("update_farm_configuration", { target_farm_id: context.farm.id, farm_name: d.name, farm_currency: d.currency, farm_timezone: d.timezone, farm_crate_size: d.crateSize, farm_feed_bag_size_kg: d.feedBagSizeKg, farm_opening_cash_balance: d.openingCashBalance, egg_price_per_crate: d.defaultEggPricePerCrate, loose_egg_price: d.defaultLooseEggPrice, warning_days: d.feedAlertWarningDays, critical_days: d.feedAlertCriticalDays, average_days: d.averageFeedDaysWindow });

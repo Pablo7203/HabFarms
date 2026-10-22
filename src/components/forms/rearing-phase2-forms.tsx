@@ -11,7 +11,7 @@ import {
 } from "@/app/actions/rearing-phase2";
 import { uploadPurchaseReceiptAction } from "@/app/actions/feed";
 
-type Option = { id: string; name: string };
+type Option = { id: string; name: string; availableKg?: number };
 type Message = { ok: boolean; message: string; id?: string };
 function useSubmit<T>(run: (form: FormData) => Promise<T>) {
   const [pending, start] = useTransition(), [message, setMessage] = useState("");
@@ -34,10 +34,10 @@ export function RearingFeedConsumptionForm({ batchId, today, arrivalDate, feedTy
   const router = useRouter();
   const form = useSubmit(async (f) => {
     const result = await recordRearingFeedAction(batchId, { feedTypeId: f.get("feedTypeId"), consumptionDate: f.get("date"), quantityKg: f.get("quantityKg"), dailyRecordId: dailyRecordId ?? "", notes: f.get("notes") });
-    if (result.ok) router.refresh(); return result;
+    if (result.ok) router.replace(`/rearing/${batchId}`); return result;
   });
   return <form onSubmit={form.submit} className="grid gap-4 sm:grid-cols-2">
-    <label className={field}>Feed product<select required name="feedTypeId" defaultValue="" className={select}><option value="" disabled>Select feed</option>{feedTypes.map(x => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+    <label className={field}>Feed product<select required name="feedTypeId" defaultValue="" className={select}><option value="" disabled>Select feed</option>{feedTypes.map(x => <option key={x.id} value={x.id}>{x.name} · {(x.availableKg ?? 0).toLocaleString()} kg available</option>)}</select><span className="mt-1 block text-xs font-normal text-stone-500">Available quantities are the farm-wide live balance; they can change if another user records feed use.</span></label>
     <label className={field}>Consumed (kg)<Input name="quantityKg" type="number" min="0.001" step="0.001" required className="mt-2" placeholder="e.g. 32.5"/></label>
     <label className={field}>Consumption date<Input name="date" type="date" min={arrivalDate} max={today} defaultValue={date} required readOnly={!!dailyRecordId} className="mt-2 read-only:bg-stone-50"/></label>
     <label className={`${field} sm:col-span-2`}>Notes<textarea name="notes" maxLength={2000} className={textarea}/></label>

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import type { AppContext, FarmRole } from "@/types/domain";
+import { resolveFarmTimezone } from "@/lib/farm-date";
 
 export async function getCurrentUser() { const supabase = await createClient(); return (await supabase.auth.getUser()).data.user; }
 export async function getCurrentAppContext(): Promise<AppContext | null> {
@@ -19,7 +20,7 @@ export async function getCurrentAppContext(): Promise<AppContext | null> {
     supabase.from("profiles").select("full_name,phone").eq("id", user.id).maybeSingle(),
   ]);
   if (!farm) return null;
-  return { user: { id: user.id, email: user.email ?? "" }, profile, membership: membership as AppContext["membership"], farm } as AppContext;
+  return { user: { id: user.id, email: user.email ?? "" }, profile, membership: membership as AppContext["membership"], farm: { ...farm, timezone: resolveFarmTimezone(farm.timezone) } } as AppContext;
 }
 
 export async function getAvailableFarms() {

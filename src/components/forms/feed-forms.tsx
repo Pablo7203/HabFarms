@@ -14,6 +14,7 @@ import {
   saveSupplierAction,
   setOpeningStockAction,
   updateFeedPurchaseAction,
+  updateMaterialPurchasePricesAction,
 } from "@/app/actions/feed";
 type Option = { id: string; name: string; default_bag_size_kg?: number };
 const Field = ({
@@ -448,13 +449,18 @@ export function FeedPaymentForm({ id, today }: { id: string; today: string }) {
 }
 export function PurchaseEditForm({
   id,
+  today,
   suppliers,
+  types,
   record,
 }: {
   id: string;
+  today: string;
   suppliers: Option[];
+  types: Option[];
   record: {
     supplier_id: string | null;
+    feed_type_id: string;
     purchase_date: string;
     bags: number;
     bag_size_kg: number;
@@ -467,6 +473,7 @@ export function PurchaseEditForm({
       action={(f) =>
         updateFeedPurchaseAction(id, {
           supplierId: f.get("supplier"),
+          feedTypeId: f.get("type"),
           purchaseDate: f.get("date"),
           bags: f.get("bags"),
           bagSizeKg: f.get("bagSize"),
@@ -492,15 +499,28 @@ export function PurchaseEditForm({
       </label>
       <div className="grid gap-5 sm:grid-cols-2">
         <label>
+          Feed type
+          <select
+            name="type"
+            required
+            defaultValue={record.feed_type_id}
+            className="mt-2 min-h-11 w-full rounded-lg border px-3"
+          >
+            {types.map((type) => <option key={type.id} value={type.id}>{type.name}</option>)}
+          </select>
+        </label>
+        <label>
           Date
-          <Input name="date" type="date" defaultValue={record.purchase_date} />
+          <Input name="date" type="date" max={today} required defaultValue={record.purchase_date} />
         </label>
         <label>
           Bags
           <Input
             name="bags"
             type="number"
+            min="0.001"
             step="0.001"
+            required
             defaultValue={record.bags}
           />
         </label>
@@ -509,18 +529,23 @@ export function PurchaseEditForm({
           <Input
             name="bagSize"
             type="number"
+            min="0.001"
             step="0.001"
+            required
             defaultValue={record.bag_size_kg}
           />
         </label>
         <label>
-          Cost per bag
+          Purchase price per bag
           <Input
             name="cost"
             type="number"
+            min="0"
             step="0.01"
+            required
             defaultValue={record.cost_per_bag}
           />
+          <span className="mt-1 block text-xs font-normal text-stone-500">This corrects what the feed cost. It does not change payments already recorded.</span>
         </label>
       </div>
       <label>
@@ -533,4 +558,35 @@ export function PurchaseEditForm({
       </label>
     </Shell>
   );
+}
+
+export function MaterialPurchasePriceCorrectionForm({ id, items }: {
+  id: string;
+  items: Array<{
+    id: string;
+    material_id: string;
+    quantity_kg: number;
+    unit_cost: number;
+    raw_materials: { name: string } | { name: string }[] | null;
+  }>;
+}) {
+  const router = useRouter();
+  return <Shell
+    submit="Save corrected prices"
+    onSuccess={() => router.refresh()}
+    action={(form) => updateMaterialPurchasePricesAction(id, {
+      items: items.map((item) => ({ purchaseId: item.id, unitCost: form.get(`unit-cost-${item.id}`) })),
+    })}
+  >
+    <p className="text-sm leading-6 text-stone-600">Correct the supplier’s price per kg for any line. The purchase total and material stock valuation will be recalculated; quantity, date, and recorded payments stay unchanged.</p>
+    <div className="divide-y divide-stone-100 rounded-xl border border-stone-200">
+      {items.map((item) => {
+        const material = Array.isArray(item.raw_materials) ? item.raw_materials[0] : item.raw_materials;
+        return <div key={item.id} className="grid gap-3 p-4 sm:grid-cols-[1fr_1fr] sm:items-end">
+          <div><p className="font-semibold text-stone-900">{material?.name ?? "Material"}</p><p className="mt-1 text-sm text-stone-500">{Number(item.quantity_kg).toLocaleString()} kg purchased</p></div>
+          <label className="text-sm font-semibold text-stone-700">Correct price per kg<Input name={`unit-cost-${item.id}`} type="number" min="0" step="0.0001" required defaultValue={item.unit_cost} className="mt-1"/></label>
+        </div>;
+      })}
+    </div>
+  </Shell>;
 }

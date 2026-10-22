@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAppContext, requireRole } from "@/lib/auth/context";
+import { actionErrorMessage } from "@/lib/utils";
 import { adminFlockUpdateSchema, birdMovementSchema, flockSchema, flockUpdateSchema, henDayTargetSchema, productionSchema, productionUpdateSchema } from "@/lib/validation/operations";
 import type { ActionResult } from "./auth";
 function message(error: { message: string }) {
@@ -51,7 +52,7 @@ export async function saveHenDayTargetAction(flockId:string,input:unknown):Promi
   const p=henDayTargetSchema.safeParse(input);
   if(!p.success)return{ok:false,message:p.error.issues[0].message};
   const d=p.data,{error}=await supabase.rpc("save_flock_hen_day_target",{target_flock:flockId,target_percentage:d.targetPercentage,target_effective_from:d.effectiveFrom,target_notes:d.notes});
-  if(error)return{ok:false,message:error.message};
+  if(error)return{ok:false,message:actionErrorMessage(error,"The production target couldn't be saved. Check the flock and effective date, then try again.")};
   revalidatePath(`/flocks/${flockId}`);revalidatePath("/dashboard");revalidatePath("/reports/daily-summary");revalidatePath("/reports/weekly-summary");
   return{ok:true,message:"Production target saved. Historical periods remain unchanged."};
 }
