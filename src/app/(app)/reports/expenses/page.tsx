@@ -1,1 +1,32 @@
-import{requireRole}from"@/lib/auth/context";import{createClient}from"@/lib/supabase/server";import{reportRange,money}from"@/lib/reporting";import{DateFilter,Kpis,ReportTable}from"@/components/reports/report-ui";export default async function ExpenseReport({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){const c=await requireRole(["admin","manager"]),q=await searchParams,r=reportRange(c.farm.timezone,q),s=await createClient(),category=q.category||null,source=q.source||null,[{data:sum},{data:rows},{data:categories}]=await Promise.all([s.rpc("get_expense_report_summary",{start_date:r.from,end_date:r.to,target_category:category,target_source:source}),s.from("v_expense_payables").select("*").eq("farm_id",c.farm.id).gte("expense_date",r.from).lte("expense_date",r.to).order("expense_date",{ascending:false}),s.from("expense_categories").select("id,name").eq("farm_id",c.farm.id)]),x=sum?.[0]??{},filtered=(rows??[]).filter(v=>(!category||v.category_id===category)&&(!source||v.source_type===source));return <div><h1 className="text-3xl font-bold">Expense and payables report</h1><p className="mt-2 text-stone-600">Expenses incurred are separate from cash paid.</p><DateFilter from={r.from} to={r.to} exportType="expenses"><label className="text-sm font-medium">Category<select name="category" defaultValue={q.category??""} className="mt-2 min-h-11 w-full rounded-lg border px-3"><option value="">All categories</option>{categories?.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label></DateFilter><Kpis items={[["Expenses incurred",money(x.expenses_incurred,c.farm.currency)],["Amount paid as of period end",money(x.amount_paid,c.farm.currency)],["Outstanding payables",money(x.outstanding_payables,c.farm.currency)],["Expense count",Number(x.expense_count??0)]]}/><ReportTable headers={["Date","Expense","Category","Description","Source","Amount","Paid","Outstanding","Status"]} rows={filtered.map(x=>[x.expense_date,x.expense_number,x.category_name,x.description,x.source_type,money(x.amount,c.farm.currency),money(x.total_paid,c.farm.currency),money(x.outstanding_balance,c.farm.currency),x.payment_status])} empty="No expenses recorded for this period."/></div>}
+import { requireRole } from "@/lib/auth/context";
+import { createClient } from "@/lib/supabase/server";
+import { reportRange, money } from "@/lib/reporting";
+import { DateFilter, Kpis } from "@/components/reports/report-ui";
+import { ReportTable } from "@/components/reports/report-table";
+
+export default async function ExpenseReport({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const context = await requireRole(["admin", "manager"]);
+  const query = await searchParams;
+  const range = reportRange(context.farm.timezone, query);
+  const supabase = await createClient();
+  const category = query.category || null;
+  const source = query.source || null;
+  const [{ data: summary }, { data: rows }, { data: categories }] = await Promise.all([
+    supabase.rpc("get_expense_report_summary", { start_date: range.from, end_date: range.to, target_category: category, target_source: source }),
+    supabase.from("v_expense_payables").select("*").eq("farm_id", context.farm.id).gte("expense_date", range.from).lte("expense_date", range.to).order("expense_date", { ascending: false }),
+    supabase.from("expense_categories").select("id,name").eq("farm_id", context.farm.id),
+  ]);
+  const totals = summary?.[0] ?? {};
+  const filtered = (rows ?? []).filter((row) => (!category || row.category_id === category) && (!source || row.source_type === source));
+
+  return <div>
+    <h1 className="text-3xl font-bold">Expense and payables report</h1>
+    <p className="mt-2 text-stone-600">Expenses incurred are separate from cash paid.</p>
+    <DateFilter from={range.from} to={range.to} exportType="expenses">
+      <label className="text-sm font-medium">Category<select name="category" defaultValue={category ?? ""} className="mt-2 min-h-11 w-full rounded-lg border px-3"><option value="">All categories</option>{categories?.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label>
+      <label className="text-sm font-medium">Source<select name="source" defaultValue={source ?? ""} className="mt-2 min-h-11 w-full rounded-lg border px-3"><option value="">All sources</option><option value="manual">Manual</option><option value="health_record">Health record</option><option value="daily_production">Daily production</option></select></label>
+    </DateFilter>
+    <Kpis items={[["Expenses incurred", money(totals.expenses_incurred, context.farm.currency)], ["Amount paid as of period end", money(totals.amount_paid, context.farm.currency)], ["Outstanding payables", money(totals.outstanding_payables, context.farm.currency)], ["Expense count", Number(totals.expense_count ?? 0)]]} />
+    <ReportTable headers={["Date", "Expense", "Category", "Description", "Source", "Amount", "Paid", "Outstanding", "Status"]} rows={filtered.map((row) => [row.expense_date, row.expense_number, row.category_name, row.description, row.source_type, money(row.amount, context.farm.currency), money(row.total_paid, context.farm.currency), money(row.outstanding_balance, context.farm.currency), row.payment_status])} empty="No expenses recorded for this period." />
+  </div>;
+}

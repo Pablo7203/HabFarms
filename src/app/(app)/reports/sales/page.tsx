@@ -1,7 +1,8 @@
 import { requireRole } from "@/lib/auth/context";
 import { createClient } from "@/lib/supabase/server";
 import { reportRange, money } from "@/lib/reporting";
-import { DateFilter, Kpis, ReportTable } from "@/components/reports/report-ui";
+import { DateFilter, Kpis } from "@/components/reports/report-ui";
+import { ReportTable } from "@/components/reports/report-table";
 
 export default async function SalesReport({
   searchParams,
@@ -21,6 +22,7 @@ export default async function SalesReport({
     { data: customers },
     { data: gradeRows },
     { data: grades },
+    { data: matchingSales },
   ] = await Promise.all([
     supabase.rpc("get_sales_report_summary", {
       start_date: range.from,
@@ -45,11 +47,15 @@ export default async function SalesReport({
       .select("id,name,is_unsorted,sort_order")
       .eq("farm_id", context.farm.id)
       .order("sort_order"),
+    customerId
+      ? supabase.from("sales").select("id").eq("farm_id", context.farm.id).eq("customer_id", customerId).eq("status", "completed").eq("sale_type", "egg").gte("sale_date", range.from).lte("sale_date", range.to)
+      : Promise.resolve({ data: null }),
   ]);
 
   const totals = summary?.[0] ?? {};
+  const matchingSaleIds = customerId ? new Set((matchingSales ?? []).map((sale) => sale.id)) : null;
   const filtered = (gradeRows ?? []).filter(
-    (row) => !gradeId || row.egg_grade_id === gradeId,
+    (row) => (!gradeId || row.egg_grade_id === gradeId) && (!matchingSaleIds || matchingSaleIds.has(row.sale_id)),
   );
   const eggsSold = filtered.reduce(
     (total, row) => total + Number(row.total_eggs),
@@ -162,3 +168,4 @@ export default async function SalesReport({
     </div>
   );
 }
+

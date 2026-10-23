@@ -1,7 +1,8 @@
 import { requireRole } from "@/lib/auth/context";
 import { createClient } from "@/lib/supabase/server";
 import { reportRange, money } from "@/lib/reporting";
-import { DateFilter, Kpis, ReportTable } from "@/components/reports/report-ui";
+import { DateFilter, Kpis } from "@/components/reports/report-ui";
+import { ReportTable } from "@/components/reports/report-table";
 
 export default async function BirdSalesReport({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const context = await requireRole(["admin", "manager"]);
