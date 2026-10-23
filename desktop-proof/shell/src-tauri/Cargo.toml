@@ -1,0 +1,12 @@
+[package]
+name = "habfarms-desktop-proof-shell"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "2.7.2" }
+
+[dependencies]
+habfarms-desktop-local-proof = { path = "../../local-core" }
+tauri = { version = "2.12.3" }

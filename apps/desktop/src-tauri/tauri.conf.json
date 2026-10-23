@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "HabFarms Desktop",
+  "version": "0.1.0",
+  "identifier": "com.habfarms.desktop",
+  "build": { "frontendDist": "../dist", "devUrl": "http://localhost:1420", "beforeDevCommand": "npm run dev", "beforeBuildCommand": "npm run build" },
+  "app": { "windows": [{ "title": "HabFarms Desktop", "width": 1080, "height": 760, "minWidth": 800, "minHeight": 600 }] },
+  "bundle": { "active": false }
+}

@@ -1,0 +1,7 @@
+.local/
+.env.local
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/local-core/target/
+src-tauri/gen/

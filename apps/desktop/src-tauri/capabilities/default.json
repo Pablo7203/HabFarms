@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "desktop-window",
+  "description": "HabFarms Desktop main window; local data is available only through narrow Rust commands",
+  "windows": ["main"],
+  "permissions": []
+}

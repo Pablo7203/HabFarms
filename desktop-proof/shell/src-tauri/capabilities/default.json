@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "proof-window",
+  "description": "Only the local proof window; no filesystem, SQL or network plugins",
+  "windows": ["main"],
+  "permissions": []
+}
