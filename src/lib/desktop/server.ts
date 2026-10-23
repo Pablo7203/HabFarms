@@ -73,5 +73,3 @@ export async function canonicalRefresh(token: string, userId: string, farmId: st
   };
   return signPreparedSnapshot(snapshot, userId, farmId, installationId);
 }
-
-
