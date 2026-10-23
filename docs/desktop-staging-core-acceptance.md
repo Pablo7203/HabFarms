@@ -18,11 +18,11 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 
 ## Hosted acceptance blockers
 
-1. A verified pre-migration backup and recovery path for the existing 12-farm Staging data has not been established. Do not apply migration 088 or reset the database yet.
+1. The Supabase Staging Database Backups page states that this Free Plan does not include project backups. No independent logical backup or restore proof exists for the 12-farm Staging data. Do not apply migration 088 or reset the database yet.
 2. Migration 088 is missing although later migrations are applied. Review its dependencies and the Supabase migration ledger before an explicitly targeted application. Do not run a blind `db push` against the unrelated CLI link.
 3. The effective Vercel `NEXT_PUBLIC_SUPABASE_URL` value was masked in the UI and has not been verified as the Staging Supabase host. Required server-only Desktop lease signer variables were not present in the visible Vercel environment variable list.
 4. The saved Vercel CLI token returned 403 `invalidToken` on a read-only request to the Staging project. This checkout has no verified deployment credential.
-5. Local browser control now returns `Local browser use is disabled in Work settings`, preventing continuation of the Staging dashboard checks through the previously used UI. The user can re-enable that setting and reopen the Staging tabs; credentials should not be sent in chat.
+5. Browser access resumed after the user restarted the app. The Staging Supabase backup and migration pages and Vercel environment variable list were inspected read-only.
 6. The native Staging QA installer has not been built, signed, or connected to verified Staging endpoints. No hosted login, offline operation, sync, lost-acknowledgement, conflict, or regression proof has run.
 
 ## Required final report fields (1–45)
@@ -33,7 +33,7 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 | 2 | Staging web identity | Verified project, site, ready deployment above. |
 | 3 | Staging Supabase identity | Verified project ref, API host, Auth Site URL above. |
 | 4 | Production access | None during this work. |
-| 5 | Backup/recovery | Unverified; blocker. |
+| 5 | Backup/recovery | Supabase Free Plan shows no project backups; independent backup/recovery unverified; blocker. |
 | 6 | Staging migrations applied | Desktop 088 not applied. |
 | 7 | Migration ledger | Head 092; 088 absent; out-of-order review needed. |
 | 8 | Hosted sync service deployment | Not deployed. |
@@ -72,9 +72,10 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 | 41 | Commit hash | `126a4b5d9e23248d20aae54aa61e57409eac0b00` (source and initial report; this report correction follows). |
 | 42 | Staging deployment ID | Existing deployment `6FVwoBcHaqDTjvUprmAxAgxHj1Y4`; no new deployment. |
 | 43 | Production deployment | Unchanged by this work. |
-| 44 | Remaining blockers | Backup, migration ordering, effective Vercel config, deployment auth, browser control, hosted proof. |
-| 45 | Recommendation | Restore Staging access, verify backup and config, apply only reviewed missing migration, deploy Staging, then run the full native hosted acceptance. Do not expand scope yet. |
+| 44 | Remaining blockers | No scheduled backup or independent restore proof, migration ordering, effective Vercel config, deployment auth, hosted proof. |
+| 45 | Recommendation | Produce and verify an independent Staging logical backup and recovery procedure, verify config, apply only reviewed missing migration, deploy Staging, then run the full native hosted acceptance. Do not expand scope yet. |
 
 **HABFARMS DESKTOP STAGING CORE OFFLINE ACCEPTANCE FAILED — BLOCKERS REMAIN**
+
 
 
