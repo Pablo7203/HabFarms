@@ -7,8 +7,8 @@
 - Staging Vercel project: `habfarms-staging`, project ID `prj_kVFfydcwPQaoBamCSKtJy5Q0STXT`, site `https://habfarms-staging.vercel.app`. The visible ready deployment was `6FVwoBcHaqDTjvUprmAxAgxHj1Y4`, from `staging` commit `afdf85c95a4d74aa7c2390e84cf15e1af1c9a86f`.
 - Staging Supabase project: `habfarms-staging`, ref `faxvvvwkmdqwnlikczls`, API host `faxvvvwkmdqwnlikczls.supabase.co`. Auth Site URL is the Staging Vercel site.
 - A read-only Staging SQL query showed 12 farms, migration ledger head `202610230092`, and no `202610210088` ledger row, `desktop_sync_receipts` relation, or `sync_desktop_operation_v1(jsonb)` function. Versions 089–092 are already applied, so migration 088 is now out of order.
-- The main checkout's Supabase CLI link points to `brxnglrbmrfdoyizzyik`, which is neither this Staging project nor the documented Production project. It must not be used for this acceptance.
-- No Production environment was accessed or modified during this acceptance work.
+- The main checkout's Supabase CLI link points to `brxnglrbmrfdoyizzyik`, which the authenticated Supabase CLI project list identifies as `HabFarms Production`. It must not be used for this acceptance. The account-wide list returned Production project metadata incidentally; no Production database or deployment was opened or changed.
+- No Production database, dashboard page, or deployment was accessed or modified. An account-wide CLI project list incidentally returned Production project metadata.
 
 ## Local integration prepared
 
@@ -18,7 +18,7 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 
 ## Hosted acceptance blockers
 
-1. The Supabase Staging Database Backups page states that this Free Plan does not include project backups. No independent logical backup or restore proof exists for the 12-farm Staging data. Do not apply migration 088 or reset the database yet.
+1. The Supabase Staging Database Backups page states that this Free Plan does not include project backups. The connection dialog requires an existing database password; it displays only a `[YOUR-PASSWORD]` placeholder. No independent logical backup or restore proof exists for the 12-farm Staging data. Local Docker is currently unavailable, and no standalone `pg_dump` was found. Do not apply migration 088 or reset the database yet.
 2. Migration 088 is missing although later migrations are applied. Review its dependencies and the Supabase migration ledger before an explicitly targeted application. Do not run a blind `db push` against the unrelated CLI link.
 3. The effective Vercel `NEXT_PUBLIC_SUPABASE_URL` value was masked in the UI and has not been verified as the Staging Supabase host. Required server-only Desktop lease signer variables were not present in the visible Vercel environment variable list.
 4. The saved Vercel CLI token returned 403 `invalidToken` on a read-only request to the Staging project. This checkout has no verified deployment credential.
@@ -32,7 +32,7 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 | 1 | Source branch/commit | `codex/desktop-staging-core` at `126a4b5d9e23248d20aae54aa61e57409eac0b00`, based on Staging `afdf85c`; Desktop source imported from `8ed184e`. |
 | 2 | Staging web identity | Verified project, site, ready deployment above. |
 | 3 | Staging Supabase identity | Verified project ref, API host, Auth Site URL above. |
-| 4 | Production access | None during this work. |
+| 4 | Production access | No Production database or deployment access/change; account-wide project list included Production metadata. |
 | 5 | Backup/recovery | Supabase Free Plan shows no project backups; independent backup/recovery unverified; blocker. |
 | 6 | Staging migrations applied | Desktop 088 not applied. |
 | 7 | Migration ledger | Head 092; 088 absent; out-of-order review needed. |
@@ -76,6 +76,7 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 | 45 | Recommendation | Produce and verify an independent Staging logical backup and recovery procedure, verify config, apply only reviewed missing migration, deploy Staging, then run the full native hosted acceptance. Do not expand scope yet. |
 
 **HABFARMS DESKTOP STAGING CORE OFFLINE ACCEPTANCE FAILED — BLOCKERS REMAIN**
+
 
 
 
