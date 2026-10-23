@@ -29,7 +29,7 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 
 | # | Item | Result |
 |---|---|---|
-| 1 | Source branch/commit | Isolated detached integration worktree at `afdf85c`; Desktop source imported from `8ed184e`. Integration changes staged, not committed. |
+| 1 | Source branch/commit | `codex/desktop-staging-core` at `126a4b5d9e23248d20aae54aa61e57409eac0b00`, based on Staging `afdf85c`; Desktop source imported from `8ed184e`. |
 | 2 | Staging web identity | Verified project, site, ready deployment above. |
 | 3 | Staging Supabase identity | Verified project ref, API host, Auth Site URL above. |
 | 4 | Production access | None during this work. |
@@ -69,10 +69,11 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 | 38 | Staging web regression | Not run. |
 | 39 | Database tests | Existing local Staging logic tests 4/4; hosted SQL tests not run. |
 | 40 | Files changed | Desktop app/proof, sync route/contract, migration 088/test, ESLint, this report. |
-| 41 | Commit hash | No integration commit yet. |
+| 41 | Commit hash | `126a4b5d9e23248d20aae54aa61e57409eac0b00` (source and initial report; this report correction follows). |
 | 42 | Staging deployment ID | Existing deployment `6FVwoBcHaqDTjvUprmAxAgxHj1Y4`; no new deployment. |
 | 43 | Production deployment | Unchanged by this work. |
 | 44 | Remaining blockers | Backup, migration ordering, effective Vercel config, deployment auth, browser control, hosted proof. |
 | 45 | Recommendation | Restore Staging access, verify backup and config, apply only reviewed missing migration, deploy Staging, then run the full native hosted acceptance. Do not expand scope yet. |
 
 **HABFARMS DESKTOP STAGING CORE OFFLINE ACCEPTANCE FAILED — BLOCKERS REMAIN**
+
