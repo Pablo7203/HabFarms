@@ -12,7 +12,7 @@
 
 ## Local integration prepared
 
-The isolated worktree at `C:\Users\Thoma\.codex\worktrees\desktop-staging-core\My work` starts at the deployed Staging commit above. It stages only the Desktop app and proof code, authenticated Desktop sync route and contract, migration 088 and its SQL test, and ESLint configuration for these files. Newer Staging web changes and migrations 089–092 were retained. The route accepts a server-only base64 PEM signing key for a hosted environment and checks it against the public key pinned in the native client. The Desktop UI has an explicit `DESKTOP · STAGING QA` marker when built with `VITE_DESKTOP_ENV=staging`.
+The isolated worktree at `C:\Users\Thoma\.codex\worktrees\desktop-staging-core\My work` starts at the deployed Staging commit above. It includes only the Desktop app and proof code, authenticated Desktop sync route and contract, migration 088 and its SQL test, and ESLint configuration for these files. Newer Staging web changes and migrations 089–092 were retained. The route accepts a server-only base64 PEM signing key for a hosted environment and checks it against the public key pinned in the native client. The Desktop UI has an explicit `DESKTOP · STAGING QA` marker when built with `VITE_DESKTOP_ENV=staging`.
 
 Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 Desktop projection proofs; 4/4 existing Staging logic-security tests; focused ESLint with zero errors and one existing React Hook warning; Next type generation and typecheck; production Next build with local placeholder public environment values. None of these checks used the hosted Staging database.
 
@@ -76,4 +76,5 @@ Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 
 | 45 | Recommendation | Restore Staging access, verify backup and config, apply only reviewed missing migration, deploy Staging, then run the full native hosted acceptance. Do not expand scope yet. |
 
 **HABFARMS DESKTOP STAGING CORE OFFLINE ACCEPTANCE FAILED — BLOCKERS REMAIN**
+
 
