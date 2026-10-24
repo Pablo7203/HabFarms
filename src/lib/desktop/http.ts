@@ -5,6 +5,10 @@ const allowedOrigins = new Set([
   "tauri://localhost", "http://tauri.localhost", "http://localhost:1420", "http://127.0.0.1:1420",
 ]);
 
+export function desktopStagingTargetIsVerified() {
+  return new URL(env.NEXT_PUBLIC_SUPABASE_URL).hostname === "faxvvvwkmdqwnlikczls.supabase.co";
+}
+
 export function desktopResponse(request: Request, body: unknown, status = 200) {
   const origin = request.headers.get("origin") ?? "";
   const headers = new Headers({ "Cache-Control": "no-store", "Vary": "Origin" });

@@ -1,82 +1,83 @@
 # HabFarms Desktop — hosted Staging core offline acceptance
 
-**Status (23 October 2026): FAILED — BLOCKERS REMAIN.** This is an evidence checkpoint, not a hosted acceptance claim. Scope is daily production and mortality only.
+**Current result (24 October 2026): BLOCKED — hosted acceptance is incomplete.** The user explicitly waived the Staging backup gate so work could proceed. That waiver is recorded here; it is not backup or restore evidence. Scope is Desktop daily egg production and mortality only. Production remains out of scope.
 
-## Verified environment and source
+## Environment and database evidence
 
-- Staging Vercel project: `habfarms-staging`, project ID `prj_kVFfydcwPQaoBamCSKtJy5Q0STXT`, site `https://habfarms-staging.vercel.app`. The visible ready deployment was `6FVwoBcHaqDTjvUprmAxAgxHj1Y4`, from `staging` commit `afdf85c95a4d74aa7c2390e84cf15e1af1c9a86f`.
-- Staging Supabase project: `habfarms-staging`, ref `faxvvvwkmdqwnlikczls`, API host `faxvvvwkmdqwnlikczls.supabase.co`. Auth Site URL is the Staging Vercel site.
-- A read-only Staging SQL query showed 12 farms, migration ledger head `202610230092`, and no `202610210088` ledger row, `desktop_sync_receipts` relation, or `sync_desktop_operation_v1(jsonb)` function. Versions 089–092 are already applied, so migration 088 is now out of order.
-- The main checkout's Supabase CLI link points to `brxnglrbmrfdoyizzyik`, which the authenticated Supabase CLI project list identifies as `HabFarms Production`. It must not be used for this acceptance. The account-wide list returned Production project metadata incidentally; no Production database or deployment was opened or changed.
-- No Production database, dashboard page, or deployment was accessed or modified. An account-wide CLI project list incidentally returned Production project metadata.
+- Staging Vercel project: `habfarms-staging`, project ID `prj_kVFfydcwPQaoBamCSKtJy5Q0STXT`, site `https://habfarms-staging.vercel.app`. Before this work, the ready deployment was `6FVwoBcHaqDTjvUprmAxAgxHj1Y4` from `staging` commit `afdf85c95a4d74aa7c2390e84cf15e1af1c9a86f`.
+- Staging Supabase project: `faxvvvwkmdqwnlikczls`, API host `faxvvvwkmdqwnlikczls.supabase.co`; Auth Site URL points to the Staging Vercel site.
+- Migration `202610210088_desktop_sync_core.sql` was explicitly reviewed with `supabase db push --project-ref faxvvvwkmdqwnlikczls --include-all --skip-vault --dry-run`; the dry run selected only 088. The same explicitly targeted command applied only 088 to Staging. SQL Editor then confirmed the 088 ledger row, receipt relation, sync RPC, RLS enabled, zero receipts, and unchanged farm count of 12. Grants checked: anon cannot execute the RPC or read receipts; authenticated can execute the RPC; service role can read receipts.
+- The Staging Free Plan has no managed database backups. The user said to ignore the Staging backup and proceed. Independent backup and restore have not been proven; this remains a documented data recovery risk, accepted for continuing this Staging-only exercise.
+- No Production database, dashboard, deployment, or project settings were changed. An earlier account-wide Supabase CLI project listing returned Production project metadata incidentally.
 
-## Local integration prepared
+## Source and local build evidence
 
-The isolated worktree at `C:\Users\Thoma\.codex\worktrees\desktop-staging-core\My work` starts at the deployed Staging commit above. It includes only the Desktop app and proof code, authenticated Desktop sync route and contract, migration 088 and its SQL test, and ESLint configuration for these files. Newer Staging web changes and migrations 089–092 were retained. The route accepts a server-only base64 PEM signing key for a hosted environment and checks it against the public key pinned in the native client. The Desktop UI has an explicit `DESKTOP · STAGING QA` marker when built with `VITE_DESKTOP_ENV=staging`.
-
-Local checks completed: frozen offline `pnpm install`; 9/9 contract proofs; 9/9 Desktop projection proofs; 4/4 existing Staging logic-security tests; focused ESLint with zero errors and one existing React Hook warning; Next type generation and typecheck; production Next build with local placeholder public environment values. None of these checks used the hosted Staging database.
+- Worktree: `C:\Users\Thoma\.codex\worktrees\desktop-staging-core\My work`; branch `codex/desktop-staging-core`; base commit `bca9719c2a828de047928afe8e0c593076464e43` on top of Staging deployment commit `afdf85c`.
+- Changes include the isolated Desktop app/proof, authenticated farm/bootstrap endpoints, daily production/mortality sync endpoint and contract, migration 088 plus its SQL test, and focused lint configuration. Existing Staging migrations 089–092 remain intact.
+- New `/api/desktop/farms` and `/api/desktop/bootstrap` routes provide authenticated farm access and a signed prepared snapshot. `GET` and `POST /api/desktop/sync` plus these routes fail closed unless `NEXT_PUBLIC_SUPABASE_URL` resolves to the exact Staging Supabase host.
+- A new Staging Ed25519 keypair was generated. The private PEM is in the ignored local `apps/desktop/.local/staging-lease-private.pem`; only the public key is committed/pinned in the native app. Its SHA-256 fingerprint is `086bfec0007116fff31088cd9482cad71f11f9ff7db65f2cdda2828aad7e44a1`.
+- The user approved the private key for the Staging Vercel project. Vercel confirmed `DESKTOP_LEASE_PRIVATE_KEY_B64` was saved as a Secret in the project's Production environment; `DESKTOP_LEASE_PUBLIC_KEY_B64` and `DESKTOP_LEASE_KEY_ID=staging-2026-10` were saved as Config values. Vercel reported a new deployment is needed. The browser session expired before rechecking the list; the save success notifications were visible. These variables have not been verified at runtime.
+- Verification completed: offline `pnpm install`; 9/9 sync contract proofs; 9/9 Desktop projection proofs; 4/4 existing Staging logic-security tests; focused ESLint (zero errors, one existing React Hook warning); Next type generation and typecheck; local production Next build with placeholder public environment values; Windows Tauri release build completed at `apps/desktop/src-tauri/target/release/habfarms-desktop.exe`. The native build used the Staging Supabase URL, Staging publishable key, and Staging API URLs. These checks do not establish hosted behavior.
 
 ## Hosted acceptance blockers
 
-1. The Supabase Staging Database Backups page states that this Free Plan does not include project backups. The connection dialog requires an existing database password; it displays only a `[YOUR-PASSWORD]` placeholder. No independent logical backup or restore proof exists for the 12-farm Staging data. Local Docker is currently unavailable, and no standalone `pg_dump` was found. Do not apply migration 088 or reset the database yet.
-2. Migration 088 is missing although later migrations are applied. Review its dependencies and the Supabase migration ledger before an explicitly targeted application. Do not run a blind `db push` against the unrelated CLI link.
-3. The effective Vercel `NEXT_PUBLIC_SUPABASE_URL` value was masked in the UI and has not been verified as the Staging Supabase host. Required server-only Desktop lease signer variables were not present in the visible Vercel environment variable list.
-4. The saved Vercel CLI token returned 403 `invalidToken` on a read-only request to the Staging project. This checkout has no verified deployment credential.
-5. Browser access resumed after the user restarted the app. The Staging Supabase backup and migration pages and Vercel environment variable list were inspected read-only.
-6. The native Staging QA installer has not been built, signed, or connected to verified Staging endpoints. No hosted login, offline operation, sync, lost-acknowledgement, conflict, or regression proof has run.
+1. **Backup/restore:** waived by the user for this exercise; no independent backup/restore proof. Treat Staging data recovery as an accepted residual risk, not a passed check.
+2. **Deployment:** source target guard, routes, and pinned Staging public key are not yet deployed. Only the earlier deployment ID above is verified.
+3. **Runtime configuration:** lease variables were saved, but no new deployment has loaded them. The masked existing `NEXT_PUBLIC_SUPABASE_URL` was not independently read; the new routes fail closed unless its runtime host is exactly the Staging Supabase API host.
+4. **Hosted smoke:** the Desktop API health endpoint and signed farm bootstrap have not been verified against a deployment containing these changes.
+5. **Native hosted use:** no Staging login, farm bootstrap, offline close/reopen, reconnect, or authoritative web verification has been run in the rebuilt installer.
+6. **Business sync proof:** no hosted production or mortality operation has been submitted; no lost acknowledgement/retry proof, conflict handling proof, or authoritative exactly-once count comparison exists.
+7. **Security/regression:** hosted negative HTTP/security checks, expired/revoked session, membership/role/suspension changes, multi-user/farm isolation, longer outage behavior, and Staging web regression remain unverified.
+8. **Recovery:** no demonstrated recovery process for a customer's lost or damaged desktop workspace.
 
-## Required final report fields (1–45)
+## Required acceptance fields (1–45)
 
-| # | Item | Result |
+| # | Field | Evidence / status |
 |---|---|---|
-| 1 | Source branch/commit | `codex/desktop-staging-core` at `126a4b5d9e23248d20aae54aa61e57409eac0b00`, based on Staging `afdf85c`; Desktop source imported from `8ed184e`. |
-| 2 | Staging web identity | Verified project, site, ready deployment above. |
-| 3 | Staging Supabase identity | Verified project ref, API host, Auth Site URL above. |
-| 4 | Production access | No Production database or deployment access/change; account-wide project list included Production metadata. |
-| 5 | Backup/recovery | Supabase Free Plan shows no project backups; independent backup/recovery unverified; blocker. |
-| 6 | Staging migrations applied | Desktop 088 not applied. |
-| 7 | Migration ledger | Head 092; 088 absent; out-of-order review needed. |
-| 8 | Hosted sync service deployment | Not deployed. |
-| 9 | Staging service health | Existing public `/api/health` returned 200 `{"status":"ok"}`; Desktop sync health untested. |
-| 10 | Staging QA Desktop build/config | Source marker prepared; native QA build/config unverified. |
-| 11 | Synthetic users/farms | Not created. Existing Staging farm count: 12. |
+| 1 | Source branch/commit | `codex/desktop-staging-core`; current source base `bca9719`; Staging base `afdf85c`. Final source commit pending. |
+| 2 | Staging web identity | Verified project, site, prior deployment listed above. |
+| 3 | Staging Supabase identity | Verified project ref, API host, and Auth Site URL listed above. |
+| 4 | Production access/change | No Production DB, dashboard, or deployment changed; CLI project list incidentally exposed project metadata. |
+| 5 | Backup/recovery | Explicitly waived by user for this acceptance; no independent backup or restore proof. Residual risk. |
+| 6 | Migration 088 | Applied to Staging only; post-apply SQL checks passed. |
+| 7 | Migration ledger | 088 row verified after application; previously applied later versions 089–092 retained. |
+| 8 | Hosted sync deployment | Not deployed; blocker. |
+| 9 | Staging API health | Existing public web health was previously 200; new Desktop sync health not verified on deployed code. |
+| 10 | Staging QA desktop build | Windows Tauri release executable built locally with Staging endpoints and `VITE_DESKTOP_ENV=staging`. |
+| 11 | Synthetic user/farm | None created; existing Staging count remained 12 immediately after migration. |
 | 12 | Native hosted login | Not run. |
-| 13 | Bootstrap/snapshot | Not run on hosted Staging. |
-| 14 | Offline Production | Not run on hosted Staging. |
-| 15 | Offline Mortality | Not run on hosted Staging. |
-| 16 | Native offline restart | Not run on hosted Staging. |
+| 13 | Hosted bootstrap/snapshot | Not run. |
+| 14 | Offline production entry | Not run against hosted Staging. |
+| 15 | Offline mortality entry | Not run against hosted Staging. |
+| 16 | Offline restart | Native restart tested by user previously for local pending entries; hosted lease/offline workflow not yet accepted. |
 | 17 | Hosted Sync Now | Not run. |
 | 18 | Web authoritative verification | Not run. |
 | 19 | Production authoritative counts | Not measured. |
 | 20 | Mortality authoritative counts | Not measured. |
-| 21 | Inventory | Not measured. |
-| 22 | Population | Not measured. |
+| 21 | Egg inventory impact | Not measured. |
+| 22 | Flock population impact | Not measured. |
 | 23 | Production percentage | Not measured. |
-| 24 | Hosted Production lost acknowledgement | Not run. |
-| 25 | Hosted Mortality lost acknowledgement | Not run. |
+| 24 | Production lost acknowledgement | Not run. |
+| 25 | Mortality lost acknowledgement | Not run. |
 | 26 | Production conflict | Not run. |
 | 27 | Population conflict | Not run. |
-| 28 | Session expiry | Not run. |
+| 28 | Session expiry | Not run against hosted Desktop routes. |
 | 29 | Membership revocation | Not run. |
 | 30 | Role change | Not run. |
 | 31 | Farm/subscription suspension | Not run. |
 | 32 | Multi-user isolation | Not run. |
 | 33 | Multi-farm routing | Not run. |
-| 34 | Negative HTTP/security tests | Not run against hosted Staging. |
-| 35 | Audit actor | Not verified on hosted Staging. |
+| 34 | Negative HTTP/security tests | Local checks only; hosted negative requests not run. |
+| 35 | Audit actor | Not verified for hosted events. |
 | 36 | Several-hour outage | Not run. |
-| 37 | Performance | No hosted observations. |
-| 38 | Staging web regression | Not run. |
-| 39 | Database tests | Existing local Staging logic tests 4/4; hosted SQL tests not run. |
-| 40 | Files changed | Desktop app/proof, sync route/contract, migration 088/test, ESLint, this report. |
-| 41 | Commit hash | `126a4b5d9e23248d20aae54aa61e57409eac0b00` (source and initial report; this report correction follows). |
-| 42 | Staging deployment ID | Existing deployment `6FVwoBcHaqDTjvUprmAxAgxHj1Y4`; no new deployment. |
-| 43 | Production deployment | Unchanged by this work. |
-| 44 | Remaining blockers | No scheduled backup or independent restore proof, migration ordering, effective Vercel config, deployment auth, hosted proof. |
-| 45 | Recommendation | Produce and verify an independent Staging logical backup and recovery procedure, verify config, apply only reviewed missing migration, deploy Staging, then run the full native hosted acceptance. Do not expand scope yet. |
+| 37 | Performance | No hosted measurements. |
+| 38 | Staging web regression | Not run after Desktop routes are deployed. |
+| 39 | Database tests | Local Staging logic tests 4/4; migration 088 applied; no hosted business operation tests. |
+| 40 | Files changed | Desktop app/proof, Desktop API routes/helpers, pinned public key, migration 088/test, focused lint config, acceptance report. Private key remains ignored locally. |
+| 41 | Commit hash | Pending final commit. |
+| 42 | Staging deployment ID | Prior ID `6FVwoBcHaqDTjvUprmAxAgxHj1Y4`; new deployment pending. |
+| 43 | Production deployment | Unchanged. |
+| 44 | Remaining blockers | New source deploy, runtime config/health, native hosted login/bootstrap/offline/reconnect, operation sync, lost-ack exactly-once for both operation types, conflicts/security/regression proof. Backup was waived and remains a residual risk. |
+| 45 | Recommendation | Deploy only to the dedicated Staging project, verify fail-closed target and signing config, then execute hosted native login/bootstrap/offline restart and exactly-once sync acceptance for mortality and production. Stop before Phase 4 scope. |
 
 **HABFARMS DESKTOP STAGING CORE OFFLINE ACCEPTANCE FAILED — BLOCKERS REMAIN**
-
-
-
-

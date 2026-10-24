@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { desktopIdentity, desktopOptions, desktopResponse } from "@/lib/desktop/http";
+import { desktopIdentity, desktopOptions, desktopResponse, desktopStagingTargetIsVerified } from "@/lib/desktop/http";
 import { canonicalRefresh } from "@/lib/desktop/server";
 
 export const runtime = "nodejs";
@@ -9,6 +9,7 @@ export const OPTIONS = desktopOptions;
 const requestSchema = z.strictObject({ farmId: z.uuid(), installationId: z.uuid() });
 
 export async function POST(request: Request) {
+  if (!desktopStagingTargetIsVerified()) return desktopResponse(request, { code: "DESKTOP_STAGING_TARGET_MISMATCH" }, 503);
   const identity = await desktopIdentity(request);
   if (!identity) return desktopResponse(request, { code: "SESSION_EXPIRED" }, 401);
   if (Number(request.headers.get("content-length") ?? 0) > 4096) return desktopResponse(request, { code: "REQUEST_TOO_LARGE" }, 413);

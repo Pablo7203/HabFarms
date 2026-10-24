@@ -1,6 +1,7 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "@/lib/env";
+import { desktopStagingTargetIsVerified } from "@/lib/desktop/http";
 import { dbFor, canonicalRefresh } from "@/lib/desktop/server";
 import { dailyProductionV1, mortalityV1, type DesktopOperationV1 } from "@/lib/desktop/sync-contract";
 
@@ -42,6 +43,7 @@ function outcomeForError(operation: DesktopOperationV1, error: { code?: string; 
 }
 
 export async function GET(request: Request) {
+  if (!desktopStagingTargetIsVerified()) return response(request, { status: "target_mismatch" }, 503);
   try {
     const upstream = await fetch(`${env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/health`, {
       cache: "no-store", signal: AbortSignal.timeout(3500),
@@ -66,6 +68,7 @@ export function OPTIONS(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (!desktopStagingTargetIsVerified()) return response(request, { code: "DESKTOP_STAGING_TARGET_MISMATCH" }, 503);
   const authorization = request.headers.get("authorization") ?? "";
   const token = authorization.match(/^Bearer\s+(.+)$/i)?.[1];
   if (!token) return response(request, { code: "SESSION_EXPIRED" }, 401);

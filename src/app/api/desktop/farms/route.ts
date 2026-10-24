@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
-import { desktopIdentity, desktopOptions, desktopResponse } from "@/lib/desktop/http";
+import { desktopIdentity, desktopOptions, desktopResponse, desktopStagingTargetIsVerified } from "@/lib/desktop/http";
 import { dbFor } from "@/lib/desktop/server";
 
 export const runtime = "nodejs";
@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 export const OPTIONS = desktopOptions;
 
 export async function GET(request: Request) {
+  if (!desktopStagingTargetIsVerified()) return desktopResponse(request, { code: "DESKTOP_STAGING_TARGET_MISMATCH" }, 503);
   const identity = await desktopIdentity(request);
   if (!identity) return desktopResponse(request, { code: "SESSION_EXPIRED" }, 401);
   const db = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
