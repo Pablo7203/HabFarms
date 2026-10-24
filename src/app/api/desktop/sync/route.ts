@@ -46,7 +46,7 @@ export async function GET(request: Request) {
   if (!desktopStagingTargetIsVerified()) return response(request, { status: "target_mismatch" }, 503);
   try {
     const upstream = await fetch(`${env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/health`, {
-      cache: "no-store", signal: AbortSignal.timeout(3500),
+      cache: "no-store", headers: { apikey: env.NEXT_PUBLIC_SUPABASE_ANON_KEY }, signal: AbortSignal.timeout(3500),
     });
     if (!upstream.ok) return response(request, { status: "unreachable" });
     const host = new URL(env.NEXT_PUBLIC_SUPABASE_URL).hostname;
